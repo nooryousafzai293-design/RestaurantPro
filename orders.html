@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RestaurantPro - Orders</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="orders.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🍽️
+            </div>
+
+            <div>
+
+                <h2>
+                    RestaurantPro
+                </h2>
+
+                <span>
+                    Restaurant Management
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="index.html"
+                class="menu-item"
+            >
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="pos.html"
+                class="menu-item"
+            >
+                <span>🧾</span>
+                <span>POS / Billing</span>
+            </a>
+
+
+            <a
+                href="orders.html"
+                class="menu-item active"
+            >
+                <span>📋</span>
+                <span>Orders</span>
+            </a>
+
+
+     <a href="tables.html" class="menu-item">
+    <span>🪑</span>
+    <span>Tables</span>
+</a>
+
+    <a href="kitchen.html" class="menu-item">
+    <span>👨‍🍳</span>
+    <span>Kitchen</span>
+</a>
+
+
+            <a
+                href="menu.html"
+                class="menu-item"
+            >
+                <span>🍔</span>
+                <span>Menu</span>
+            </a>
+
+<a href="inventory.html" class="menu-item">
+    <span>📦</span>
+    <span>Inventory</span>
+</a>
+
+
+ <a href="customers.html" class="menu-item">
+    <span>👥</span>
+    <span>Customers</span>
+</a>
+
+
+<a href="expenses.html" class="menu-item">
+    <span>💰</span>
+    <span>Expenses</span>
+</a>
+
+
+<a href="reports.html" class="menu-item">
+    <span>📊</span>
+    <span>Reports</span>
+</a>
+
+<a href="settings.html" class="menu-item">
+    <span>⚙️</span>
+    <span>Settings</span>
+</a>
+
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <strong>
+                RestaurantPro
+            </strong>
+
+            <small>
+                Version 1.0
+            </small>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>
+                    Orders
+                </h1>
+
+                <p>
+                    View and manage restaurant orders.
+                </p>
+
+            </div>
+
+
+            <div class="header-user">
+
+                <span class="notification">
+                    🔔
+                </span>
+
+
+                <div class="user-avatar">
+                    RO
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        Restaurant Owner
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ORDERS CONTENT -->
+
+        <section class="orders-content">
+
+
+            <!-- TOP STATS -->
+
+            <div class="order-stats">
+
+
+                <div class="order-stat-card">
+
+                    <div class="stat-icon">
+                        📋
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Orders
+                        </span>
+
+                        <strong id="totalOrders">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="order-stat-card">
+
+                    <div class="stat-icon">
+                        💵
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Sales
+                        </span>
+
+                        <strong id="totalSales">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="order-stat-card">
+
+                    <div class="stat-icon">
+                        🍽️
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Today's Orders
+                        </span>
+
+                        <strong id="todayOrders">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="order-stat-card">
+
+                    <div class="stat-icon">
+                        📈
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Today's Sales
+                        </span>
+
+                        <strong id="todaySales">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ORDERS PANEL -->
+
+            <div class="orders-panel">
+
+
+                <!-- TOOLBAR -->
+
+                <div class="orders-toolbar">
+
+
+                    <div>
+
+                        <h2>
+                            All Orders
+                        </h2>
+
+                        <p>
+                            Orders created from POS.
+                        </p>
+
+                    </div>
+
+
+                    <div class="orders-actions">
+
+
+                        <div class="orders-search">
+
+                            <span>
+                                🔍
+                            </span>
+
+                            <input
+                                type="text"
+                                id="ordersSearch"
+                                placeholder="Search order..."
+                            >
+
+                        </div>
+
+
+                        <select
+                            id="orderFilter"
+                            class="order-filter"
+                        >
+
+                            <option value="all">
+                                All Orders
+                            </option>
+
+                            <option value="today">
+                                Today
+                            </option>
+
+                            <option value="dine-in">
+                                Dine In
+                            </option>
+
+                            <option value="takeaway">
+                                Takeaway
+                            </option>
+
+                            <option value="delivery">
+                                Delivery
+                            </option>
+
+                        </select>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TABLE -->
+
+                <div class="orders-table-wrapper">
+
+                    <table class="orders-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Order
+                                </th>
+
+                                <th>
+                                    Customer
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Items
+                                </th>
+
+<th>Payment</th>
+<th>Status</th>
+<th>Total</th>
+<th>Date</th>
+<th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="ordersTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- EMPTY STATE -->
+
+                <div
+                    id="ordersEmpty"
+                    class="orders-empty"
+                >
+
+                    <div class="orders-empty-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        No Orders Yet
+                    </h3>
+
+                    <p>
+                        Complete an order from POS
+                        and it will appear here.
+                    </p>
+
+
+                    <a
+                        href="pos.html"
+                        class="go-pos-button"
+                    >
+                        Go to POS
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ORDER DETAILS MODAL -->
+
+    <div
+        id="orderModal"
+        class="order-modal"
+    >
+
+        <div class="order-modal-box">
+
+
+            <div class="order-modal-header">
+
+                <div>
+
+                    <h2>
+                        Order Details
+                    </h2>
+
+                    <p id="modalOrderNumber">
+                        Order
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeOrderModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div
+                id="orderModalContent"
+                class="order-modal-content"
+            >
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    class="modal-print"
+                    onclick="printSelectedOrder()"
+                >
+                    🖨️ Print Bill
+                </button>
+
+
+                <button
+                    type="button"
+                    class="modal-close-button"
+                    onclick="closeOrderModal()"
+                >
+                    Close
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <script src="orders.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>

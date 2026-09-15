@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestaurantPro - Reports</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="reports.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🍽️
+            </div>
+
+            <div>
+                <h2>RestaurantPro</h2>
+                <span>Restaurant Management</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html" class="menu-item">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="pos.html" class="menu-item">
+                <span>🧾</span>
+                <span>POS / Billing</span>
+            </a>
+
+            <a href="orders.html" class="menu-item">
+                <span>📋</span>
+                <span>Orders</span>
+            </a>
+
+            <a href="tables.html" class="menu-item">
+                <span>🪑</span>
+                <span>Tables</span>
+            </a>
+
+            <a href="kitchen.html" class="menu-item">
+                <span>👨‍🍳</span>
+                <span>Kitchen</span>
+            </a>
+
+            <a href="menu.html" class="menu-item">
+                <span>🍔</span>
+                <span>Menu</span>
+            </a>
+
+            <a href="inventory.html" class="menu-item">
+                <span>📦</span>
+                <span>Inventory</span>
+            </a>
+
+            <a href="customers.html" class="menu-item">
+                <span>👥</span>
+                <span>Customers</span>
+            </a>
+
+            <a href="expenses.html" class="menu-item">
+                <span>💰</span>
+                <span>Expenses</span>
+            </a>
+
+            <a href="reports.html" class="menu-item active">
+                <span>📊</span>
+                <span>Reports</span>
+            </a>
+
+  <a href="settings.html" class="menu-item">
+    <span>⚙️</span>
+    <span>Settings</span>
+</a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+            <strong>RestaurantPro</strong>
+            <small>Version 1.0</small>
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="page-header">
+
+            <div>
+
+                <h1>Reports</h1>
+
+                <p>
+                    View your restaurant sales, expenses and performance.
+                </p>
+
+            </div>
+
+
+            <div class="header-user">
+
+                <span class="notification">
+                    🔔
+                </span>
+
+                <div class="user-avatar">
+                    RO
+                </div>
+
+                <div class="user-info">
+
+                    <strong>
+                        Restaurant Owner
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- REPORT CONTENT -->
+        <section class="reports-content">
+
+
+            <!-- FILTER -->
+            <div class="reports-filter-card">
+
+                <div>
+
+                    <h2>
+                        Report Period
+                    </h2>
+
+                    <p>
+                        Select the period you want to analyze.
+                    </p>
+
+                </div>
+
+
+                <div class="report-period-buttons">
+
+                    <button
+                        type="button"
+                        class="period-button active"
+                        data-period="today"
+                    >
+                        Today
+                    </button>
+
+                    <button
+                        type="button"
+                        class="period-button"
+                        data-period="week"
+                    >
+                        This Week
+                    </button>
+
+                    <button
+                        type="button"
+                        class="period-button"
+                        data-period="month"
+                    >
+                        This Month
+                    </button>
+
+                    <button
+                        type="button"
+                        class="period-button"
+                        data-period="year"
+                    >
+                        This Year
+                    </button>
+
+                    <button
+                        type="button"
+                        class="period-button"
+                        data-period="all"
+                    >
+                        All Time
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SUMMARY CARDS -->
+            <div class="report-summary-grid">
+
+
+                <div class="report-summary-card">
+
+                    <div class="report-summary-icon">
+                        💵
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Sales
+                        </span>
+
+                        <strong id="reportSales">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-summary-card">
+
+                    <div class="report-summary-icon">
+                        🧾
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Orders
+                        </span>
+
+                        <strong id="reportOrders">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-summary-card">
+
+                    <div class="report-summary-icon">
+                        💰
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Expenses
+                        </span>
+
+                        <strong id="reportExpenses">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-summary-card">
+
+                    <div class="report-summary-icon">
+                        📈
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Net Profit
+                        </span>
+
+                        <strong id="reportProfit">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- REPORT PANELS -->
+            <div class="reports-grid">
+
+
+                <!-- SALES REPORT -->
+                <div class="report-panel">
+
+                    <div class="report-panel-header">
+
+                        <div>
+
+                            <h2>
+                                Sales Overview
+                            </h2>
+
+                            <p>
+                                Sales performance for the selected period.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="sales-overview">
+
+                        <div class="sales-big-number">
+                            <span>
+                                Revenue
+                            </span>
+
+                            <strong id="salesRevenue">
+                                Rs. 0
+                            </strong>
+                        </div>
+
+
+                        <div class="sales-big-number">
+                            <span>
+                                Average Order
+                            </span>
+
+                            <strong id="averageOrder">
+                                Rs. 0
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="sales-chart">
+
+                        <div class="chart-title">
+                            Daily Sales
+                        </div>
+
+                        <div
+                            id="salesChart"
+                            class="chart-bars"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- EXPENSE REPORT -->
+                <div class="report-panel">
+
+                    <div class="report-panel-header">
+
+                        <div>
+
+                            <h2>
+                                Expense Breakdown
+                            </h2>
+
+                            <p>
+                                Expenses by category.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="expenseBreakdown"
+                        class="expense-breakdown"
+                    ></div>
+
+
+                    <div class="expense-total-row">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong id="breakdownTotal">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- TOP ITEMS -->
+            <div class="report-panel top-items-panel">
+
+                <div class="report-panel-header">
+
+                    <div>
+
+                        <h2>
+                            Top Selling Items
+                        </h2>
+
+                        <p>
+                            Best performing menu items.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="topItems"
+                    class="top-items-list"
+                ></div>
+
+            </div>
+
+
+
+            <!-- PRINT -->
+            <div class="reports-actions">
+
+                <button
+                    type="button"
+                    onclick="printReport()"
+                    class="print-report-button"
+                >
+                    🖨️ Print Report
+                </button>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <script src="reports.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>

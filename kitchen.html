@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RestaurantPro - Kitchen</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="kitchen.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🍽️
+            </div>
+
+            <div>
+
+                <h2>
+                    RestaurantPro
+                </h2>
+
+                <span>
+                    Restaurant Management
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="index.html"
+                class="menu-item"
+            >
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="pos.html"
+                class="menu-item"
+            >
+                <span>🧾</span>
+                <span>POS / Billing</span>
+            </a>
+
+
+            <a
+                href="orders.html"
+                class="menu-item"
+            >
+                <span>📋</span>
+                <span>Orders</span>
+            </a>
+
+
+            <a
+                href="tables.html"
+                class="menu-item"
+            >
+                <span>🪑</span>
+                <span>Tables</span>
+            </a>
+
+
+            <a
+                href="kitchen.html"
+                class="menu-item active"
+            >
+                <span>👨‍🍳</span>
+                <span>Kitchen</span>
+            </a>
+
+
+            <a
+                href="menu.html"
+                class="menu-item"
+            >
+                <span>🍔</span>
+                <span>Menu</span>
+            </a>
+
+<a href="inventory.html" class="menu-item">
+    <span>📦</span>
+    <span>Inventory</span>
+</a>
+
+<a href="customers.html" class="menu-item">
+    <span>👥</span>
+    <span>Customers</span>
+</a>
+
+
+  <a href="expenses.html" class="menu-item">
+    <span>💰</span>
+    <span>Expenses</span>
+</a>
+
+<a href="reports.html" class="menu-item">
+    <span>📊</span>
+    <span>Reports</span>
+</a>
+
+
+<a href="settings.html" class="menu-item">
+    <span>⚙️</span>
+    <span>Settings</span>
+</a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <strong>
+                RestaurantPro
+            </strong>
+
+            <small>
+                Version 1.0
+            </small>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>
+                    Kitchen
+                </h1>
+
+                <p>
+                    Manage and prepare incoming restaurant orders.
+                </p>
+
+            </div>
+
+
+            <div class="header-user">
+
+                <span class="notification">
+                    🔔
+                </span>
+
+
+                <div class="user-avatar">
+                    RO
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        Restaurant Owner
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- KITCHEN CONTENT -->
+
+        <section class="kitchen-content">
+
+
+            <!-- KITCHEN STATS -->
+
+            <div class="kitchen-stats">
+
+
+                <div class="kitchen-stat-card">
+
+                    <div class="kitchen-stat-icon">
+                        🔔
+                    </div>
+
+                    <div>
+
+                        <span>
+                            New Orders
+                        </span>
+
+                        <strong id="newOrdersCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="kitchen-stat-card">
+
+                    <div class="kitchen-stat-icon">
+                        👨‍🍳
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Preparing
+                        </span>
+
+                        <strong id="preparingCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="kitchen-stat-card">
+
+                    <div class="kitchen-stat-icon">
+                        🍽️
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Ready
+                        </span>
+
+                        <strong id="readyCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="kitchen-stat-card">
+
+                    <div class="kitchen-stat-icon">
+                        📦
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Today
+                        </span>
+
+                        <strong id="todayOrdersCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- KITCHEN BOARD -->
+
+            <div class="kitchen-panel">
+
+
+                <div class="kitchen-toolbar">
+
+
+                    <div>
+
+                        <h2>
+                            Kitchen Orders
+                        </h2>
+
+                        <p>
+                            Track orders from received to ready.
+                        </p>
+
+                    </div>
+
+
+                    <div class="kitchen-actions">
+
+                        <button
+                            type="button"
+                            class="refresh-kitchen-button"
+                            onclick="refreshKitchen()"
+                        >
+                            ↻ Refresh
+                        </button>
+
+
+                        <label class="auto-refresh-control">
+
+                            <input
+                                type="checkbox"
+                                id="autoRefresh"
+                                checked
+                            >
+
+                            Auto Refresh
+
+                        </label>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- FILTERS -->
+
+                <div class="kitchen-filter-bar">
+
+
+                    <div class="kitchen-filter-tabs">
+
+
+                        <button
+                            type="button"
+                            class="kitchen-filter active"
+                            data-status="all"
+                        >
+                            All
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="kitchen-filter"
+                            data-status="new"
+                        >
+                            New
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="kitchen-filter"
+                            data-status="preparing"
+                        >
+                            Preparing
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="kitchen-filter"
+                            data-status="ready"
+                        >
+                            Ready
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="kitchen-search">
+
+                        <span>
+                            🔍
+                        </span>
+
+                        <input
+                            type="text"
+                            id="kitchenSearch"
+                            placeholder="Search order..."
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ORDER BOARD -->
+
+                <div
+                    id="kitchenBoard"
+                    class="kitchen-board"
+                >
+
+                </div>
+
+
+
+                <!-- EMPTY STATE -->
+
+                <div
+                    id="kitchenEmpty"
+                    class="kitchen-empty"
+                >
+
+                    <div class="kitchen-empty-icon">
+                        👨‍🍳
+                    </div>
+
+                    <h3>
+                        No Kitchen Orders
+                    </h3>
+
+                    <p>
+                        New POS orders will appear here for the kitchen.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <script src="kitchen.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>

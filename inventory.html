@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestaurantPro - Inventory</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="inventory.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🍽️
+            </div>
+
+            <div>
+                <h2>RestaurantPro</h2>
+                <span>Restaurant Management</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html" class="menu-item">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="pos.html" class="menu-item">
+                <span>🧾</span>
+                <span>POS / Billing</span>
+            </a>
+
+            <a href="orders.html" class="menu-item">
+                <span>📋</span>
+                <span>Orders</span>
+            </a>
+
+            <a href="tables.html" class="menu-item">
+                <span>🪑</span>
+                <span>Tables</span>
+            </a>
+
+            <a href="kitchen.html" class="menu-item">
+                <span>👨‍🍳</span>
+                <span>Kitchen</span>
+            </a>
+
+            <a href="menu.html" class="menu-item">
+                <span>🍔</span>
+                <span>Menu</span>
+            </a>
+<a href="inventory.html" class="menu-item">
+    <span>📦</span>
+    <span>Inventory</span>
+<a href="customers.html" class="menu-item">
+    <span>👥</span>
+    <span>Customers</span>
+</a>
+<a href="expenses.html" class="menu-item">
+    <span>💰</span>
+    <span>Expenses</span>
+</a>
+<a href="reports.html" class="menu-item">
+    <span>📊</span>
+    <span>Reports</span>
+</a>
+<a href="settings.html" class="menu-item">
+    <span>⚙️</span>
+    <span>Settings</span>
+</a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+            <strong>RestaurantPro</strong>
+            <small>Version 1.0</small>
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="page-header">
+
+            <div>
+
+                <h1>Inventory</h1>
+
+                <p>
+                    Manage your restaurant stock and supplies.
+                </p>
+
+            </div>
+
+
+            <div class="header-user">
+
+                <span class="notification">
+                    🔔
+                </span>
+
+                <div class="user-avatar">
+                    RO
+                </div>
+
+                <div class="user-info">
+
+                    <strong>
+                        Restaurant Owner
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- INVENTORY CONTENT -->
+        <section class="inventory-content">
+
+
+            <!-- STATS -->
+            <div class="inventory-stats">
+
+
+                <div class="inventory-stat-card">
+
+                    <div class="inventory-stat-icon">
+                        📦
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Items
+                        </span>
+
+                        <strong id="totalItems">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="inventory-stat-card">
+
+                    <div class="inventory-stat-icon">
+                        ⚠️
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Low Stock
+                        </span>
+
+                        <strong id="lowStockItems">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="inventory-stat-card">
+
+                    <div class="inventory-stat-icon">
+                        🚨
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Out of Stock
+                        </span>
+
+                        <strong id="outOfStockItems">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="inventory-stat-card">
+
+                    <div class="inventory-stat-icon">
+                        💰
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Stock Value
+                        </span>
+
+                        <strong id="stockValue">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- MAIN PANEL -->
+            <div class="inventory-panel">
+
+
+                <!-- TOOLBAR -->
+                <div class="inventory-toolbar">
+
+
+                    <div>
+
+                        <h2>
+                            Stock Items
+                        </h2>
+
+                        <p>
+                            Add, edit and remove restaurant inventory items.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="add-inventory-button"
+                        onclick="openInventoryModal()"
+                    >
+                        + Add Stock Item
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- FILTER BAR -->
+                <div class="inventory-filter-bar">
+
+
+                    <div class="inventory-search">
+
+                        <span>
+                            🔍
+                        </span>
+
+                        <input
+                            type="text"
+                            id="inventorySearch"
+                            placeholder="Search stock item..."
+                        >
+
+                    </div>
+
+
+                    <select id="stockFilter">
+
+                        <option value="all">
+                            All Stock
+                        </option>
+
+                        <option value="normal">
+                            Normal Stock
+                        </option>
+
+                        <option value="low">
+                            Low Stock
+                        </option>
+
+                        <option value="out">
+                            Out of Stock
+                        </option>
+
+                    </select>
+
+
+                </div>
+
+
+
+                <!-- TABLE -->
+                <div class="inventory-table-wrapper">
+
+                    <table class="inventory-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Item
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Quantity
+                                </th>
+
+                                <th>
+                                    Unit
+                                </th>
+
+                                <th>
+                                    Cost / Unit
+                                </th>
+
+                                <th>
+                                    Stock Value
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="inventoryTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- EMPTY STATE -->
+                <div
+                    id="inventoryEmpty"
+                    class="inventory-empty"
+                >
+
+                    <div class="inventory-empty-icon">
+                        📦
+                    </div>
+
+                    <h3>
+                        No Inventory Items
+                    </h3>
+
+                    <p>
+                        Add your first stock item to start managing inventory.
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="openInventoryModal()"
+                    >
+                        + Add Stock Item
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ADD / EDIT MODAL -->
+    <div
+        id="inventoryModal"
+        class="inventory-modal"
+    >
+
+        <div class="inventory-modal-box">
+
+
+            <div class="inventory-modal-header">
+
+                <div>
+
+                    <h2 id="inventoryModalTitle">
+                        Add Stock Item
+                    </h2>
+
+                    <p>
+                        Enter the stock item details.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeInventoryModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <form
+                id="inventoryForm"
+                onsubmit="saveInventoryItem(event)"
+            >
+
+
+                <div class="inventory-form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="itemName">
+                            Item Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="itemName"
+                            placeholder="e.g. Chicken"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="itemCategory">
+                            Category
+                        </label>
+
+                        <input
+                            type="text"
+                            id="itemCategory"
+                            placeholder="e.g. Meat"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="itemQuantity">
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="itemQuantity"
+                            min="0"
+                            step="0.01"
+                            placeholder="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="itemUnit">
+                            Unit
+                        </label>
+
+                        <select id="itemUnit">
+
+                            <option value="kg">
+                                Kg
+                            </option>
+
+                            <option value="g">
+                                Gram
+                            </option>
+
+                            <option value="liter">
+                                Liter
+                            </option>
+
+                            <option value="ml">
+                                ML
+                            </option>
+
+                            <option value="piece">
+                                Piece
+                            </option>
+
+                            <option value="dozen">
+                                Dozen
+                            </option>
+
+                            <option value="packet">
+                                Packet
+                            </option>
+
+                            <option value="box">
+                                Box
+                            </option>
+
+                            <option value="bottle">
+                                Bottle
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="itemCost">
+                            Cost Per Unit (Rs.)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="itemCost"
+                            min="0"
+                            step="0.01"
+                            placeholder="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="itemMinStock">
+                            Minimum Stock
+                        </label>
+
+                        <input
+                            type="number"
+                            id="itemMinStock"
+                            min="0"
+                            step="0.01"
+                            placeholder="5"
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="inventory-modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeInventoryModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-inventory-button"
+                    >
+                        Save Item
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="inventory.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>

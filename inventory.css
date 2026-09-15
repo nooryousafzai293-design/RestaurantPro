@@ -1,0 +1,558 @@
+/* ==========================================
+   RESTAURANTPRO - INVENTORY CSS
+========================================== */
+
+.inventory-content {
+    padding: 25px 35px;
+}
+
+
+/* ==========================================
+   STATS
+========================================== */
+
+.inventory-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.inventory-stat-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.inventory-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fff4ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.inventory-stat-card span {
+    display: block;
+    color: #858b94;
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.inventory-stat-card strong {
+    display: block;
+    color: #30343a;
+    font-size: 18px;
+}
+
+
+/* ==========================================
+   MAIN PANEL
+========================================== */
+
+.inventory-panel {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   TOOLBAR
+========================================== */
+
+.inventory-toolbar {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.inventory-toolbar h2 {
+    color: #30343a;
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.inventory-toolbar p {
+    color: #858b94;
+    font-size: 10px;
+}
+
+.add-inventory-button {
+    height: 38px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 7px;
+    background: #e85b22;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.add-inventory-button:hover {
+    background: #d94e18;
+}
+
+
+/* ==========================================
+   FILTER BAR
+========================================== */
+
+.inventory-filter-bar {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.inventory-search {
+    height: 36px;
+    width: 280px;
+    border: 1px solid #dfe2e6;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.inventory-search span {
+    font-size: 13px;
+    margin-right: 7px;
+}
+
+.inventory-search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 10px;
+}
+
+#stockFilter {
+    height: 36px;
+    min-width: 150px;
+    padding: 0 10px;
+    border: 1px solid #dfe2e6;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #555b63;
+    outline: none;
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.inventory-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+.inventory-table th {
+    background: #fafafa;
+    color: #777d85;
+    text-align: left;
+    padding: 13px 15px;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 9px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.inventory-table td {
+    padding: 14px 15px;
+    border-bottom: 1px solid #f0f1f2;
+    color: #555b63;
+    font-size: 9px;
+    vertical-align: middle;
+}
+
+.inventory-table tbody tr:hover {
+    background: #fcfcfc;
+}
+
+
+/* ==========================================
+   ITEM NAME
+========================================== */
+
+.inventory-item-name {
+    color: #30343a;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.inventory-item-category {
+    color: #999fa6;
+    font-size: 8px;
+    margin-top: 3px;
+}
+
+
+/* ==========================================
+   QUANTITY
+========================================== */
+
+.inventory-quantity {
+    color: #30343a;
+    font-weight: 700;
+}
+
+.inventory-unit {
+    color: #858b94;
+}
+
+
+/* ==========================================
+   STATUS
+========================================== */
+
+.inventory-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 20px;
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.inventory-status.normal {
+    background: #eef9f1;
+    color: #3d8c51;
+}
+
+.inventory-status.low {
+    background: #fff7df;
+    color: #aa7a0b;
+}
+
+.inventory-status.out {
+    background: #fff0ee;
+    color: #c54a3f;
+}
+
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.inventory-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.inventory-action-button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #dfe2e6;
+    border-radius: 6px;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.inventory-action-button:hover {
+    border-color: #e85b22;
+}
+
+.inventory-action-button.delete:hover {
+    border-color: #d9534f;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.inventory-empty {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.inventory-empty.hidden {
+    display: none;
+}
+
+.inventory-empty-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #f5f6f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.inventory-empty h3 {
+    color: #444a52;
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.inventory-empty p {
+    color: #8b9199;
+    font-size: 10px;
+    margin-bottom: 15px;
+}
+
+.inventory-empty button {
+    height: 35px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 7px;
+    background: #e85b22;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.inventory-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.inventory-modal.show {
+    display: flex;
+}
+
+.inventory-modal-box {
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.inventory-modal-header {
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.inventory-modal-header h2 {
+    color: #30343a;
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.inventory-modal-header p {
+    color: #858b94;
+    font-size: 10px;
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    background: #f5f6f8;
+    color: #555b63;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background: #eeeeee;
+}
+
+
+/* ==========================================
+   FORM
+========================================== */
+
+#inventoryForm {
+    padding: 20px;
+}
+
+.inventory-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    color: #555b63;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group select {
+    height: 38px;
+    width: 100%;
+    padding: 0 10px;
+    border: 1px solid #dfe2e6;
+    border-radius: 7px;
+    outline: none;
+    background: #ffffff;
+    color: #444a52;
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #e85b22;
+}
+
+
+/* ==========================================
+   MODAL ACTIONS
+========================================== */
+
+.inventory-modal-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eeeeee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.cancel-button {
+    height: 36px;
+    padding: 0 15px;
+    border: 1px solid #dfe2e6;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #555b63;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.cancel-button:hover {
+    background: #f7f7f7;
+}
+
+.save-inventory-button {
+    height: 36px;
+    padding: 0 17px;
+    border: none;
+    border-radius: 7px;
+    background: #e85b22;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.save-inventory-button:hover {
+    background: #d94e18;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .inventory-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .inventory-content {
+        padding: 20px;
+    }
+
+    .inventory-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .add-inventory-button {
+        width: 100%;
+    }
+
+    .inventory-filter-bar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .inventory-search {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #stockFilter {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .inventory-content {
+        padding: 12px;
+    }
+
+    .inventory-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .inventory-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .inventory-modal {
+        padding: 10px;
+    }
+
+}

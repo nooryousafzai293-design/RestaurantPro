@@ -1,0 +1,931 @@
+/* ==========================================
+   RESTAURANTPRO - TABLES CSS
+========================================== */
+
+.tables-content {
+    padding: 25px 35px;
+}
+
+
+/* ==========================================
+   STATS
+========================================== */
+
+.table-stats {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.table-stat-card {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+.table-stat-icon {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 10px;
+
+    background: #fff4ed;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.table-stat-card span {
+    display: block;
+
+    color: #858b94;
+
+    font-size: 10px;
+
+    margin-bottom: 5px;
+}
+
+.table-stat-card strong {
+    display: block;
+
+    color: #30343a;
+
+    font-size: 18px;
+}
+
+
+/* ==========================================
+   MAIN PANEL
+========================================== */
+
+.tables-panel {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   TOOLBAR
+========================================== */
+
+.tables-toolbar {
+    padding: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.tables-toolbar h2 {
+    color: #30343a;
+
+    font-size: 17px;
+
+    margin-bottom: 5px;
+}
+
+.tables-toolbar p {
+    color: #858b94;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   ADD BUTTON
+========================================== */
+
+.add-table-button,
+.empty-add-button {
+    border: none;
+
+    background: #e85b22;
+
+    color: #ffffff;
+
+    border-radius: 7px;
+
+    height: 38px;
+
+    padding: 0 16px;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.add-table-button:hover,
+.empty-add-button:hover {
+    background: #d94e18;
+}
+
+
+/* ==========================================
+   FILTER BAR
+========================================== */
+
+.tables-filter-bar {
+    padding: 15px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.table-filter-tabs {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+.table-filter {
+    border: none;
+
+    background: transparent;
+
+    color: #858b94;
+
+    padding: 8px 12px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.table-filter:hover {
+    background: #f7f7f7;
+}
+
+.table-filter.active {
+    background: #fff1e9;
+
+    color: #e85b22;
+}
+
+
+/* SEARCH */
+
+.table-search {
+    height: 36px;
+
+    width: 210px;
+
+    border: 1px solid #dfe2e6;
+
+    border-radius: 7px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 10px;
+}
+
+.table-search span {
+    font-size: 13px;
+
+    margin-right: 7px;
+}
+
+.table-search input {
+    width: 100%;
+
+    border: none;
+
+    outline: none;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   TABLE CARDS GRID
+========================================== */
+
+.tables-grid {
+    padding: 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 15px;
+}
+
+
+/* ==========================================
+   TABLE CARD
+========================================== */
+
+.restaurant-table-card {
+    position: relative;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e5e8;
+
+    border-radius: 11px;
+
+    padding: 18px;
+
+    min-height: 190px;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.restaurant-table-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #d7dade;
+
+    box-shadow:
+        0 6px 20px
+        rgba(0, 0, 0, 0.06);
+}
+
+
+/* STATUS STRIP */
+
+.restaurant-table-card.available {
+    border-top: 3px solid #45a35c;
+}
+
+.restaurant-table-card.occupied {
+    border-top: 3px solid #e85b22;
+}
+
+
+/* CARD TOP */
+
+.table-card-top {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.table-number {
+    color: #30343a;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    margin-bottom: 4px;
+}
+
+.table-location {
+    color: #92979f;
+
+    font-size: 9px;
+}
+
+
+/* STATUS */
+
+.table-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 5px 8px;
+
+    border-radius: 20px;
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+.table-status.available {
+    background: #eef9f1;
+
+    color: #3d8c51;
+}
+
+.table-status.occupied {
+    background: #fff1eb;
+
+    color: #d85822;
+}
+
+
+/* TABLE VISUAL */
+
+.table-visual {
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 10px 0;
+}
+
+.table-shape {
+    width: 80px;
+    height: 45px;
+
+    border: 3px solid #d7dadd;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    color: #8a9098;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.table-shape::before,
+.table-shape::after {
+    content: "";
+
+    position: absolute;
+
+    width: 26px;
+    height: 8px;
+
+    border: 2px solid #d7dadd;
+
+    border-radius: 5px;
+}
+
+.table-shape::before {
+    left: -33px;
+}
+
+.table-shape::after {
+    right: -33px;
+}
+
+
+/* CARD INFO */
+
+.table-card-info {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding-top: 10px;
+
+    border-top: 1px solid #f0f1f2;
+}
+
+.table-capacity {
+    color: #777d85;
+
+    font-size: 9px;
+}
+
+.table-capacity strong {
+    color: #4d535a;
+
+    font-size: 10px;
+}
+
+
+/* CARD ACTIONS */
+
+.table-card-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 10px;
+}
+
+.table-action {
+    flex: 1;
+
+    height: 30px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+.table-action.edit {
+    border: 1px solid #dfe2e6;
+
+    background: #ffffff;
+
+    color: #555b63;
+}
+
+.table-action.edit:hover {
+    border-color: #e85b22;
+
+    color: #e85b22;
+}
+
+.table-action.delete {
+    border: 1px solid #f0d9d2;
+
+    background: #fff8f5;
+
+    color: #d85822;
+}
+
+.table-action.delete:hover {
+    background: #fff0ea;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.tables-empty {
+    min-height: 330px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+}
+
+.tables-empty.hidden {
+    display: none;
+}
+
+.tables-empty-icon {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    background: #f5f6f8;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+
+    margin-bottom: 15px;
+}
+
+.tables-empty h3 {
+    color: #444a52;
+
+    font-size: 15px;
+
+    margin-bottom: 6px;
+}
+
+.tables-empty p {
+    color: #8b9199;
+
+    font-size: 10px;
+
+    margin-bottom: 18px;
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.table-modal {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(20, 24, 30, 0.55);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 1000;
+}
+
+.table-modal.show {
+    display: flex;
+}
+
+.table-modal-box {
+    width: 100%;
+
+    max-width: 470px;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   MODAL HEADER
+========================================== */
+
+.table-modal-header {
+    padding: 20px;
+
+    border-bottom: 1px solid #eeeeee;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+}
+
+.table-modal-header h2 {
+    color: #30343a;
+
+    font-size: 18px;
+
+    margin-bottom: 5px;
+}
+
+.table-modal-header p {
+    color: #8b9199;
+
+    font-size: 10px;
+}
+
+.modal-close {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    background: #f4f5f6;
+
+    border-radius: 8px;
+
+    font-size: 20px;
+
+    color: #555b63;
+
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    background: #eeeeee;
+}
+
+
+/* ==========================================
+   FORM
+========================================== */
+
+.table-form {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+
+    color: #4b5158;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    border: 1px solid #dfe2e6;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #444a52;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    padding: 10px 11px;
+}
+
+.form-group input,
+.form-group select {
+    height: 38px;
+}
+
+.form-group textarea {
+    resize: vertical;
+
+    min-height: 75px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #e85b22;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(232, 91, 34, 0.08);
+}
+
+
+/* ==========================================
+   FORM BUTTONS
+========================================== */
+
+.table-form-buttons,
+.delete-buttons {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 5px;
+}
+
+.cancel-button,
+.save-table-button,
+.delete-button {
+    height: 38px;
+
+    border-radius: 7px;
+
+    padding: 0 16px;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.cancel-button {
+    border: 1px solid #dfe2e6;
+
+    background: #ffffff;
+
+    color: #555b63;
+}
+
+.cancel-button:hover {
+    background: #f7f7f7;
+}
+
+.save-table-button {
+    border: none;
+
+    background: #e85b22;
+
+    color: #ffffff;
+}
+
+.save-table-button:hover {
+    background: #d94e18;
+}
+
+
+/* ==========================================
+   DELETE MODAL
+========================================== */
+
+.delete-modal-box {
+    width: 100%;
+
+    max-width: 400px;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    padding: 30px;
+
+    text-align: center;
+}
+
+.delete-icon {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 50%;
+
+    background: #fff0ea;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 23px;
+
+    margin: 0 auto 15px;
+}
+
+.delete-modal-box h2 {
+    color: #343940;
+
+    font-size: 17px;
+
+    margin-bottom: 7px;
+}
+
+.delete-modal-box p {
+    color: #858b94;
+
+    font-size: 10px;
+
+    margin-bottom: 20px;
+}
+
+.delete-buttons {
+    justify-content: center;
+}
+
+.delete-button {
+    border: none;
+
+    background: #d95320;
+
+    color: #ffffff;
+}
+
+.delete-button:hover {
+    background: #c74718;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1200px) {
+
+    .tables-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 950px) {
+
+    .table-stats {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .tables-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .tables-content {
+        padding: 20px;
+    }
+
+    .tables-toolbar {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .add-table-button {
+        width: 100%;
+    }
+
+    .tables-filter-bar {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .table-search {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .tables-content {
+        padding: 12px;
+    }
+
+    .table-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .tables-grid {
+        grid-template-columns: 1fr;
+
+        padding: 12px;
+    }
+
+    .table-filter-tabs {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    .table-filter {
+        flex: 1;
+    }
+
+}

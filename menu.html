@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestaurantPro - Menu Management</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="menu.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">🍽️</div>
+
+            <div>
+                <h2>RestaurantPro</h2>
+                <span>Restaurant Management</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+   <a href="index.html" class="menu-item">
+    <span>🏠</span>
+    <span>Dashboard</span>
+</a>
+<a href="pos.html" class="menu-item">
+    <span>🧾</span>
+    <span>POS / Billing</span>
+</a>
+<a href="orders.html" class="menu-item">
+    <span>📋</span>
+    <span>Orders</span>
+</a>
+
+  <a href="tables.html" class="menu-item">
+    <span>🪑</span>
+    <span>Tables</span>
+</a>
+   <a href="kitchen.html" class="menu-item">
+    <span>👨‍🍳</span>
+    <span>Kitchen</span>
+</a>
+
+            <a href="menu.html" class="menu-item active">
+                <span>🍔</span>
+                <span>Menu</span>
+            </a>
+
+      <a href="inventory.html" class="menu-item">
+    <span>📦</span>
+    <span>Inventory</span>
+</a>
+
+      <a href="customers.html" class="menu-item">
+    <span>👥</span>
+    <span>Customers</span>
+</a>
+
+ <a href="expenses.html" class="menu-item">
+    <span>💰</span>
+    <span>Expenses</span>
+</a>
+
+<a href="reports.html" class="menu-item">
+    <span>📊</span>
+    <span>Reports</span>
+</a>
+<a href="settings.html" class="menu-item">
+    <span>⚙️</span>
+    <span>Settings</span>
+</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <strong>RestaurantPro</strong>
+            <small>Version 1.0</small>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="page-header">
+
+            <div>
+                <h1>Menu Management</h1>
+
+                <p>
+                    Create and manage your restaurant menu.
+                </p>
+            </div>
+
+            <div class="header-user">
+
+                <span class="notification">🔔</span>
+
+                <div class="user-avatar">
+                    RO
+                </div>
+
+                <div class="user-info">
+                    <strong>Restaurant Owner</strong>
+                    <span>Administrator</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- MENU CONTENT -->
+        <section class="menu-content">
+
+            <!-- TITLE -->
+            <div class="menu-page-title">
+
+                <div>
+                    <h2>Food Menu</h2>
+
+                    <p>
+                        Add categories and food items according
+                        to your restaurant.
+                    </p>
+                </div>
+
+                <div class="menu-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="openCategoryModal()">
+
+                        + Add Category
+
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="openFoodModal()">
+
+                        + Add Food Item
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SEARCH -->
+            <div class="menu-search-box">
+
+                <div class="search-input-wrapper">
+
+                    <span>🔍</span>
+
+                    <input
+                        type="text"
+                        id="menuSearch"
+                        placeholder="Search food item..."
+                    >
+
+                </div>
+
+
+                <select id="categoryFilter">
+
+                    <option value="all">
+                        All Categories
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- CATEGORIES -->
+            <section class="menu-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h2>Categories</h2>
+
+                        <p>
+                            Create your own food categories.
+                        </p>
+                    </div>
+
+                    <span
+                        id="categoryCount"
+                        class="item-count">
+                        0 Categories
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="categoryContainer"
+                    class="category-grid">
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOD ITEMS -->
+            <section class="menu-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h2>Food Items</h2>
+
+                        <p>
+                            Manage your restaurant food items.
+                        </p>
+                    </div>
+
+                    <span
+                        id="foodItemCount"
+                        class="item-count">
+                        0 Items
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="foodContainer"
+                    class="food-grid">
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==============================
+         CATEGORY MODAL
+    =============================== -->
+
+    <div
+        id="categoryModal"
+        class="modal">
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2 id="categoryModalTitle">
+                        Add Category
+                    </h2>
+
+                    <p>
+                        Create a category for your menu.
+                    </p>
+                </div>
+
+                <button
+                    class="modal-close"
+                    onclick="closeCategoryModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Category Name
+                </label>
+
+                <input
+                    type="text"
+                    id="categoryName"
+                    placeholder="Example: Karahi"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Category Icon
+                </label>
+
+                <input
+                    type="text"
+                    id="categoryIcon"
+                    placeholder="🍲"
+                >
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="closeCategoryModal()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveCategory()">
+
+                    Save Category
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================
+         FOOD MODAL
+    =============================== -->
+
+    <div
+        id="foodModal"
+        class="modal">
+
+        <div class="modal-box food-modal-box">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2 id="foodModalTitle">
+                        Add Food Item
+                    </h2>
+
+                    <p>
+                        Add any food item and its prices.
+                    </p>
+                </div>
+
+                <button
+                    class="modal-close"
+                    onclick="closeFoodModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <!-- FOOD NAME -->
+            <div class="form-group">
+
+                <label>
+                    Food Item Name
+                </label>
+
+                <input
+                    type="text"
+                    id="foodName"
+                    placeholder="Example: Chicken Karahi"
+                >
+
+            </div>
+
+
+            <!-- CATEGORY -->
+            <div class="form-group">
+
+                <label>
+                    Category
+                </label>
+
+                <select id="foodCategory">
+
+                </select>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="foodDescription"
+                    placeholder="Example: Traditional Pakistani Chicken Karahi">
+                </textarea>
+
+            </div>
+
+
+            <!-- PRICE OPTIONS -->
+            <div class="price-options-header">
+
+                <div>
+                    <h3>
+                        Price Options
+                    </h3>
+
+                    <p>
+                        Add sizes, quantities or variants.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="addPriceOption()">
+
+                    + Add Option
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="priceOptionsContainer"
+                class="price-options-container">
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="closeFoodModal()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveFoodItem()">
+
+                    Save Food Item
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="menu.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,557 @@
+/* ==========================================
+   RESTAURANTPRO - CUSTOMERS CSS
+========================================== */
+
+.customers-content {
+    padding: 25px 35px;
+}
+
+
+/* ==========================================
+   STATS
+========================================== */
+
+.customer-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.customer-stat-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.customer-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fff4ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.customer-stat-card span {
+    display: block;
+    color: #858b94;
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.customer-stat-card strong {
+    display: block;
+    color: #30343a;
+    font-size: 18px;
+}
+
+
+/* ==========================================
+   MAIN PANEL
+========================================== */
+
+.customers-panel {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   TOOLBAR
+========================================== */
+
+.customers-toolbar {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.customers-toolbar h2 {
+    color: #30343a;
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.customers-toolbar p {
+    color: #858b94;
+    font-size: 10px;
+}
+
+.add-customer-button {
+    height: 38px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 7px;
+    background: #e85b22;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.add-customer-button:hover {
+    background: #d94e18;
+}
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.customers-search-bar {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.customers-search {
+    height: 36px;
+    width: 320px;
+    border: 1px solid #dfe2e6;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.customers-search span {
+    font-size: 13px;
+    margin-right: 7px;
+}
+
+.customers-search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.customers-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.customers-table {
+    width: 100%;
+    min-width: 750px;
+    border-collapse: collapse;
+}
+
+.customers-table th {
+    background: #fafafa;
+    color: #777d85;
+    text-align: left;
+    padding: 13px 15px;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 9px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.customers-table td {
+    padding: 14px 15px;
+    border-bottom: 1px solid #f0f1f2;
+    color: #555b63;
+    font-size: 9px;
+    vertical-align: middle;
+}
+
+.customers-table tbody tr:hover {
+    background: #fcfcfc;
+}
+
+
+/* ==========================================
+   CUSTOMER NAME
+========================================== */
+
+.customer-name {
+    color: #30343a;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.customer-address {
+    color: #999fa6;
+    font-size: 8px;
+    margin-top: 3px;
+}
+
+
+/* ==========================================
+   PHONE
+========================================== */
+
+.customer-phone {
+    color: #555b63;
+    font-size: 9px;
+}
+
+
+/* ==========================================
+   ORDER COUNT
+========================================== */
+
+.customer-order-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 25px;
+    height: 25px;
+    padding: 0 6px;
+    border-radius: 20px;
+    background: #fff1e9;
+    color: #e85b22;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   SPENDING
+========================================== */
+
+.customer-spending {
+    color: #30343a;
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   LAST ORDER
+========================================== */
+
+.customer-last-order {
+    color: #858b94;
+    font-size: 9px;
+}
+
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.customer-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.customer-action-button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #dfe2e6;
+    border-radius: 6px;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.customer-action-button:hover {
+    border-color: #e85b22;
+}
+
+.customer-action-button.delete:hover {
+    border-color: #d9534f;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.customers-empty {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.customers-empty.hidden {
+    display: none;
+}
+
+.customers-empty-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #f5f6f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.customers-empty h3 {
+    color: #444a52;
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.customers-empty p {
+    color: #8b9199;
+    font-size: 10px;
+    margin-bottom: 15px;
+}
+
+.customers-empty button {
+    height: 35px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 7px;
+    background: #e85b22;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.customer-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.customer-modal.show {
+    display: flex;
+}
+
+.customer-modal-box {
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.customer-modal-header {
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.customer-modal-header h2 {
+    color: #30343a;
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.customer-modal-header p {
+    color: #858b94;
+    font-size: 10px;
+}
+
+.customer-modal-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    background: #f5f6f8;
+    color: #555b63;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.customer-modal-close:hover {
+    background: #eeeeee;
+}
+
+
+/* ==========================================
+   FORM
+========================================== */
+
+#customerForm {
+    padding: 20px;
+}
+
+.customer-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.customer-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.customer-form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.customer-form-group label {
+    color: #555b63;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.customer-form-group input,
+.customer-form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    border: 1px solid #dfe2e6;
+    border-radius: 7px;
+    outline: none;
+    background: #ffffff;
+    color: #444a52;
+    font-size: 10px;
+    font-family: inherit;
+}
+
+.customer-form-group input {
+    height: 38px;
+}
+
+.customer-form-group textarea {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    resize: vertical;
+}
+
+.customer-form-group input:focus,
+.customer-form-group textarea:focus {
+    border-color: #e85b22;
+}
+
+
+/* ==========================================
+   MODAL ACTIONS
+========================================== */
+
+.customer-modal-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eeeeee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.customer-cancel-button {
+    height: 36px;
+    padding: 0 15px;
+    border: 1px solid #dfe2e6;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #555b63;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.customer-cancel-button:hover {
+    background: #f7f7f7;
+}
+
+.customer-save-button {
+    height: 36px;
+    padding: 0 17px;
+    border: none;
+    border-radius: 7px;
+    background: #e85b22;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.customer-save-button:hover {
+    background: #d94e18;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .customer-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .customers-content {
+        padding: 20px;
+    }
+
+    .customers-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .add-customer-button {
+        width: 100%;
+    }
+
+    .customers-search {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .customers-content {
+        padding: 12px;
+    }
+
+    .customer-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .customer-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .customer-form-group.full-width {
+        grid-column: auto;
+    }
+
+    .customer-modal {
+        padding: 10px;
+    }
+
+}

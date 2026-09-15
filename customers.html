@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestaurantPro - Customers</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="customers.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🍽️
+            </div>
+
+            <div>
+                <h2>RestaurantPro</h2>
+                <span>Restaurant Management</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html" class="menu-item">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="pos.html" class="menu-item">
+                <span>🧾</span>
+                <span>POS / Billing</span>
+            </a>
+
+            <a href="orders.html" class="menu-item">
+                <span>📋</span>
+                <span>Orders</span>
+            </a>
+
+            <a href="tables.html" class="menu-item">
+                <span>🪑</span>
+                <span>Tables</span>
+            </a>
+
+            <a href="kitchen.html" class="menu-item">
+                <span>👨‍🍳</span>
+                <span>Kitchen</span>
+            </a>
+
+            <a href="menu.html" class="menu-item">
+                <span>🍔</span>
+                <span>Menu</span>
+            </a>
+
+            <a href="inventory.html" class="menu-item">
+                <span>📦</span>
+                <span>Inventory</span>
+            </a>
+<a href="customers.html" class="menu-item">
+    <span>👥</span>
+    <span>Customers</span>
+</a>
+
+   <a href="expenses.html" class="menu-item">
+    <span>💰</span>
+    <span>Expenses</span>
+</a>
+
+      <a href="reports.html" class="menu-item">
+    <span>📊</span>
+    <span>Reports</span>
+</a>
+
+  <a href="settings.html" class="menu-item">
+    <span>⚙️</span>
+    <span>Settings</span>
+</a>
+        </nav>
+
+
+        <div class="sidebar-footer">
+            <strong>RestaurantPro</strong>
+            <small>Version 1.0</small>
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="page-header">
+
+            <div>
+
+                <h1>Customers</h1>
+
+                <p>
+                    Manage your restaurant customers and their information.
+                </p>
+
+            </div>
+
+
+            <div class="header-user">
+
+                <span class="notification">
+                    🔔
+                </span>
+
+                <div class="user-avatar">
+                    RO
+                </div>
+
+                <div class="user-info">
+
+                    <strong>
+                        Restaurant Owner
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CUSTOMERS CONTENT -->
+        <section class="customers-content">
+
+
+            <!-- STATS -->
+            <div class="customer-stats">
+
+
+                <div class="customer-stat-card">
+
+                    <div class="customer-stat-icon">
+                        👥
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Customers
+                        </span>
+
+                        <strong id="totalCustomers">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-stat-card">
+
+                    <div class="customer-stat-icon">
+                        🆕
+                    </div>
+
+                    <div>
+
+                        <span>
+                            New Customers
+                        </span>
+
+                        <strong id="newCustomers">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-stat-card">
+
+                    <div class="customer-stat-icon">
+                        🧾
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Orders
+                        </span>
+
+                        <strong id="customerOrders">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-stat-card">
+
+                    <div class="customer-stat-icon">
+                        💰
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Spending
+                        </span>
+
+                        <strong id="customerSpending">
+                            Rs. 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- MAIN PANEL -->
+            <div class="customers-panel">
+
+
+                <!-- TOOLBAR -->
+                <div class="customers-toolbar">
+
+
+                    <div>
+
+                        <h2>
+                            Customer List
+                        </h2>
+
+                        <p>
+                            Add and manage your restaurant customers.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="add-customer-button"
+                        onclick="openCustomerModal()"
+                    >
+                        + Add Customer
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- SEARCH -->
+                <div class="customers-search-bar">
+
+                    <div class="customers-search">
+
+                        <span>
+                            🔍
+                        </span>
+
+                        <input
+                            type="text"
+                            id="customerSearch"
+                            placeholder="Search by name or phone..."
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TABLE -->
+                <div class="customers-table-wrapper">
+
+                    <table class="customers-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Customer
+                                </th>
+
+                                <th>
+                                    Phone
+                                </th>
+
+                                <th>
+                                    Orders
+                                </th>
+
+                                <th>
+                                    Total Spent
+                                </th>
+
+                                <th>
+                                    Last Order
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="customersTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- EMPTY STATE -->
+                <div
+                    id="customersEmpty"
+                    class="customers-empty"
+                >
+
+                    <div class="customers-empty-icon">
+                        👥
+                    </div>
+
+                    <h3>
+                        No Customers Yet
+                    </h3>
+
+                    <p>
+                        Add your first customer to start building your customer list.
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="openCustomerModal()"
+                    >
+                        + Add Customer
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ADD / EDIT CUSTOMER MODAL -->
+    <div
+        id="customerModal"
+        class="customer-modal"
+    >
+
+        <div class="customer-modal-box">
+
+
+            <div class="customer-modal-header">
+
+                <div>
+
+                    <h2 id="customerModalTitle">
+                        Add Customer
+                    </h2>
+
+                    <p>
+                        Enter customer information.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="customer-modal-close"
+                    onclick="closeCustomerModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <form
+                id="customerForm"
+                onsubmit="saveCustomer(event)"
+            >
+
+
+                <div class="customer-form-grid">
+
+
+                    <div class="customer-form-group">
+
+                        <label for="customerName">
+                            Customer Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="customerName"
+                            placeholder="e.g. Ali Khan"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="customer-form-group">
+
+                        <label for="customerPhone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="customerPhone"
+                            placeholder="e.g. 03001234567"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="customer-form-group full-width">
+
+                        <label for="customerAddress">
+                            Address
+                        </label>
+
+                        <input
+                            type="text"
+                            id="customerAddress"
+                            placeholder="Customer address"
+                        >
+
+                    </div>
+
+
+                    <div class="customer-form-group full-width">
+
+                        <label for="customerNotes">
+                            Notes
+                        </label>
+
+                        <textarea
+                            id="customerNotes"
+                            rows="3"
+                            placeholder="Optional notes..."
+                        ></textarea>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="customer-modal-actions">
+
+                    <button
+                        type="button"
+                        class="customer-cancel-button"
+                        onclick="closeCustomerModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="customer-save-button"
+                    >
+                        Save Customer
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="customers.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>
