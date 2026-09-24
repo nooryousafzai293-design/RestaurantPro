@@ -725,3 +725,32 @@ body {
         justify-content: center;
     }
 }
+@media (max-width: 800px) {
+
+    .sidebar {
+        transition: width 0.25s ease;
+    }
+
+    .sidebar.mobile-open {
+        width: 260px;
+    }
+
+    .sidebar.mobile-open .brand {
+        justify-content: flex-start;
+        padding: 20px;
+    }
+
+    .sidebar.mobile-open .brand > div:last-child,
+    .sidebar.mobile-open .menu-item span:last-child {
+        display: inline;
+    }
+
+    .sidebar.mobile-open .brand-logo {
+        margin-right: 12px;
+    }
+
+    .sidebar.mobile-open .menu-item {
+        justify-content: flex-start;
+        padding: 0 15px;
+    }
+}
