@@ -1335,6 +1335,7 @@ kitchenStatus:
 
     saveOrders(orders);
 
+saveCustomerFromOrder(order);
 
     showOrderSuccess(
         order
@@ -2199,4 +2200,65 @@ document.addEventListener(
         }
 
     }
-);
+);function saveCustomerFromOrder(order) {
+
+    const name = String(order.customerName || "").trim();
+    const phone = String(order.customerPhone || "").trim();
+
+    if (!name && !phone) {
+        return;
+    }
+
+    const saved =
+        localStorage.getItem("restaurantpro_customers");
+
+    let customers = [];
+
+    try {
+        customers = saved
+            ? JSON.parse(saved)
+            : [];
+    } catch (error) {
+        customers = [];
+    }
+
+    const existingIndex = customers.findIndex(function (customer) {
+        return phone &&
+            String(customer.phone || "").trim() === phone;
+    });
+
+    if (existingIndex !== -1) {
+
+        customers[existingIndex].name =
+            name || customers[existingIndex].name;
+
+        customers[existingIndex].orders =
+            Number(customers[existingIndex].orders || 0) + 1;
+
+        customers[existingIndex].totalSpent =
+            Number(customers[existingIndex].totalSpent || 0) +
+            Number(order.grandTotal || 0);
+
+        customers[existingIndex].lastOrder =
+            order.date;
+
+    } else {
+
+        customers.push({
+            id: "customer_" + Date.now(),
+            name: name || "Walk-in Customer",
+            phone: phone,
+            address: "",
+            notes: "",
+            orders: 1,
+            totalSpent: Number(order.grandTotal || 0),
+            lastOrder: order.date,
+            createdAt: new Date().toISOString()
+        });
+    }
+
+    localStorage.setItem(
+        "restaurantpro_customers",
+        JSON.stringify(customers)
+    );
+}
