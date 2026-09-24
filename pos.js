@@ -2263,3 +2263,49 @@ document.addEventListener(
         JSON.stringify(customers)
     );
 }
+function loadCustomerPhoneList() {
+
+    const list =
+        document.getElementById("customerPhoneList");
+
+    if (!list) {
+        return;
+    }
+
+    const saved =
+        localStorage.getItem("restaurantpro_customers");
+
+    if (!saved) {
+        return;
+    }
+
+    let customers = [];
+
+    try {
+        customers = JSON.parse(saved) || [];
+    } catch (error) {
+        return;
+    }
+
+    list.innerHTML = "";
+
+    customers.forEach(function (customer) {
+
+        const phone =
+            String(customer.phone || "").trim();
+
+        if (!phone) {
+            return;
+        }
+
+        const option =
+            document.createElement("option");
+
+        option.value = phone;
+
+        option.label =
+            customer.name || "Customer";
+
+        list.appendChild(option);
+    });
+}
