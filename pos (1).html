@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RestaurantPro - POS / Billing</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="pos.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ==============================
+         SIDEBAR
+    =============================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🍽️
+            </div>
+
+            <div>
+
+                <h2>
+                    RestaurantPro
+                </h2>
+
+                <span>
+                    Restaurant Management
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+         <a href="index.html" class="menu-item">
+    <span>🏠</span>
+    <span>Dashboard</span>
+</a>
+
+            <a
+                href="pos.html"
+                class="menu-item active"
+            >
+                <span>🧾</span>
+                <span>POS / Billing</span>
+            </a>
+
+
+        <a href="orders.html" class="menu-item">
+    <span>📋</span>
+    <span>Orders</span>
+</a>
+
+      <a href="tables.html" class="menu-item">
+    <span>🪑</span>
+    <span>Tables</span>
+</a>
+
+    <a href="kitchen.html" class="menu-item">
+    <span>👨‍🍳</span>
+    <span>Kitchen</span>
+</a>
+
+
+           <a href="menu.html" class="menu-item">
+    <span>🍔</span>
+    <span>Menu</span>
+</a>
+
+<a href="inventory.html" class="menu-item">
+    <span>📦</span>
+    <span>Inventory</span>
+</a>
+
+<a href="customers.html" class="menu-item">
+    <span>👥</span>
+    <span>Customers</span>
+</a>
+
+
+<a href="expenses.html" class="menu-item">
+    <span>💰</span>
+    <span>Expenses</span>
+</a>
+
+
+<a href="reports.html" class="menu-item">
+    <span>📊</span>
+    <span>Reports</span>
+</a>
+
+<a href="settings.html" class="menu-item">
+    <span>⚙️</span>
+    <span>Settings</span>
+</a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <strong>
+                RestaurantPro
+            </strong>
+
+            <small>
+                Version 1.0
+            </small>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ==============================
+         MAIN
+    =============================== -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>
+                    POS / Billing
+                </h1>
+
+                <p>
+                    Create a new customer order.
+                </p>
+
+            </div>
+
+
+            <div class="header-user">
+
+                <span class="notification">
+                    🔔
+                </span>
+
+
+                <div class="user-avatar">
+                    RO
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        Restaurant Owner
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==============================
+             POS CONTENT
+        =============================== -->
+
+        <section class="pos-content">
+
+
+            <!-- ORDER INFORMATION -->
+
+            <div class="order-info-bar">
+
+
+                <div class="order-info-item">
+
+                    <label>
+                        Order Type
+                    </label>
+
+                    <select id="orderType">
+
+                        <option value="dine-in">
+                            Dine In
+                        </option>
+
+                        <option value="takeaway">
+                            Takeaway
+                        </option>
+
+                        <option value="delivery">
+                            Delivery
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    class="order-info-item"
+                    id="tableField"
+                >
+
+                    <label>
+                        Table
+                    </label>
+
+                    <input
+                        type="text"
+                        id="tableNumber"
+                        placeholder="Table 1"
+                    >
+
+                </div>
+
+
+                <div class="order-info-item">
+
+                    <label>
+                        Customer Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="customerName"
+                        placeholder="Optional"
+                    >
+
+                </div>
+
+
+                <div class="order-info-item">
+
+                    <label>
+                        Customer Phone
+                    </label>
+
+               <input
+                            type="text"
+                            id="customerPhone"
+                            list="customerPhoneList"
+                            placeholder="03XXXXXXXXX"
+                        >
+
+                        <datalist id="customerPhoneList"></datalist>
+
+                    </div>
+
+
+            </div>
+
+
+
+            <!-- POS GRID -->
+
+            <div class="pos-grid">
+
+
+                <!-- ==========================
+                     PRODUCTS
+                =========================== -->
+
+                <section class="products-panel">
+
+
+                    <div class="products-header">
+
+                        <div>
+
+                            <h2>
+                                Menu
+                            </h2>
+
+                            <p>
+                                Select food items to add
+                                to the order.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SEARCH -->
+
+                    <div class="pos-search">
+
+                        <span>
+                            🔍
+                        </span>
+
+                        <input
+                            type="text"
+                            id="posSearch"
+                            placeholder="Search food..."
+                        >
+
+                    </div>
+
+
+                    <!-- CATEGORIES -->
+
+                    <div
+                        id="posCategories"
+                        class="pos-categories"
+                    >
+
+                    </div>
+
+
+                    <!-- PRODUCTS -->
+
+                    <div
+                        id="posProducts"
+                        class="pos-products"
+                    >
+
+                    </div>
+
+
+                </section>
+
+
+
+                <!-- ==========================
+                     CART
+                =========================== -->
+
+                <section class="cart-panel">
+
+
+                    <div class="cart-header">
+
+                        <div>
+
+                            <h2>
+                                Current Order
+                            </h2>
+
+                            <p id="cartItemCount">
+                                0 items
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="clear-cart"
+                            onclick="clearCart()"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- CART ITEMS -->
+
+                    <div
+                        id="cartItems"
+                        class="cart-items"
+                    >
+
+                    </div>
+
+
+
+                    <!-- BILL SUMMARY -->
+
+                    <div class="bill-summary">
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <strong id="subtotal">
+                                Rs. 0
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="discount-row">
+
+                            <div>
+
+                                <span>
+                                    Discount
+                                </span>
+
+                            </div>
+
+
+                            <div class="discount-input">
+
+                                <input
+                                    type="number"
+                                    id="discount"
+                                    value="0"
+                                    min="0"
+                                    step="1"
+                                >
+
+                                <span>
+                                    Rs.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="tax-row">
+
+                            <div>
+
+                                <span>
+                                    Tax
+                                </span>
+
+                            </div>
+
+
+                            <div class="tax-input">
+
+                                <input
+                                    type="number"
+                                    id="taxRate"
+                                    value="0"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                >
+
+                                <span>
+                                    %
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Tax Amount
+                            </span>
+
+                            <strong id="taxAmount">
+                                Rs. 0
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="grand-total">
+
+                            <span>
+                                Grand Total
+                            </span>
+
+                            <strong id="grandTotal">
+                                Rs. 0
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- PAYMENT -->
+
+                    <div class="payment-section">
+
+
+                        <h3>
+                            Payment Method
+                        </h3>
+
+
+                        <div class="payment-methods">
+
+
+                            <button
+                                type="button"
+                                class="payment-method active"
+                                data-payment="cash"
+                            >
+                                💵
+                                <span>
+                                    Cash
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="payment-method"
+                                data-payment="card"
+                            >
+                                💳
+                                <span>
+                                    Card
+                                </span>
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="payment-method"
+                                data-payment="online"
+                            >
+                                📱
+                                <span>
+                                    Online
+                                </span>
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- COMPLETE BUTTON -->
+
+                    <button
+                        type="button"
+                        class="complete-order"
+                        onclick="completeOrder()"
+                    >
+
+                        Complete Order
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="print-preview"
+                        onclick="printCurrentBill()"
+                    >
+
+                        🖨️ Print Bill
+
+                    </button>
+
+
+                </section>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ==============================
+         PRICE OPTION MODAL
+    =============================== -->
+
+    <div
+        id="priceModal"
+        class="modal"
+    >
+
+        <div class="price-modal-box">
+
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h2>
+                        Select Option
+                    </h2>
+
+                    <p id="priceModalFoodName">
+                        Select size or quantity.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closePriceModal()"
+                >
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="priceOptions"
+                class="price-options"
+            >
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="pos.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>
