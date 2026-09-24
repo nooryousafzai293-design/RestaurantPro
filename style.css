@@ -704,3 +704,24 @@ body {
     background: #eeeeee;
     color: #555555;
 }
+/* MOBILE MENU BUTTON */
+
+.mobile-menu-button {
+    display: none;
+    border: none;
+    background: #fff0e8;
+    color: #e85b22;
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+@media (max-width: 800px) {
+    .mobile-menu-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
