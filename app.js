@@ -571,4 +571,12 @@ function updateDashboardPopularItems() {
 
         }).join("");
 
+}function toggleMobileMenu() {
+    const sidebar = document.querySelector(".sidebar");
+
+    if (!sidebar) {
+        return;
+    }
+
+    sidebar.classList.toggle("mobile-open");
 }
