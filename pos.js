@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 }
 loadSettingsTaxRate();
+   loadCustomerPhoneList();
 });
 
 
