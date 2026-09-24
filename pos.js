@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 loadSettingsTaxRate();
    loadCustomerPhoneList();
+   setupCustomerPhoneLookup();
 });
 
 
@@ -2307,5 +2308,62 @@ function loadCustomerPhoneList() {
             customer.name || "Customer";
 
         list.appendChild(option);
+    });
+}
+function setupCustomerPhoneLookup() {
+
+    const phoneInput =
+        document.getElementById("customerPhone");
+
+    const nameInput =
+        document.getElementById("customerName");
+
+    if (!phoneInput || !nameInput) {
+        return;
+    }
+
+    phoneInput.addEventListener("change", function () {
+
+        const phone =
+            phoneInput.value.trim();
+
+        if (!phone) {
+            return;
+        }
+
+        const saved =
+            localStorage.getItem(
+                "restaurantpro_customers"
+            );
+
+        if (!saved) {
+            return;
+        }
+
+        let customers = [];
+
+        try {
+            customers =
+                JSON.parse(saved) || [];
+        } catch (error) {
+            return;
+        }
+
+        const customer =
+            customers.find(function (item) {
+
+                return String(
+                    item.phone || ""
+                ).trim() === phone;
+
+            });
+
+        if (customer) {
+
+            nameInput.value =
+                customer.name || "";
+
+        }
+
     });
 }
