@@ -435,6 +435,199 @@
         }
 
     </script>
+<script>
+    const RESTAURANT_KEY =
+        "restaurantpro_admin_restaurants";
 
+    function getRestaurants() {
+        const saved =
+            localStorage.getItem(RESTAURANT_KEY);
+
+        if (!saved) {
+            return [];
+        }
+
+        try {
+            return JSON.parse(saved) || [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveRestaurants(restaurants) {
+        localStorage.setItem(
+            RESTAURANT_KEY,
+            JSON.stringify(restaurants)
+        );
+    }
+
+    const restaurantForm =
+        document.getElementById("restaurantForm");
+
+    if (restaurantForm) {
+
+        restaurantForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                const restaurant = {
+                    id:
+                        "restaurant_" +
+                        Date.now(),
+
+                    restaurantName:
+                        document
+                            .getElementById(
+                                "restaurantName"
+                            )
+                            .value
+                            .trim(),
+
+                    ownerName:
+                        document
+                            .getElementById(
+                                "ownerName"
+                            )
+                            .value
+                            .trim(),
+
+                    username:
+                        document
+                            .getElementById(
+                                "restaurantUsername"
+                            )
+                            .value
+                            .trim(),
+
+                    password:
+                        document
+                            .getElementById(
+                                "restaurantPassword"
+                            )
+                            .value,
+
+                    monthlyFee:
+                        Number(
+                            document
+                                .getElementById(
+                                    "monthlyFee"
+                                )
+                                .value
+                        ) || 0,
+
+                    subscriptionStart:
+                        document
+                            .getElementById(
+                                "subscriptionStart"
+                            )
+                            .value,
+
+                    subscriptionExpiry:
+                        document
+                            .getElementById(
+                                "subscriptionExpiry"
+                            )
+                            .value,
+
+                    status: "active",
+
+                    paymentStatus: "unpaid",
+
+                    createdAt:
+                        new Date().toISOString()
+                };
+
+                const restaurants =
+                    getRestaurants();
+
+                restaurants.push(
+                    restaurant
+                );
+
+                saveRestaurants(
+                    restaurants
+                );
+
+                alert(
+                    "Restaurant created successfully."
+                );
+
+                restaurantForm.reset();
+
+                updateRestaurantStats();
+            }
+        );
+    }
+
+    function updateRestaurantStats() {
+
+        const restaurants =
+            getRestaurants();
+
+        const total =
+            restaurants.length;
+
+        const active =
+            restaurants.filter(
+                function (restaurant) {
+                    return restaurant.status === "active";
+                }
+            ).length;
+
+        const blocked =
+            restaurants.filter(
+                function (restaurant) {
+                    return restaurant.status === "blocked";
+                }
+            ).length;
+
+        const unpaid =
+            restaurants.filter(
+                function (restaurant) {
+                    return restaurant.paymentStatus === "unpaid";
+                }
+            ).length;
+
+        const totalElement =
+            document.getElementById(
+                "totalRestaurants"
+            );
+
+        const activeElement =
+            document.getElementById(
+                "activeRestaurants"
+            );
+
+        const blockedElement =
+            document.getElementById(
+                "blockedRestaurants"
+            );
+
+        const unpaidElement =
+            document.getElementById(
+                "unpaidRestaurants"
+            );
+
+        if (totalElement) {
+            totalElement.textContent = total;
+        }
+
+        if (activeElement) {
+            activeElement.textContent = active;
+        }
+
+        if (blockedElement) {
+            blockedElement.textContent = blocked;
+        }
+
+        if (unpaidElement) {
+            unpaidElement.textContent = unpaid;
+        }
+    }
+
+    updateRestaurantStats();
+</script>
 </body>
 </html>
