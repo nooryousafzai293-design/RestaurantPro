@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestaurantPro - Super Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f7f9;
+            color: #222;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 18px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            font-size: 30px;
+        }
+
+        .brand h1 {
+            font-size: 21px;
+        }
+
+        .brand p {
+            color: #777;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #ffe9e4;
+            color: #d94f19;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .page-title p {
+            color: #777;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .stat-card span {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .stat-card h3 {
+            font-size: 28px;
+            margin-top: 10px;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header h3 {
+            font-size: 19px;
+        }
+
+        .add-btn {
+            border: none;
+            background: #e85b22;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+            color: #777;
+        }
+
+        .empty-state .icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 800px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .header {
+                padding: 15px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                gap: 10px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="brand">
+            <div class="brand-icon">🍽️</div>
+
+            <div>
+                <h1>RestaurantPro</h1>
+                <p>Super Admin Panel</p>
+            </div>
+        </div>
+
+        <button
+            class="logout-btn"
+            onclick="logoutAdmin()"
+        >
+            Logout
+        </button>
+
+    </header>
+
+    <main class="container">
+
+        <div class="page-title">
+            <h2>Dashboard</h2>
+            <p>Manage your RestaurantPro customers and subscriptions.</p>
+        </div>
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <span>Total Restaurants</span>
+                <h3 id="totalRestaurants">0</h3>
+            </div>
+
+            <div class="stat-card">
+                <span>Active</span>
+                <h3 id="activeRestaurants">0</h3>
+            </div>
+
+            <div class="stat-card">
+                <span>Blocked</span>
+                <h3 id="blockedRestaurants">0</h3>
+            </div>
+
+            <div class="stat-card">
+                <span>Unpaid</span>
+                <h3 id="unpaidRestaurants">0</h3>
+            </div>
+
+        </section>
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h3>Restaurants</h3>
+
+                <button
+                    class="add-btn"
+                    onclick="alert('Restaurant creation will be added in the next step.')"
+                >
+                    + Add Restaurant
+                </button>
+
+            </div>
+
+            <div class="empty-state">
+
+                <div class="icon">🏪</div>
+
+                <h3>No restaurants added yet</h3>
+
+                <p>
+                    Your restaurant accounts will appear here.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        const adminLoggedIn =
+            localStorage.getItem(
+                "restaurantpro_admin_logged_in"
+            );
+
+        if (adminLoggedIn !== "true") {
+
+            window.location.href =
+                "admin-login.html";
+
+        }
+
+        function logoutAdmin() {
+
+            localStorage.removeItem(
+                "restaurantpro_admin_logged_in"
+            );
+
+            window.location.href =
+                "admin-login.html";
+
+        }
+
+    </script>
+
+</body>
+</html>
