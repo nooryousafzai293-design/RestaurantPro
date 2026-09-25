@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>RestaurantPro - Super Admin Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px;
+            padding: 35px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #e85b22;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #e85b22;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #d94f19;
+        }
+
+        .error {
+            display: none;
+            margin-bottom: 15px;
+            padding: 11px;
+            border-radius: 8px;
+            background: #ffe8e8;
+            color: #c62828;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <div class="logo">🍽️</div>
+
+        <h1>Super Admin</h1>
+
+        <p class="subtitle">
+            RestaurantPro Management
+        </p>
+
+        <div id="loginError" class="error">
+            Invalid username or password.
+        </div>
+
+        <form id="adminLoginForm">
+
+            <div class="form-group">
+                <label for="adminUsername">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="adminUsername"
+                    placeholder="Enter username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="adminPassword">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="adminPassword"
+                    placeholder="Enter password"
+                    required
+                >
+            </div>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <div class="footer">
+            RestaurantPro Super Admin
+        </div>
+
+    </div>
+
+    <script>
+        const ADMIN_USERNAME = "admin";
+        const ADMIN_PASSWORD = "admin123";
+
+        document
+            .getElementById("adminLoginForm")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                const username =
+                    document
+                        .getElementById("adminUsername")
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById("adminPassword")
+                        .value;
+
+                const error =
+                    document.getElementById("loginError");
+
+                if (
+                    username === ADMIN_USERNAME &&
+                    password === ADMIN_PASSWORD
+                ) {
+                    localStorage.setItem(
+                        "restaurantpro_admin_logged_in",
+                        "true"
+                    );
+
+                    window.location.href =
+                        "admin.html";
+
+                    return;
+                }
+
+                error.style.display = "block";
+            });
+    </script>
+
+</body>
+</html>
