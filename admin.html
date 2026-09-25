@@ -165,7 +165,66 @@
                 align-items: flex-start;
                 flex-direction: column;
             }
-        }
+        }.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #e85b22;
+}
+
+.form-actions {
+    padding: 0 20px 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.cancel-btn {
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #555;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+}
     </style>
 </head>
 
@@ -222,34 +281,131 @@
 
         </section>
 
-        <section class="section">
+<section class="section">
 
-            <div class="section-header">
+    <div class="section-header">
 
-                <h3>Restaurants</h3>
+        <h3>Add Restaurant</h3>
 
-                <button
-                    class="add-btn"
-                    onclick="alert('Restaurant creation will be added in the next step.')"
+    </div>
+
+    <form id="restaurantForm">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="restaurantName">
+                    Restaurant Name
+                </label>
+
+                <input
+                    type="text"
+                    id="restaurantName"
+                    placeholder="Restaurant name"
+                    required
                 >
-                    + Add Restaurant
-                </button>
-
             </div>
 
-            <div class="empty-state">
+            <div class="form-group">
+                <label for="ownerName">
+                    Owner Name
+                </label>
 
-                <div class="icon">🏪</div>
-
-                <h3>No restaurants added yet</h3>
-
-                <p>
-                    Your restaurant accounts will appear here.
-                </p>
-
+                <input
+                    type="text"
+                    id="ownerName"
+                    placeholder="Owner name"
+                    required
+                >
             </div>
 
-        </section>
+            <div class="form-group">
+                <label for="restaurantUsername">
+                    Login Username
+                </label>
+
+                <input
+                    type="text"
+                    id="restaurantUsername"
+                    placeholder="Username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="restaurantPassword">
+                    Login Password
+                </label>
+
+                <input
+                    type="password"
+                    id="restaurantPassword"
+                    placeholder="Password"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="monthlyFee">
+                    Monthly Fee (Rs.)
+                </label>
+
+                <input
+                    type="number"
+                    id="monthlyFee"
+                    placeholder="5000"
+                    min="0"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="subscriptionStart">
+                    Subscription Start
+                </label>
+
+                <input
+                    type="date"
+                    id="subscriptionStart"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="subscriptionExpiry">
+                    Subscription Expiry
+                </label>
+
+                <input
+                    type="date"
+                    id="subscriptionExpiry"
+                    required
+                >
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="add-btn"
+            >
+                Create Restaurant
+            </button>
+
+            <button
+                type="reset"
+                class="cancel-btn"
+            >
+                Clear
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
 
     </main>
 
