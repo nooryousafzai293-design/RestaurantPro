@@ -641,6 +641,48 @@
     }
 
     updateRestaurantStats();
+    function renderRestaurantList() {
+    const container =
+        document.getElementById("restaurantList");
+
+    if (!container) {
+        return;
+    }
+
+    const restaurants = getRestaurants();
+
+    if (restaurants.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="icon">🍽️</div>
+                <p>No restaurants added yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = restaurants.map(function (restaurant) {
+        return `
+            <div style="
+                padding: 18px 20px;
+                border-bottom: 1px solid #eee;
+            ">
+                <strong>${restaurant.restaurantName}</strong>
+                <div style="margin-top: 6px; color: #777;">
+                    Owner: ${restaurant.ownerName}
+                </div>
+                <div style="margin-top: 6px;">
+                    Status: ${restaurant.status}
+                </div>
+                <div style="margin-top: 6px;">
+                    Payment: ${restaurant.paymentStatus}
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+renderRestaurantList();
 </script>
 </body>
 </html>
