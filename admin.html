@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>RestaurantPro - Super Admin</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -105,6 +107,7 @@
             border-radius: 12px;
             border: 1px solid #eee;
             overflow: hidden;
+            margin-bottom: 30px;
         }
 
         .section-header {
@@ -119,14 +122,61 @@
             font-size: 19px;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #e85b22;
+        }
+
+        .form-actions {
+            padding: 0 20px 20px;
+            display: flex;
+            gap: 10px;
+        }
+
         .add-btn {
             border: none;
             background: #e85b22;
             color: white;
-            padding: 10px 16px;
+            padding: 11px 18px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+        }
+
+        .cancel-btn {
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #555;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         .empty-state {
@@ -140,13 +190,79 @@
             margin-bottom: 12px;
         }
 
+        .restaurant-item {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .restaurant-item:last-child {
+            border-bottom: none;
+        }
+
+        .restaurant-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .restaurant-detail {
+            margin-top: 6px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status-active {
+            color: #2e8b57;
+            font-weight: 700;
+        }
+
+        .status-blocked {
+            color: #d94f19;
+            font-weight: 700;
+        }
+
+        .payment-unpaid {
+            color: #d94f19;
+            font-weight: 600;
+        }
+
+        .payment-paid {
+            color: #2e8b57;
+            font-weight: 600;
+        }
+
+        .restaurant-actions {
+            margin-top: 14px;
+        }
+
+        .block-btn,
+        .unblock-btn {
+            border: none;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .block-btn {
+            background: #d94f19;
+        }
+
+        .unblock-btn {
+            background: #2e8b57;
+        }
+
         @media (max-width: 800px) {
+
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
+
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
+
             .header {
                 padding: 15px;
             }
@@ -160,579 +276,988 @@
                 grid-template-columns: 1fr;
             }
 
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
             .section-header {
                 gap: 10px;
                 align-items: flex-start;
                 flex-direction: column;
             }
-        }.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    padding: 20px;
-}
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
+            .brand h1 {
+                font-size: 18px;
+            }
 
-.form-group.full {
-    grid-column: 1 / -1;
-}
+        }
 
-.form-group label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-}
-
-.form-group input:focus {
-    border-color: #e85b22;
-}
-
-.form-actions {
-    padding: 0 20px 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.cancel-btn {
-    border: 1px solid #ddd;
-    background: #fff;
-    color: #555;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-@media (max-width: 600px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-group.full {
-        grid-column: auto;
-    }
-}
     </style>
 </head>
 
 <body>
 
-    <header class="header">
+<header class="header">
 
-        <div class="brand">
-            <div class="brand-icon">🍽️</div>
+    <div class="brand">
 
-            <div>
-                <h1>RestaurantPro</h1>
-                <p>Super Admin Panel</p>
-            </div>
+        <div class="brand-icon">
+            🍽️
         </div>
 
-        <button
-            class="logout-btn"
-            onclick="logoutAdmin()"
-        >
-            Logout
-        </button>
+        <div>
 
-    </header>
+            <h1>
+                RestaurantPro
+            </h1>
 
-    <main class="container">
+            <p>
+                Super Admin Panel
+            </p>
 
-        <div class="page-title">
-            <h2>Dashboard</h2>
-            <p>Manage your RestaurantPro customers and subscriptions.</p>
         </div>
-
-        <section class="stats">
-
-            <div class="stat-card">
-                <span>Total Restaurants</span>
-                <h3 id="totalRestaurants">0</h3>
-            </div>
-
-            <div class="stat-card">
-                <span>Active</span>
-                <h3 id="activeRestaurants">0</h3>
-            </div>
-
-            <div class="stat-card">
-                <span>Blocked</span>
-                <h3 id="blockedRestaurants">0</h3>
-            </div>
-
-            <div class="stat-card">
-                <span>Unpaid</span>
-                <h3 id="unpaidRestaurants">0</h3>
-            </div>
-
-        </section>
-
-<section class="section">
-
-    <div class="section-header">
-
-        <h3>Add Restaurant</h3>
 
     </div>
 
-    <form id="restaurantForm">
+    <button
+        class="logout-btn"
+        type="button"
+        onclick="logoutAdmin()"
+    >
+        Logout
+    </button>
 
-        <div class="form-grid">
+</header>
 
-            <div class="form-group">
-                <label for="restaurantName">
-                    Restaurant Name
-                </label>
 
-                <input
-                    type="text"
-                    id="restaurantName"
-                    placeholder="Restaurant name"
-                    required
-                >
-            </div>
+<main class="container">
 
-            <div class="form-group">
-                <label for="ownerName">
-                    Owner Name
-                </label>
+    <div class="page-title">
 
-                <input
-                    type="text"
-                    id="ownerName"
-                    placeholder="Owner name"
-                    required
-                >
-            </div>
+        <h2>
+            Dashboard
+        </h2>
 
-            <div class="form-group">
-                <label for="restaurantUsername">
-                    Login Username
-                </label>
+        <p>
+            Manage your RestaurantPro customers and subscriptions.
+        </p>
 
-                <input
-                    type="text"
-                    id="restaurantUsername"
-                    placeholder="Username"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="restaurantPassword">
-                    Login Password
-                </label>
-
-                <input
-                    type="password"
-                    id="restaurantPassword"
-                    placeholder="Password"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="monthlyFee">
-                    Monthly Fee (Rs.)
-                </label>
-
-                <input
-                    type="number"
-                    id="monthlyFee"
-                    placeholder="5000"
-                    min="0"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="subscriptionStart">
-                    Subscription Start
-                </label>
-
-                <input
-                    type="date"
-                    id="subscriptionStart"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="subscriptionExpiry">
-                    Subscription Expiry
-                </label>
-
-                <input
-                    type="date"
-                    id="subscriptionExpiry"
-                    required
-                >
-            </div>
-
-        </div>
-
-        <div class="form-actions">
-
-            <button
-                type="submit"
-                class="add-btn"
-            >
-                Create Restaurant
-            </button>
-
-            <button
-                type="reset"
-                class="cancel-btn"
-            >
-                Clear
-            </button>
-
-        </div>
-
-    </form>
-
-</section>
-<section class="section" style="margin-top: 30px;">
-
-    <div class="section-header">
-        <h3>Restaurants</h3>
     </div>
 
-    <div id="restaurantList">
-        <div class="empty-state">
-            <div class="icon">🍽️</div>
-            <p>No restaurants added yet.</p>
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <span>
+                Total Restaurants
+            </span>
+
+            <h3 id="totalRestaurants">
+                0
+            </h3>
+
         </div>
-    </div>
 
-</section>
-    </main>
 
-    <script>
+        <div class="stat-card">
 
-        const adminLoggedIn =
-            localStorage.getItem(
-                "restaurantpro_admin_logged_in"
-            );
+            <span>
+                Active
+            </span>
 
-        if (adminLoggedIn !== "true") {
+            <h3 id="activeRestaurants">
+                0
+            </h3>
 
-            window.location.href =
-                "admin-login.html";
+        </div>
 
-        }
 
-        function logoutAdmin() {
+        <div class="stat-card">
 
-            localStorage.removeItem(
-                "restaurantpro_admin_logged_in"
-            );
+            <span>
+                Blocked
+            </span>
 
-            window.location.href =
-                "admin-login.html";
+            <h3 id="blockedRestaurants">
+                0
+            </h3>
 
-        }
+        </div>
 
-    </script>
+
+        <div class="stat-card">
+
+            <span>
+                Unpaid
+            </span>
+
+            <h3 id="unpaidRestaurants">
+                0
+            </h3>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADD RESTAURANT -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Add Restaurant
+            </h3>
+
+        </div>
+
+
+        <form id="restaurantForm">
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label for="restaurantName">
+                        Restaurant Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="restaurantName"
+                        placeholder="Restaurant name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="ownerName">
+                        Owner Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="ownerName"
+                        placeholder="Owner name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="restaurantUsername">
+                        Login Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="restaurantUsername"
+                        placeholder="Username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="restaurantPassword">
+                        Login Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="restaurantPassword"
+                        placeholder="Password"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="monthlyFee">
+                        Monthly Fee (Rs.)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="monthlyFee"
+                        placeholder="5000"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="subscriptionStart">
+                        Subscription Start
+                    </label>
+
+                    <input
+                        type="date"
+                        id="subscriptionStart"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="subscriptionExpiry">
+                        Subscription Expiry
+                    </label>
+
+                    <input
+                        type="date"
+                        id="subscriptionExpiry"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="add-btn"
+                >
+                    Create Restaurant
+                </button>
+
+
+                <button
+                    type="reset"
+                    class="cancel-btn"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- RESTAURANT LIST -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h3>
+                Restaurants
+            </h3>
+
+        </div>
+
+
+        <div id="restaurantList">
+
+            <div class="empty-state">
+
+                <div class="icon">
+                    🍽️
+                </div>
+
+                <p>
+                    No restaurants added yet.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
 <script>
+
+    /* =========================
+       ADMIN LOGIN CHECK
+    ========================= */
+
+    const adminLoggedIn =
+        localStorage.getItem(
+            "restaurantpro_admin_logged_in"
+        );
+
+
+    if (adminLoggedIn !== "true") {
+
+        window.location.href =
+            "admin-login.html";
+
+    }
+
+
+    function logoutAdmin() {
+
+        localStorage.removeItem(
+            "restaurantpro_admin_logged_in"
+        );
+
+        window.location.href =
+            "admin-login.html";
+
+    }
+
+
+    /* =========================
+       RESTAURANT STORAGE
+    ========================= */
+
     const RESTAURANT_KEY =
         "restaurantpro_admin_restaurants";
 
+
     function getRestaurants() {
+
         const saved =
-            localStorage.getItem(RESTAURANT_KEY);
+            localStorage.getItem(
+                RESTAURANT_KEY
+            );
+
 
         if (!saved) {
+
             return [];
+
         }
+
 
         try {
-            return JSON.parse(saved) || [];
+
+            const restaurants =
+                JSON.parse(saved);
+
+            return Array.isArray(restaurants)
+                ? restaurants
+                : [];
+
         } catch (error) {
+
+            console.error(
+                "Could not read restaurants:",
+                error
+            );
+
             return [];
+
         }
+
     }
 
+
     function saveRestaurants(restaurants) {
+
         localStorage.setItem(
             RESTAURANT_KEY,
             JSON.stringify(restaurants)
         );
+
     }
 
-    const restaurantForm =
-        document.getElementById("restaurantForm");
 
-    if (restaurantForm) {
-
-        restaurantForm.addEventListener(
-            "submit",
-            function (event) {
-
-                event.preventDefault();
-
-                const restaurant = {
-                    id:
-                        "restaurant_" +
-                        Date.now(),
-
-                    restaurantName:
-                        document
-                            .getElementById(
-                                "restaurantName"
-                            )
-                            .value
-                            .trim(),
-
-                    ownerName:
-                        document
-                            .getElementById(
-                                "ownerName"
-                            )
-                            .value
-                            .trim(),
-
-                    username:
-                        document
-                            .getElementById(
-                                "restaurantUsername"
-                            )
-                            .value
-                            .trim(),
-
-                    password:
-                        document
-                            .getElementById(
-                                "restaurantPassword"
-                            )
-                            .value,
-
-                    monthlyFee:
-                        Number(
-                            document
-                                .getElementById(
-                                    "monthlyFee"
-                                )
-                                .value
-                        ) || 0,
-
-                    subscriptionStart:
-                        document
-                            .getElementById(
-                                "subscriptionStart"
-                            )
-                            .value,
-
-                    subscriptionExpiry:
-                        document
-                            .getElementById(
-                                "subscriptionExpiry"
-                            )
-                            .value,
-
-                    status: "active",
-
-                    paymentStatus: "unpaid",
-
-                    createdAt:
-                        new Date().toISOString()
-                };
-
-                const restaurants =
-                    getRestaurants();
-
-                restaurants.push(
-                    restaurant
-                );
-
-                saveRestaurants(
-                    restaurants
-                );
-
-                alert(
-                    "Restaurant created successfully."
-                );
-
-                restaurantForm.reset();
-
-                updateRestaurantStats();
-            }
-        );
-    }
+    /* =========================
+       UPDATE STATS
+    ========================= */
 
     function updateRestaurantStats() {
 
         const restaurants =
             getRestaurants();
 
+
         const total =
             restaurants.length;
+
 
         const active =
             restaurants.filter(
                 function (restaurant) {
+
                     return restaurant.status === "active";
+
                 }
             ).length;
+
 
         const blocked =
             restaurants.filter(
                 function (restaurant) {
+
                     return restaurant.status === "blocked";
+
                 }
             ).length;
+
 
         const unpaid =
             restaurants.filter(
                 function (restaurant) {
+
                     return restaurant.paymentStatus === "unpaid";
+
                 }
             ).length;
+
 
         const totalElement =
             document.getElementById(
                 "totalRestaurants"
             );
 
+
         const activeElement =
             document.getElementById(
                 "activeRestaurants"
             );
+
 
         const blockedElement =
             document.getElementById(
                 "blockedRestaurants"
             );
 
+
         const unpaidElement =
             document.getElementById(
                 "unpaidRestaurants"
             );
 
+
         if (totalElement) {
-            totalElement.textContent = total;
+
+            totalElement.textContent =
+                total;
+
         }
+
 
         if (activeElement) {
-            activeElement.textContent = active;
+
+            activeElement.textContent =
+                active;
+
         }
+
 
         if (blockedElement) {
-            blockedElement.textContent = blocked;
+
+            blockedElement.textContent =
+                blocked;
+
         }
+
 
         if (unpaidElement) {
-            unpaidElement.textContent = unpaid;
+
+            unpaidElement.textContent =
+                unpaid;
+
         }
+
     }
 
-    updateRestaurantStats();
-   function renderRestaurantList() {
-    const container =
-        document.getElementById("restaurantList");
 
-    if (!container) {
-        return;
+    /* =========================
+       RENDER RESTAURANT LIST
+    ========================= */
+
+    function renderRestaurantList() {
+
+        const container =
+            document.getElementById(
+                "restaurantList"
+            );
+
+
+        if (!container) {
+
+            return;
+
+        }
+
+
+        const restaurants =
+            getRestaurants();
+
+
+        if (restaurants.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty-state">
+
+                    <div class="icon">
+                        🍽️
+                    </div>
+
+                    <p>
+                        No restaurants added yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            restaurants.map(
+                function (restaurant) {
+
+
+                    const isBlocked =
+                        restaurant.status === "blocked";
+
+
+                    const statusClass =
+                        isBlocked
+                            ? "status-blocked"
+                            : "status-active";
+
+
+                    const paymentClass =
+                        restaurant.paymentStatus === "paid"
+                            ? "payment-paid"
+                            : "payment-unpaid";
+
+
+                    return `
+
+                        <div class="restaurant-item">
+
+                            <div class="restaurant-name">
+                                ${escapeHTML(
+                                    restaurant.restaurantName
+                                )}
+                            </div>
+
+
+                            <div class="restaurant-detail">
+                                Owner:
+                                ${escapeHTML(
+                                    restaurant.ownerName
+                                )}
+                            </div>
+
+
+                            <div class="restaurant-detail">
+                                Username:
+                                ${escapeHTML(
+                                    restaurant.username
+                                )}
+                            </div>
+
+
+                            <div class="restaurant-detail">
+                                Monthly Fee:
+                                Rs.
+                                ${Number(
+                                    restaurant.monthlyFee || 0
+                                ).toLocaleString()}
+                            </div>
+
+
+                            <div class="restaurant-detail">
+                                Subscription:
+                                ${escapeHTML(
+                                    restaurant.subscriptionStart
+                                )}
+                                to
+                                ${escapeHTML(
+                                    restaurant.subscriptionExpiry
+                                )}
+                            </div>
+
+
+                            <div class="restaurant-detail">
+
+                                Status:
+
+                                <span class="${statusClass}">
+                                    ${isBlocked
+                                        ? "Blocked"
+                                        : "Active"}
+                                </span>
+
+                            </div>
+
+
+                            <div class="restaurant-detail">
+
+                                Payment:
+
+                                <span class="${paymentClass}">
+                                    ${escapeHTML(
+                                        restaurant.paymentStatus
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="restaurant-actions">
+
+                                <button
+                                    type="button"
+                                    class="${
+                                        isBlocked
+                                            ? "unblock-btn"
+                                            : "block-btn"
+                                    }"
+                                    onclick="toggleRestaurantStatus('${restaurant.id}')"
+                                >
+
+                                    ${
+                                        isBlocked
+                                            ? "Unblock"
+                                            : "Block"
+                                    }
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            ).join("");
+
     }
 
-    const restaurants = getRestaurants();
 
-    if (restaurants.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="icon">🍽️</div>
-                <p>No restaurants added yet.</p>
-            </div>
-        `;
-        return;
+    /* =========================
+       BLOCK / UNBLOCK
+    ========================= */
+
+    function toggleRestaurantStatus(id) {
+
+        const restaurants =
+            getRestaurants();
+
+
+        const restaurant =
+            restaurants.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (!restaurant) {
+
+            return;
+
+        }
+
+
+        if (restaurant.status === "active") {
+
+            restaurant.status =
+                "blocked";
+
+        } else {
+
+            restaurant.status =
+                "active";
+
+        }
+
+
+        saveRestaurants(
+            restaurants
+        );
+
+
+        renderRestaurantList();
+
+        updateRestaurantStats();
+
     }
 
-    container.innerHTML = restaurants.map(function (restaurant) {
 
-        const isBlocked =
-            restaurant.status === "blocked";
+    /* =========================
+       ESCAPE HTML
+    ========================= */
 
-        return `
-            <div style="
-                padding: 18px 20px;
-                border-bottom: 1px solid #eee;
-            ">
+    function escapeHTML(value) {
 
-                <strong>${restaurant.restaurantName}</strong>
+        const div =
+            document.createElement(
+                "div"
+            );
 
-                <div style="margin-top: 6px; color: #777;">
-                    Owner: ${restaurant.ownerName}
-                </div>
 
-                <div style="margin-top: 6px;">
-                    Status:
-                    <strong>
-                        ${isBlocked ? "blocked" : "active"}
-                    </strong>
-                </div>
+        div.textContent =
+            value == null
+                ? ""
+                : String(value);
 
-                <div style="margin-top: 6px;">
-                    Payment: ${restaurant.paymentStatus}
-                </div>
 
-                <button
-                    type="button"
-                    onclick="toggleRestaurantStatus('${restaurant.id}')"
-                    style="
-                        margin-top: 12px;
-                        border: none;
-                        background: ${isBlocked ? "#2e8b57" : "#d94f19"};
-                        color: white;
-                        padding: 9px 14px;
-                        border-radius: 7px;
-                        cursor: pointer;
-                        font-weight: 600;
-                    "
-                >
-                    ${isBlocked ? "Unblock" : "Block"}
-                </button>
+        return div.innerHTML;
 
-            </div>
-        `;
+    }
 
-    }).join("");
-}
-function toggleRestaurantStatus(id) {
 
-    const restaurants = getRestaurants();
+    /* =========================
+       CREATE RESTAURANT
+    ========================= */
 
-    const restaurant = restaurants.find(
-        function (item) {
-            return item.id === id;
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+
+            const restaurantForm =
+                document.getElementById(
+                    "restaurantForm"
+                );
+
+
+            if (!restaurantForm) {
+
+                return;
+
+            }
+
+
+            restaurantForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    const restaurantName =
+                        document
+                            .getElementById(
+                                "restaurantName"
+                            )
+                            .value
+                            .trim();
+
+
+                    const ownerName =
+                        document
+                            .getElementById(
+                                "ownerName"
+                            )
+                            .value
+                            .trim();
+
+
+                    const username =
+                        document
+                            .getElementById(
+                                "restaurantUsername"
+                            )
+                            .value
+                            .trim();
+
+
+                    const password =
+                        document
+                            .getElementById(
+                                "restaurantPassword"
+                            )
+                            .value;
+
+
+                    const monthlyFee =
+                        Number(
+                            document
+                                .getElementById(
+                                    "monthlyFee"
+                                )
+                                .value
+                        ) || 0;
+
+
+                    const subscriptionStart =
+                        document
+                            .getElementById(
+                                "subscriptionStart"
+                            )
+                            .value;
+
+
+                    const subscriptionExpiry =
+                        document
+                            .getElementById(
+                                "subscriptionExpiry"
+                            )
+                            .value;
+
+
+                    if (
+                        !restaurantName ||
+                        !ownerName ||
+                        !username ||
+                        !password ||
+                        !subscriptionStart ||
+                        !subscriptionExpiry
+                    ) {
+
+                        alert(
+                            "Please fill all required fields."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (
+                        subscriptionExpiry <
+                        subscriptionStart
+                    ) {
+
+                        alert(
+                            "Subscription expiry cannot be before the start date."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const restaurants =
+                        getRestaurants();
+
+
+                    const usernameExists =
+                        restaurants.some(
+                            function (restaurant) {
+
+                                return (
+                                    restaurant.username
+                                        .toLowerCase() ===
+                                    username.toLowerCase()
+                                );
+
+                            }
+                        );
+
+
+                    if (usernameExists) {
+
+                        alert(
+                            "This login username already exists. Please use another username."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const restaurant = {
+
+                        id:
+                            "restaurant_" +
+                            Date.now(),
+
+                        restaurantName:
+                            restaurantName,
+
+                        ownerName:
+                            ownerName,
+
+                        username:
+                            username,
+
+                        password:
+                            password,
+
+                        monthlyFee:
+                            monthlyFee,
+
+                        subscriptionStart:
+                            subscriptionStart,
+
+                        subscriptionExpiry:
+                            subscriptionExpiry,
+
+                        status:
+                            "active",
+
+                        paymentStatus:
+                            "unpaid",
+
+                        createdAt:
+                            new Date().toISOString()
+
+                    };
+
+
+                    restaurants.push(
+                        restaurant
+                    );
+
+
+                    saveRestaurants(
+                        restaurants
+                    );
+
+
+                    restaurantForm.reset();
+
+
+                    updateRestaurantStats();
+
+                    renderRestaurantList();
+
+
+                    alert(
+                        "Restaurant created successfully."
+                    );
+
+                }
+            );
+
+
+            /* Initial page load */
+
+            updateRestaurantStats();
+
+            renderRestaurantList();
+
         }
     );
 
-    if (!restaurant) {
-        return;
-    }
+</script>
 
-    if (restaurant.status === "active") {
-        restaurant.status = "blocked";
-    } else {
-        restaurant.status = "active";
-    }
-
-    saveRestaurants(restaurants);
-
-    renderRestaurantList();
-    updateRestaurantStats();
-}
+</body>
+</html>
