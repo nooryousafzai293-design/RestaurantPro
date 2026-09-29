@@ -641,7 +641,7 @@
     }
 
     updateRestaurantStats();
-    function renderRestaurantList() {
+   function renderRestaurantList() {
     const container =
         document.getElementById("restaurantList");
 
@@ -662,27 +662,52 @@
     }
 
     container.innerHTML = restaurants.map(function (restaurant) {
+
+        const isBlocked =
+            restaurant.status === "blocked";
+
         return `
             <div style="
                 padding: 18px 20px;
                 border-bottom: 1px solid #eee;
             ">
+
                 <strong>${restaurant.restaurantName}</strong>
+
                 <div style="margin-top: 6px; color: #777;">
                     Owner: ${restaurant.ownerName}
                 </div>
+
                 <div style="margin-top: 6px;">
-                    Status: ${restaurant.status}
+                    Status:
+                    <strong>
+                        ${isBlocked ? "blocked" : "active"}
+                    </strong>
                 </div>
+
                 <div style="margin-top: 6px;">
                     Payment: ${restaurant.paymentStatus}
                 </div>
+
+                <button
+                    type="button"
+                    onclick="toggleRestaurantStatus('${restaurant.id}')"
+                    style="
+                        margin-top: 12px;
+                        border: none;
+                        background: ${isBlocked ? "#2e8b57" : "#d94f19"};
+                        color: white;
+                        padding: 9px 14px;
+                        border-radius: 7px;
+                        cursor: pointer;
+                        font-weight: 600;
+                    "
+                >
+                    ${isBlocked ? "Unblock" : "Block"}
+                </button>
+
             </div>
         `;
+
     }).join("");
 }
-
-renderRestaurantList();
-</script>
-</body>
-</html>
