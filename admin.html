@@ -711,3 +711,28 @@
 
     }).join("");
 }
+function toggleRestaurantStatus(id) {
+
+    const restaurants = getRestaurants();
+
+    const restaurant = restaurants.find(
+        function (item) {
+            return item.id === id;
+        }
+    );
+
+    if (!restaurant) {
+        return;
+    }
+
+    if (restaurant.status === "active") {
+        restaurant.status = "blocked";
+    } else {
+        restaurant.status = "active";
+    }
+
+    saveRestaurants(restaurants);
+
+    renderRestaurantList();
+    updateRestaurantStats();
+}
