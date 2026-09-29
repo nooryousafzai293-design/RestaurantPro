@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><script>
-    const restaurantLogin =
-        localStorage.getItem("restaurantpro_restaurant_logged_in");
+    <title>RestaurantPro - Dashboard</title>
 
-    if (!restaurantLogin) {
-        window.location.href = "login.html";
-    }
-</script>RestaurantPro - Dashboard</title>
+    <script>
+        const restaurantLogin =
+            localStorage.getItem("restaurantpro_restaurant_logged_in");
+
+        if (!restaurantLogin) {
+            window.location.href = "login.html";
+        }
+    </script>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -384,46 +386,6 @@
     </section>
 
 </div>
-
-                </section>
-
-
-                <!-- POPULAR ITEMS -->
-                <section class="dashboard-panel">
-
-                    <div class="panel-header">
-
-                        <div>
-                            <h2>Popular Items</h2>
-
-                            <p>
-                                Best selling food items.
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="empty-state">
-
-                        <div class="empty-icon">
-                            🍽️
-                        </div>
-
-                        <h3>No menu data</h3>
-
-                        <p>
-                            Add food items to see popular products.
-                        </p>
-
-                    </div>
-
-                </section>
-
-            </div>
-
-
-        </section>
 
     </main>
 
