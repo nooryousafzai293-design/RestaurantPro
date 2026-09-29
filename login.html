@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestaurantPro - Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #fff4ed, #ffe1d2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            color: #222;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin: 8px 0 28px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #e85b22;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #e85b22;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-button:hover {
+            background: #d94f19;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: #ffe5e5;
+            color: #c62828;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 22px;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <div class="logo">🍽️</div>
+
+        <h1>RestaurantPro</h1>
+
+        <div class="subtitle">
+            Restaurant Login
+        </div>
+
+        <form id="restaurantLoginForm">
+
+            <div class="form-group">
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+                Login
+            </button>
+
+            <div
+                id="loginError"
+                class="error-message"
+            ></div>
+
+        </form>
+
+        <div class="footer">
+            RestaurantPro
+        </div>
+
+    </div>
+
+    <script>
+
+        const RESTAURANT_KEY =
+            "restaurantpro_admin_restaurants";
+
+        const RESTAURANT_LOGIN_KEY =
+            "restaurantpro_restaurant_logged_in";
+
+
+        function getRestaurants() {
+
+            try {
+
+                const saved =
+                    localStorage.getItem(RESTAURANT_KEY);
+
+                const restaurants =
+                    saved ? JSON.parse(saved) : [];
+
+                return Array.isArray(restaurants)
+                    ? restaurants
+                    : [];
+
+            } catch (error) {
+
+                console.error(
+                    "Could not load restaurants:",
+                    error
+                );
+
+                return [];
+            }
+        }
+
+
+        function showError(message) {
+
+            const errorBox =
+                document.getElementById("loginError");
+
+            errorBox.textContent = message;
+
+            errorBox.style.display = "block";
+        }
+
+
+        function hideError() {
+
+            const errorBox =
+                document.getElementById("loginError");
+
+            errorBox.textContent = "";
+
+            errorBox.style.display = "none";
+        }
+
+
+        document
+            .getElementById("restaurantLoginForm")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                hideError();
+
+                const username =
+                    document
+                        .getElementById("username")
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                const restaurants =
+                    getRestaurants();
+
+
+                const restaurant =
+                    restaurants.find(function (item) {
+
+                        return (
+                            item.username === username &&
+                            item.password === password
+                        );
+
+                    });
+
+
+                if (!restaurant) {
+
+                    showError(
+                        "Invalid username or password."
+                    );
+
+                    return;
+                }
+
+
+                if (restaurant.status === "blocked") {
+
+                    showError(
+                        "This restaurant account is blocked. Please contact the administrator."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    restaurant.subscriptionExpiry &&
+                    new Date(
+                        restaurant.subscriptionExpiry
+                    ) < new Date()
+                ) {
+
+                    showError(
+                        "Your subscription has expired. Please contact the administrator."
+                    );
+
+                    return;
+                }
+
+
+                localStorage.setItem(
+                    RESTAURANT_LOGIN_KEY,
+                    JSON.stringify({
+                        restaurantId: restaurant.id,
+                        username: restaurant.username,
+                        restaurantName: restaurant.restaurantName
+                    })
+                );
+
+
+                window.location.href =
+                    "index.html";
+
+            });
+
+    </script>
+
+</body>
+</html>
