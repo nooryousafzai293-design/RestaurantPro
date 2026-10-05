@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +7,10 @@
 
     <title>RestaurantPro - Super Admin</title>
 
-    <style>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <style>
         * {
             box-sizing: border-box;
             margin: 0;
@@ -170,6 +173,11 @@
             font-weight: 600;
         }
 
+        .add-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .cancel-btn {
             border: 1px solid #ddd;
             background: #fff;
@@ -233,6 +241,9 @@
 
         .restaurant-actions {
             margin-top: 14px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .block-btn,
@@ -253,16 +264,49 @@
             background: #2e8b57;
         }
 
-        @media (max-width: 800px) {
+        .payment-btn {
+            border: none;
+            background: #315f9e;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 600;
+        }
 
+        .loading {
+            padding: 35px 20px;
+            text-align: center;
+            color: #777;
+        }
+
+        .error-message {
+            margin-bottom: 20px;
+            background: #fff0ed;
+            color: #b93813;
+            border: 1px solid #ffd1c7;
+            padding: 14px 16px;
+            border-radius: 9px;
+            display: none;
+        }
+
+        .success-message {
+            margin-bottom: 20px;
+            background: #edf9f1;
+            color: #237347;
+            border: 1px solid #c7ecd4;
+            padding: 14px 16px;
+            border-radius: 9px;
+            display: none;
+        }
+
+        @media (max-width: 800px) {
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
-
         }
 
         @media (max-width: 600px) {
-
             .header {
                 padding: 15px;
             }
@@ -289,9 +333,7 @@
             .brand h1 {
                 font-size: 18px;
             }
-
         }
-
     </style>
 </head>
 
@@ -300,23 +342,12 @@
 <header class="header">
 
     <div class="brand">
-
-        <div class="brand-icon">
-            🍽️
-        </div>
+        <div class="brand-icon">🍽️</div>
 
         <div>
-
-            <h1>
-                RestaurantPro
-            </h1>
-
-            <p>
-                Super Admin Panel
-            </p>
-
+            <h1>RestaurantPro</h1>
+            <p>Super Admin Panel</p>
         </div>
-
     </div>
 
     <button
@@ -329,100 +360,58 @@
 
 </header>
 
-
 <main class="container">
 
     <div class="page-title">
-
-        <h2>
-            Dashboard
-        </h2>
+        <h2>Dashboard</h2>
 
         <p>
             Manage your RestaurantPro customers and subscriptions.
         </p>
-
     </div>
 
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
 
     <!-- STATS -->
 
     <section class="stats">
 
         <div class="stat-card">
-
-            <span>
-                Total Restaurants
-            </span>
-
-            <h3 id="totalRestaurants">
-                0
-            </h3>
-
+            <span>Total Restaurants</span>
+            <h3 id="totalRestaurants">0</h3>
         </div>
 
-
         <div class="stat-card">
-
-            <span>
-                Active
-            </span>
-
-            <h3 id="activeRestaurants">
-                0
-            </h3>
-
+            <span>Active</span>
+            <h3 id="activeRestaurants">0</h3>
         </div>
 
-
         <div class="stat-card">
-
-            <span>
-                Blocked
-            </span>
-
-            <h3 id="blockedRestaurants">
-                0
-            </h3>
-
+            <span>Blocked</span>
+            <h3 id="blockedRestaurants">0</h3>
         </div>
 
-
         <div class="stat-card">
-
-            <span>
-                Unpaid
-            </span>
-
-            <h3 id="unpaidRestaurants">
-                0
-            </h3>
-
+            <span>Unpaid</span>
+            <h3 id="unpaidRestaurants">0</h3>
         </div>
 
     </section>
-
 
     <!-- ADD RESTAURANT -->
 
     <section class="section">
 
         <div class="section-header">
-
-            <h3>
-                Add Restaurant
-            </h3>
-
+            <h3>Add Restaurant</h3>
         </div>
-
 
         <form id="restaurantForm">
 
             <div class="form-grid">
 
-
                 <div class="form-group">
-
                     <label for="restaurantName">
                         Restaurant Name
                     </label>
@@ -433,12 +422,9 @@
                         placeholder="Restaurant name"
                         required
                     >
-
                 </div>
 
-
                 <div class="form-group">
-
                     <label for="ownerName">
                         Owner Name
                     </label>
@@ -449,12 +435,9 @@
                         placeholder="Owner name"
                         required
                     >
-
                 </div>
 
-
                 <div class="form-group">
-
                     <label for="restaurantUsername">
                         Login Username
                     </label>
@@ -465,12 +448,9 @@
                         placeholder="Username"
                         required
                     >
-
                 </div>
 
-
                 <div class="form-group">
-
                     <label for="restaurantPassword">
                         Login Password
                     </label>
@@ -481,12 +461,9 @@
                         placeholder="Password"
                         required
                     >
-
                 </div>
 
-
                 <div class="form-group">
-
                     <label for="monthlyFee">
                         Monthly Fee (Rs.)
                     </label>
@@ -498,12 +475,9 @@
                         min="0"
                         required
                     >
-
                 </div>
 
-
                 <div class="form-group">
-
                     <label for="subscriptionStart">
                         Subscription Start
                     </label>
@@ -513,12 +487,9 @@
                         id="subscriptionStart"
                         required
                     >
-
                 </div>
 
-
                 <div class="form-group">
-
                     <label for="subscriptionExpiry">
                         Subscription Expiry
                     </label>
@@ -528,22 +499,19 @@
                         id="subscriptionExpiry"
                         required
                     >
-
                 </div>
 
-
             </div>
-
 
             <div class="form-actions">
 
                 <button
                     type="submit"
                     class="add-btn"
+                    id="createRestaurantButton"
                 >
                     Create Restaurant
                 </button>
-
 
                 <button
                     type="reset"
@@ -558,138 +526,244 @@
 
     </section>
 
-
     <!-- RESTAURANT LIST -->
 
     <section class="section">
 
         <div class="section-header">
-
-            <h3>
-                Restaurants
-            </h3>
-
+            <h3>Restaurants</h3>
         </div>
 
-
         <div id="restaurantList">
-
-            <div class="empty-state">
-
-                <div class="icon">
-                    🍽️
-                </div>
-
-                <p>
-                    No restaurants added yet.
-                </p>
-
+            <div class="loading">
+                Loading restaurants...
             </div>
-
         </div>
 
     </section>
 
-
 </main>
-
 
 <script>
 
-    /* =========================
-       ADMIN LOGIN CHECK
-    ========================= */
+    /* =========================================================
+       RESTAURANTPRO SUPABASE CONFIGURATION
+    ========================================================= */
 
-    const adminLoggedIn =
-        localStorage.getItem(
-            "restaurantpro_admin_logged_in"
+    const SUPABASE_URL =
+        "https://ryixnwawmtglcibjmhjh.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
         );
 
 
-    if (adminLoggedIn !== "true") {
+    /* =========================================================
+       UI HELPERS
+    ========================================================= */
 
-        window.location.href =
-            "admin-login.html";
+    function showError(message) {
 
+        const errorElement =
+            document.getElementById("errorMessage");
+
+        const successElement =
+            document.getElementById("successMessage");
+
+        if (successElement) {
+            successElement.style.display = "none";
+        }
+
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = "block";
+        }
     }
 
 
-    function logoutAdmin() {
+    function showSuccess(message) {
 
-        localStorage.removeItem(
-            "restaurantpro_admin_logged_in"
-        );
+        const errorElement =
+            document.getElementById("errorMessage");
 
-        window.location.href =
-            "admin-login.html";
+        const successElement =
+            document.getElementById("successMessage");
 
+        if (errorElement) {
+            errorElement.style.display = "none";
+        }
+
+        if (successElement) {
+            successElement.textContent = message;
+            successElement.style.display = "block";
+        }
     }
 
 
-    /* =========================
-       RESTAURANT STORAGE
-    ========================= */
+    function clearMessages() {
 
-    const RESTAURANT_KEY =
-        "restaurantpro_admin_restaurants";
+        const errorElement =
+            document.getElementById("errorMessage");
+
+        const successElement =
+            document.getElementById("successMessage");
+
+        if (errorElement) {
+            errorElement.style.display = "none";
+        }
+
+        if (successElement) {
+            successElement.style.display = "none";
+        }
+    }
 
 
-    function getRestaurants() {
+    /* =========================================================
+       ADMIN AUTH CHECK
+    ========================================================= */
 
-        const saved =
-            localStorage.getItem(
-                RESTAURANT_KEY
+    async function checkAdminAccess() {
+
+        const {
+            data: {
+                session
+            },
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+
+        if (sessionError) {
+
+            console.error(sessionError);
+
+            showError(
+                "Could not verify your login session."
             );
 
-
-        if (!saved) {
-
-            return [];
+            return false;
 
         }
 
 
-        try {
+        if (!session) {
 
-            const restaurants =
-                JSON.parse(saved);
+            window.location.href =
+                "admin-login.html";
 
-            return Array.isArray(restaurants)
-                ? restaurants
-                : [];
+            return false;
 
-        } catch (error) {
+        }
+
+
+        const {
+            data: adminRecord,
+            error: adminError
+        } = await supabaseClient
+            .from("admin_users")
+            .select("user_id")
+            .eq("user_id", session.user.id)
+            .maybeSingle();
+
+
+        if (adminError) {
+
+            console.error(adminError);
+
+            showError(
+                "Could not verify Super Admin permissions."
+            );
+
+            return false;
+
+        }
+
+
+        if (!adminRecord) {
+
+            await supabaseClient.auth.signOut();
+
+            alert(
+                "This account is not authorized as Super Admin."
+            );
+
+            window.location.href =
+                "admin-login.html";
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
+    async function logoutAdmin() {
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href =
+            "admin-login.html";
+
+    }
+
+
+    /* =========================================================
+       LOAD RESTAURANTS
+    ========================================================= */
+
+    async function getRestaurants() {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("restaurants")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+
+        if (error) {
 
             console.error(
-                "Could not read restaurants:",
+                "Could not load restaurants:",
                 error
             );
 
+            showError(
+                "Could not load restaurants. Please check Supabase policies."
+            );
+
             return [];
 
         }
 
-    }
 
-
-    function saveRestaurants(restaurants) {
-
-        localStorage.setItem(
-            RESTAURANT_KEY,
-            JSON.stringify(restaurants)
-        );
+        return data || [];
 
     }
 
 
-    /* =========================
+    /* =========================================================
        UPDATE STATS
-    ========================= */
+    ========================================================= */
 
-    function updateRestaurantStats() {
+    async function updateRestaurantStats() {
 
         const restaurants =
-            getRestaurants();
+            await getRestaurants();
 
 
         const total =
@@ -697,98 +771,75 @@
 
 
         const active =
-            restaurants.filter(
-                function (restaurant) {
+            restaurants.filter(function (restaurant) {
 
-                    return restaurant.status === "active";
+                return restaurant.status === "active";
 
-                }
-            ).length;
+            }).length;
 
 
         const blocked =
-            restaurants.filter(
-                function (restaurant) {
+            restaurants.filter(function (restaurant) {
 
-                    return restaurant.status === "blocked";
+                return restaurant.status === "blocked";
 
-                }
-            ).length;
+            }).length;
 
 
         const unpaid =
-            restaurants.filter(
-                function (restaurant) {
+            restaurants.filter(function (restaurant) {
 
-                    return restaurant.paymentStatus === "unpaid";
+                return restaurant.payment_status === "unpaid";
 
-                }
-            ).length;
+            }).length;
 
 
-        const totalElement =
-            document.getElementById(
-                "totalRestaurants"
-            );
+        document.getElementById(
+            "totalRestaurants"
+        ).textContent = total;
 
 
-        const activeElement =
-            document.getElementById(
-                "activeRestaurants"
-            );
+        document.getElementById(
+            "activeRestaurants"
+        ).textContent = active;
 
 
-        const blockedElement =
-            document.getElementById(
-                "blockedRestaurants"
-            );
+        document.getElementById(
+            "blockedRestaurants"
+        ).textContent = blocked;
 
 
-        const unpaidElement =
-            document.getElementById(
-                "unpaidRestaurants"
-            );
-
-
-        if (totalElement) {
-
-            totalElement.textContent =
-                total;
-
-        }
-
-
-        if (activeElement) {
-
-            activeElement.textContent =
-                active;
-
-        }
-
-
-        if (blockedElement) {
-
-            blockedElement.textContent =
-                blocked;
-
-        }
-
-
-        if (unpaidElement) {
-
-            unpaidElement.textContent =
-                unpaid;
-
-        }
+        document.getElementById(
+            "unpaidRestaurants"
+        ).textContent = unpaid;
 
     }
 
 
-    /* =========================
-       RENDER RESTAURANT LIST
-    ========================= */
+    /* =========================================================
+       ESCAPE HTML
+    ========================================================= */
 
-    function renderRestaurantList() {
+    function escapeHTML(value) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            value == null
+                ? ""
+                : String(value);
+
+        return div.innerHTML;
+
+    }
+
+
+    /* =========================================================
+       RENDER RESTAURANT LIST
+    ========================================================= */
+
+    async function renderRestaurantList() {
 
         const container =
             document.getElementById(
@@ -797,14 +848,19 @@
 
 
         if (!container) {
-
             return;
-
         }
 
 
+        container.innerHTML = `
+            <div class="loading">
+                Loading restaurants...
+            </div>
+        `;
+
+
         const restaurants =
-            getRestaurants();
+            await getRestaurants();
 
 
         if (restaurants.length === 0) {
@@ -831,214 +887,301 @@
 
 
         container.innerHTML =
-            restaurants.map(
-                function (restaurant) {
+            restaurants.map(function (restaurant) {
+
+                const isBlocked =
+                    restaurant.status === "blocked";
 
 
-                    const isBlocked =
-                        restaurant.status === "blocked";
+                const statusClass =
+                    isBlocked
+                        ? "status-blocked"
+                        : "status-active";
 
 
-                    const statusClass =
-                        isBlocked
-                            ? "status-blocked"
-                            : "status-active";
+                const paymentClass =
+                    restaurant.payment_status === "paid"
+                        ? "payment-paid"
+                        : "payment-unpaid";
 
 
-                    const paymentClass =
-                        restaurant.paymentStatus === "paid"
-                            ? "payment-paid"
-                            : "payment-unpaid";
+                return `
 
+                    <div class="restaurant-item">
 
-                    return `
+                        <div class="restaurant-name">
+                            ${escapeHTML(
+                                restaurant.restaurant_name
+                            )}
+                        </div>
 
-                        <div class="restaurant-item">
+                        <div class="restaurant-detail">
+                            Owner:
+                            ${escapeHTML(
+                                restaurant.owner_name
+                            )}
+                        </div>
 
-                            <div class="restaurant-name">
-                                ${escapeHTML(
-                                    restaurant.restaurantName
-                                )}
-                            </div>
+                        <div class="restaurant-detail">
+                            Username:
+                            ${escapeHTML(
+                                restaurant.username
+                            )}
+                        </div>
 
+                        <div class="restaurant-detail">
+                            Monthly Fee:
+                            Rs.
+                            ${Number(
+                                restaurant.monthly_fee || 0
+                            ).toLocaleString()}
+                        </div>
 
-                            <div class="restaurant-detail">
-                                Owner:
-                                ${escapeHTML(
-                                    restaurant.ownerName
-                                )}
-                            </div>
+                        <div class="restaurant-detail">
+                            Subscription:
+                            ${escapeHTML(
+                                restaurant.subscription_start
+                            )}
+                            to
+                            ${escapeHTML(
+                                restaurant.subscription_expiry
+                            )}
+                        </div>
 
+                        <div class="restaurant-detail">
 
-                            <div class="restaurant-detail">
-                                Username:
-                                ${escapeHTML(
-                                    restaurant.username
-                                )}
-                            </div>
+                            Status:
 
-
-                            <div class="restaurant-detail">
-                                Monthly Fee:
-                                Rs.
-                                ${Number(
-                                    restaurant.monthlyFee || 0
-                                ).toLocaleString()}
-                            </div>
-
-
-                            <div class="restaurant-detail">
-                                Subscription:
-                                ${escapeHTML(
-                                    restaurant.subscriptionStart
-                                )}
-                                to
-                                ${escapeHTML(
-                                    restaurant.subscriptionExpiry
-                                )}
-                            </div>
-
-
-                            <div class="restaurant-detail">
-
-                                Status:
-
-                                <span class="${statusClass}">
-                                    ${isBlocked
+                            <span class="${statusClass}">
+                                ${
+                                    isBlocked
                                         ? "Blocked"
-                                        : "Active"}
-                                </span>
-
-                            </div>
-
-
-                            <div class="restaurant-detail">
-
-                                Payment:
-
-                                <span class="${paymentClass}">
-                                    ${escapeHTML(
-                                        restaurant.paymentStatus
-                                    )}
-                                </span>
-
-                            </div>
-
-
-                            <div class="restaurant-actions">
-
-                                <button
-                                    type="button"
-                                    class="${
-                                        isBlocked
-                                            ? "unblock-btn"
-                                            : "block-btn"
-                                    }"
-                                    onclick="toggleRestaurantStatus('${restaurant.id}')"
-                                >
-
-                                    ${
-                                        isBlocked
-                                            ? "Unblock"
-                                            : "Block"
-                                    }
-
-                                </button>
-
-                            </div>
+                                        : "Active"
+                                }
+                            </span>
 
                         </div>
 
-                    `;
+                        <div class="restaurant-detail">
 
-                }
-            ).join("");
+                            Payment:
+
+                            <span class="${paymentClass}">
+                                ${escapeHTML(
+                                    restaurant.payment_status
+                                )}
+                            </span>
+
+                        </div>
+
+                        <div class="restaurant-actions">
+
+                            <button
+                                type="button"
+                                class="${
+                                    isBlocked
+                                        ? "unblock-btn"
+                                        : "block-btn"
+                                }"
+                                onclick="toggleRestaurantStatus('${restaurant.id}')"
+                            >
+                                ${
+                                    isBlocked
+                                        ? "Unblock"
+                                        : "Block"
+                                }
+                            </button>
+
+                            <button
+                                type="button"
+                                class="payment-btn"
+                                onclick="togglePaymentStatus('${restaurant.id}')"
+                            >
+                                ${
+                                    restaurant.payment_status === "paid"
+                                        ? "Mark Unpaid"
+                                        : "Mark Paid"
+                                }
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join("");
 
     }
 
 
-    /* =========================
-       BLOCK / UNBLOCK
-    ========================= */
+    /* =========================================================
+       BLOCK / UNBLOCK RESTAURANT
+    ========================================================= */
 
-    function toggleRestaurantStatus(id) {
+    async function toggleRestaurantStatus(id) {
+
+        clearMessages();
+
 
         const restaurants =
-            getRestaurants();
+            await getRestaurants();
 
 
         const restaurant =
-            restaurants.find(
-                function (item) {
+            restaurants.find(function (item) {
 
-                    return item.id === id;
+                return item.id === id;
 
-                }
-            );
+            });
 
 
         if (!restaurant) {
+
+            showError(
+                "Restaurant not found."
+            );
 
             return;
 
         }
 
 
-        if (restaurant.status === "active") {
+        const newStatus =
+            restaurant.status === "active"
+                ? "blocked"
+                : "active";
 
-            restaurant.status =
-                "blocked";
 
-        } else {
+        const {
+            error
+        } = await supabaseClient
+            .from("restaurants")
+            .update({
+                status: newStatus
+            })
+            .eq("id", id);
 
-            restaurant.status =
-                "active";
+
+        if (error) {
+
+            console.error(error);
+
+            showError(
+                "Could not change restaurant status: " +
+                error.message
+            );
+
+            return;
 
         }
 
 
-        saveRestaurants(
-            restaurants
+        showSuccess(
+            newStatus === "blocked"
+                ? "Restaurant login has been blocked."
+                : "Restaurant login has been unblocked."
         );
 
 
-        renderRestaurantList();
+        await renderRestaurantList();
 
-        updateRestaurantStats();
+        await updateRestaurantStats();
 
     }
 
 
-    /* =========================
-       ESCAPE HTML
-    ========================= */
+    /* =========================================================
+       PAYMENT STATUS
+    ========================================================= */
 
-    function escapeHTML(value) {
+    async function togglePaymentStatus(id) {
 
-        const div =
-            document.createElement(
-                "div"
+        clearMessages();
+
+
+        const restaurants =
+            await getRestaurants();
+
+
+        const restaurant =
+            restaurants.find(function (item) {
+
+                return item.id === id;
+
+            });
+
+
+        if (!restaurant) {
+
+            showError(
+                "Restaurant not found."
             );
 
+            return;
 
-        div.textContent =
-            value == null
-                ? ""
-                : String(value);
+        }
 
 
-        return div.innerHTML;
+        const newPaymentStatus =
+            restaurant.payment_status === "paid"
+                ? "unpaid"
+                : "paid";
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("restaurants")
+            .update({
+                payment_status: newPaymentStatus
+            })
+            .eq("id", id);
+
+
+        if (error) {
+
+            console.error(error);
+
+            showError(
+                "Could not update payment status: " +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        showSuccess(
+            newPaymentStatus === "paid"
+                ? "Payment marked as paid."
+                : "Payment marked as unpaid."
+        );
+
+
+        await renderRestaurantList();
+
+        await updateRestaurantStats();
 
     }
 
 
-    /* =========================
+    /* =========================================================
        CREATE RESTAURANT
-    ========================= */
+    ========================================================= */
 
     document.addEventListener(
         "DOMContentLoaded",
-        function () {
+        async function () {
+
+            const hasAccess =
+                await checkAdminAccess();
+
+
+            if (!hasAccess) {
+                return;
+            }
 
 
             const restaurantForm =
@@ -1048,211 +1191,256 @@
 
 
             if (!restaurantForm) {
-
                 return;
-
             }
 
 
             restaurantForm.addEventListener(
                 "submit",
-                function (event) {
+                async function (event) {
 
                     event.preventDefault();
 
-
-                    const restaurantName =
-                        document
-                            .getElementById(
-                                "restaurantName"
-                            )
-                            .value
-                            .trim();
+                    clearMessages();
 
 
-                    const ownerName =
-                        document
-                            .getElementById(
-                                "ownerName"
-                            )
-                            .value
-                            .trim();
+                    const button =
+                        document.getElementById(
+                            "createRestaurantButton"
+                        );
 
 
-                    const username =
-                        document
-                            .getElementById(
-                                "restaurantUsername"
-                            )
-                            .value
-                            .trim();
+                    button.disabled = true;
+
+                    button.textContent =
+                        "Creating...";
 
 
-                    const password =
-                        document
-                            .getElementById(
-                                "restaurantPassword"
-                            )
-                            .value;
+                    try {
 
-
-                    const monthlyFee =
-                        Number(
+                        const restaurantName =
                             document
                                 .getElementById(
-                                    "monthlyFee"
+                                    "restaurantName"
                                 )
                                 .value
-                        ) || 0;
+                                .trim();
 
 
-                    const subscriptionStart =
-                        document
-                            .getElementById(
-                                "subscriptionStart"
-                            )
-                            .value;
+                        const ownerName =
+                            document
+                                .getElementById(
+                                    "ownerName"
+                                )
+                                .value
+                                .trim();
 
 
-                    const subscriptionExpiry =
-                        document
-                            .getElementById(
-                                "subscriptionExpiry"
-                            )
-                            .value;
+                        const username =
+                            document
+                                .getElementById(
+                                    "restaurantUsername"
+                                )
+                                .value
+                                .trim();
 
 
-                    if (
-                        !restaurantName ||
-                        !ownerName ||
-                        !username ||
-                        !password ||
-                        !subscriptionStart ||
-                        !subscriptionExpiry
-                    ) {
+                        const password =
+                            document
+                                .getElementById(
+                                    "restaurantPassword"
+                                )
+                                .value;
 
-                        alert(
-                            "Please fill all required fields."
+
+                        const monthlyFee =
+                            Number(
+                                document
+                                    .getElementById(
+                                        "monthlyFee"
+                                    )
+                                    .value
+                            ) || 0;
+
+
+                        const subscriptionStart =
+                            document
+                                .getElementById(
+                                    "subscriptionStart"
+                                )
+                                .value;
+
+
+                        const subscriptionExpiry =
+                            document
+                                .getElementById(
+                                    "subscriptionExpiry"
+                                )
+                                .value;
+
+
+                        if (
+                            !restaurantName ||
+                            !ownerName ||
+                            !username ||
+                            !password ||
+                            !subscriptionStart ||
+                            !subscriptionExpiry
+                        ) {
+
+                            showError(
+                                "Please fill all required fields."
+                            );
+
+                            return;
+
+                        }
+
+
+                        if (
+                            subscriptionExpiry <
+                            subscriptionStart
+                        ) {
+
+                            showError(
+                                "Subscription expiry cannot be before the start date."
+                            );
+
+                            return;
+
+                        }
+
+
+                        /*
+                         IMPORTANT:
+                         This temporary database insert is only for the
+                         restaurant record.
+
+                         Restaurant authentication will be connected
+                         to Supabase Auth in the next step.
+                        */
+
+                        const {
+                            data: existingRestaurant,
+                            error: usernameCheckError
+                        } = await supabaseClient
+                            .from("restaurants")
+                            .select("id")
+                            .ilike("username", username)
+                            .maybeSingle();
+
+
+                        if (usernameCheckError) {
+
+                            /*
+                             PGRST116 is ignored because maybeSingle()
+                             should normally avoid it, but we keep this
+                             check defensive.
+                            */
+
+                            console.error(
+                                usernameCheckError
+                            );
+
+                        }
+
+
+                        if (existingRestaurant) {
+
+                            showError(
+                                "This login username already exists. Please use another username."
+                            );
+
+                            return;
+
+                        }
+
+
+                        /*
+                         WARNING:
+                         Do NOT use this password field for the final
+                         restaurant login system.
+
+                         The next step will move authentication to
+                         Supabase Auth so passwords are securely managed.
+                        */
+
+                        const {
+                            error
+                        } = await supabaseClient
+                            .from("restaurants")
+                            .insert({
+                                restaurant_name:
+                                    restaurantName,
+
+                                owner_name:
+                                    ownerName,
+
+                                username:
+                                    username,
+
+                                password:
+                                    password,
+
+                                monthly_fee:
+                                    monthlyFee,
+
+                                subscription_start:
+                                    subscriptionStart,
+
+                                subscription_expiry:
+                                    subscriptionExpiry,
+
+                                status:
+                                    "active",
+
+                                payment_status:
+                                    "unpaid"
+                            });
+
+
+                        if (error) {
+
+                            console.error(error);
+
+                            showError(
+                                "Could not create restaurant: " +
+                                error.message
+                            );
+
+                            return;
+
+                        }
+
+
+                        restaurantForm.reset();
+
+
+                        showSuccess(
+                            "Restaurant created successfully."
                         );
 
-                        return;
+
+                        await renderRestaurantList();
+
+                        await updateRestaurantStats();
+
+                    } finally {
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "Create Restaurant";
 
                     }
-
-
-                    if (
-                        subscriptionExpiry <
-                        subscriptionStart
-                    ) {
-
-                        alert(
-                            "Subscription expiry cannot be before the start date."
-                        );
-
-                        return;
-
-                    }
-
-
-                    const restaurants =
-                        getRestaurants();
-
-
-                    const usernameExists =
-                        restaurants.some(
-                            function (restaurant) {
-
-                                return (
-                                    restaurant.username
-                                        .toLowerCase() ===
-                                    username.toLowerCase()
-                                );
-
-                            }
-                        );
-
-
-                    if (usernameExists) {
-
-                        alert(
-                            "This login username already exists. Please use another username."
-                        );
-
-                        return;
-
-                    }
-
-
-                    const restaurant = {
-
-                        id:
-                            "restaurant_" +
-                            Date.now(),
-
-                        restaurantName:
-                            restaurantName,
-
-                        ownerName:
-                            ownerName,
-
-                        username:
-                            username,
-
-                        password:
-                            password,
-
-                        monthlyFee:
-                            monthlyFee,
-
-                        subscriptionStart:
-                            subscriptionStart,
-
-                        subscriptionExpiry:
-                            subscriptionExpiry,
-
-                        status:
-                            "active",
-
-                        paymentStatus:
-                            "unpaid",
-
-                        createdAt:
-                            new Date().toISOString()
-
-                    };
-
-
-                    restaurants.push(
-                        restaurant
-                    );
-
-
-                    saveRestaurants(
-                        restaurants
-                    );
-
-
-                    restaurantForm.reset();
-
-
-                    updateRestaurantStats();
-
-                    renderRestaurantList();
-
-
-                    alert(
-                        "Restaurant created successfully."
-                    );
 
                 }
             );
 
 
-            /* Initial page load */
+            await updateRestaurantStats();
 
-            updateRestaurantStats();
-
-            renderRestaurantList();
+            await renderRestaurantList();
 
         }
     );
@@ -1261,3 +1449,4 @@
 
 </body>
 </html>
+```
