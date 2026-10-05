@@ -1,0 +1,553 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RestaurantPro - Restaurant Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 410px;
+            margin: 20px;
+            padding: 35px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0,0,0,.10);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #e85b22;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #e85b22;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #d94f19;
+        }
+
+        button:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 15px;
+            padding: 11px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #ffe8e8;
+            color: #c62828;
+        }
+
+        .success {
+            background: #e8f7ed;
+            color: #2e8b57;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="logo">🍽️</div>
+
+    <h1>Restaurant Login</h1>
+
+    <p class="subtitle">
+        RestaurantPro Management
+    </p>
+
+    <div id="message" class="message"></div>
+
+    <form id="restaurantLoginForm">
+
+        <div class="form-group">
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+        </div>
+
+        <button
+            type="submit"
+            id="loginButton"
+        >
+            Login
+        </button>
+
+    </form>
+
+    <div class="footer">
+        RestaurantPro
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+    /* =========================
+       SUPABASE CONFIG
+    ========================= */
+
+    const SUPABASE_URL =
+        "https://ryixnwawmtglcibjmhjh.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    /* =========================
+       ELEMENTS
+    ========================= */
+
+    const form =
+        document.getElementById(
+            "restaurantLoginForm"
+        );
+
+    const emailInput =
+        document.getElementById(
+            "email"
+        );
+
+    const passwordInput =
+        document.getElementById(
+            "password"
+        );
+
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    /* =========================
+       MESSAGE
+    ========================= */
+
+    function showMessage(
+        text,
+        type
+    ) {
+
+        message.textContent = text;
+
+        message.className =
+            "message " + type;
+
+        message.style.display =
+            "block";
+
+    }
+
+
+    function hideMessage() {
+
+        message.style.display =
+            "none";
+
+    }
+
+
+    /* =========================
+       LOGIN
+    ========================= */
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+            hideMessage();
+
+            const email =
+                emailInput.value
+                    .trim()
+                    .toLowerCase();
+
+            const password =
+                passwordInput.value;
+
+
+            if (!email || !password) {
+
+                showMessage(
+                    "Please enter email and password.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            loginButton.disabled =
+                true;
+
+            loginButton.textContent =
+                "Checking...";
+
+
+            try {
+
+                /*
+                 * First authenticate the user
+                 * with Supabase Auth.
+                 */
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+
+                if (error) {
+
+                    showMessage(
+                        "Invalid email or password.",
+                        "error"
+                    );
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Login";
+
+                    return;
+
+                }
+
+
+                if (!data.user) {
+
+                    showMessage(
+                        "Login failed. Please try again.",
+                        "error"
+                    );
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Login";
+
+                    return;
+
+                }
+
+
+                /*
+                 * Find the restaurant connected
+                 * to this authenticated user.
+                 */
+
+                const {
+                    data: restaurant,
+                    error: restaurantError
+                } =
+                    await supabaseClient
+                        .from("restaurants")
+                        .select(
+                            "id, restaurant_name, owner_name, status, payment_status, subscription_start, subscription_expiry"
+                        )
+                        .eq(
+                            "auth_user_id",
+                            data.user.id
+                        )
+                        .maybeSingle();
+
+
+                if (restaurantError) {
+
+                    await supabaseClient.auth.signOut();
+
+                    console.error(
+                        restaurantError
+                    );
+
+                    showMessage(
+                        "Could not verify restaurant account.",
+                        "error"
+                    );
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Login";
+
+                    return;
+
+                }
+
+
+                if (!restaurant) {
+
+                    await supabaseClient.auth.signOut();
+
+                    showMessage(
+                        "Restaurant account is not connected. Please contact administrator.",
+                        "error"
+                    );
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Login";
+
+                    return;
+
+                }
+
+
+                /*
+                 * BLOCKED CHECK
+                 */
+
+                if (
+                    restaurant.status !==
+                    "active"
+                ) {
+
+                    await supabaseClient.auth.signOut();
+
+                    showMessage(
+                        "Account Suspended. Please contact the administrator.",
+                        "error"
+                    );
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Login";
+
+                    return;
+
+                }
+
+
+                /*
+                 * SUBSCRIPTION EXPIRY CHECK
+                 */
+
+                if (
+                    restaurant.subscription_expiry
+                ) {
+
+                    const today =
+                        new Date();
+
+                    const expiry =
+                        new Date(
+                            restaurant.subscription_expiry +
+                            "T23:59:59"
+                        );
+
+
+                    if (
+                        expiry < today
+                    ) {
+
+                        await supabaseClient.auth.signOut();
+
+                        showMessage(
+                            "Your subscription has expired. Please contact the administrator.",
+                            "error"
+                        );
+
+                        loginButton.disabled =
+                            false;
+
+                        loginButton.textContent =
+                            "Login";
+
+                        return;
+
+                    }
+
+                }
+
+
+                /*
+                 * SAVE BASIC SESSION INFO
+                 */
+
+                localStorage.setItem(
+                    "restaurantpro_restaurant_id",
+                    restaurant.id
+                );
+
+                localStorage.setItem(
+                    "restaurantpro_restaurant_name",
+                    restaurant.restaurant_name
+                );
+
+
+                showMessage(
+                    "Login successful. Opening dashboard...",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function () {
+
+                        window.location.href =
+                            "index.html";
+
+                    },
+                    500
+                );
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+                showMessage(
+                    "Something went wrong. Please try again.",
+                    "error"
+                );
+
+                loginButton.disabled =
+                    false;
+
+                loginButton.textContent =
+                    "Login";
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
+```
