@@ -1,424 +1,982 @@
-```html
 <!DOCTYPE html>
+
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RestaurantPro - Super Admin</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+```
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+    body {
+        font-family: Arial, sans-serif;
+        background: #f6f7f9;
+        color: #222;
+    }
+
+    .header {
+        background: #fff;
+        padding: 18px 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #eee;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .brand-icon {
+        font-size: 30px;
+    }
+
+    .brand h1 {
+        font-size: 21px;
+    }
+
+    .brand p {
+        color: #777;
+        font-size: 12px;
+        margin-top: 3px;
+    }
+
+    .logout-btn {
+        border: none;
+        background: #ffe9e4;
+        color: #d94f19;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .page-title {
+        margin-bottom: 25px;
+    }
+
+    .page-title h2 {
+        font-size: 28px;
+        margin-bottom: 6px;
+    }
+
+    .page-title p {
+        color: #777;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: #fff;
+        padding: 22px;
+        border-radius: 12px;
+        border: 1px solid #eee;
+    }
+
+    .stat-card span {
+        color: #777;
+        font-size: 14px;
+    }
+
+    .stat-card h3 {
+        font-size: 28px;
+        margin-top: 10px;
+    }
+
+    .section {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #eee;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .section-header {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .section-header h3 {
+        font-size: 19px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .form-group input:focus {
+        border-color: #e85b22;
+    }
+
+    .form-actions {
+        padding: 0 20px 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .add-btn {
+        border: none;
+        background: #e85b22;
+        color: #fff;
+        padding: 11px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .add-btn:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+    }
+
+    .cancel-btn {
+        border: 1px solid #ddd;
+        background: #fff;
+        color: #555;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .message {
+        display: none;
+        margin: 0 20px 20px;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .message.success {
+        display: block;
+        background: #e8f7ee;
+        color: #237447;
+    }
+
+    .message.error {
+        display: block;
+        background: #ffe8e8;
+        color: #c62828;
+    }
+
+    .restaurant-item {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .restaurant-item:last-child {
+        border-bottom: none;
+    }
+
+    .restaurant-name {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .restaurant-detail {
+        margin-top: 6px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .status-active {
+        color: #2e8b57;
+        font-weight: 700;
+    }
+
+    .status-blocked {
+        color: #d94f19;
+        font-weight: 700;
+    }
+
+    .payment-unpaid {
+        color: #d94f19;
+        font-weight: 600;
+    }
+
+    .payment-paid {
+        color: #2e8b57;
+        font-weight: 600;
+    }
+
+    .restaurant-actions {
+        margin-top: 14px;
+    }
+
+    .block-btn,
+    .unblock-btn {
+        border: none;
+        color: #fff;
+        padding: 9px 15px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .block-btn {
+        background: #d94f19;
+    }
+
+    .unblock-btn {
+        background: #2e8b57;
+    }
+
+    .empty-state {
+        padding: 50px 20px;
+        text-align: center;
+        color: #777;
+    }
+
+    .empty-state .icon {
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+
+    .loading {
+        padding: 30px;
+        text-align: center;
+        color: #777;
+    }
+
+    @media (max-width: 800px) {
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
         }
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f6f7f9;
-            color: #222;
-        }
-
+    @media (max-width: 600px) {
         .header {
-            background: #ffffff;
-            padding: 18px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand-icon {
-            font-size: 30px;
-        }
-
-        .brand h1 {
-            font-size: 21px;
-        }
-
-        .brand p {
-            color: #777;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
-        .logout-btn {
-            border: none;
-            background: #ffe9e4;
-            color: #d94f19;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
+            padding: 15px;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .page-title {
-            margin-bottom: 25px;
-        }
-
-        .page-title h2 {
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-
-        .page-title p {
-            color: #777;
+            margin: 20px auto;
+            padding: 0 12px;
         }
 
         .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: #fff;
-            padding: 22px;
-            border-radius: 12px;
-            border: 1px solid #eee;
-        }
-
-        .stat-card span {
-            color: #777;
-            font-size: 14px;
-        }
-
-        .stat-card h3 {
-            font-size: 28px;
-            margin-top: 10px;
-        }
-
-        .section {
-            background: #fff;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-
-        .section-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .section-header h3 {
-            font-size: 19px;
+            grid-template-columns: 1fr;
         }
 
         .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            padding: 20px;
+            grid-template-columns: 1fr;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .form-group label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #e85b22;
-        }
-
-        .form-actions {
-            padding: 0 20px 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .add-btn {
-            border: none;
-            background: #e85b22;
-            color: white;
-            padding: 11px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .add-btn:disabled {
-            opacity: .6;
-            cursor: not-allowed;
-        }
-
-        .cancel-btn {
-            border: 1px solid #ddd;
-            background: #fff;
-            color: #555;
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .empty-state {
-            padding: 50px 20px;
-            text-align: center;
-            color: #777;
-        }
-
-        .empty-state .icon {
-            font-size: 42px;
-            margin-bottom: 12px;
-        }
-
-        .restaurant-item {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .restaurant-item:last-child {
-            border-bottom: none;
-        }
-
-        .restaurant-name {
+        .brand h1 {
             font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
         }
-
-        .restaurant-detail {
-            margin-top: 6px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .status-active {
-            color: #2e8b57;
-            font-weight: 700;
-        }
-
-        .status-blocked {
-            color: #d94f19;
-            font-weight: 700;
-        }
-
-        .payment-unpaid {
-            color: #d94f19;
-            font-weight: 600;
-        }
-
-        .payment-paid {
-            color: #2e8b57;
-            font-weight: 600;
-        }
-
-        .restaurant-actions {
-            margin-top: 14px;
-        }
-
-        .block-btn,
-        .unblock-btn {
-            border: none;
-            color: white;
-            padding: 9px 15px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .block-btn {
-            background: #d94f19;
-        }
-
-        .unblock-btn {
-            background: #2e8b57;
-        }
-
-        .message {
-            display: none;
-            margin: 0 20px 20px;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .message.success {
-            display: block;
-            background: #e8f7ee;
-            color: #237447;
-        }
-
-        .message.error {
-            display: block;
-            background: #ffe8e8;
-            color: #c62828;
-        }
-
-        @media (max-width: 800px) {
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-        }
-
-        @media (max-width: 600px) {
-
-            .header {
-                padding: 15px;
-            }
-
-            .container {
-                margin: 20px auto;
-                padding: 0 12px;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section-header {
-                gap: 10px;
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .brand h1 {
-                font-size: 18px;
-            }
-
-        }
-
-    </style>
+    }
+</style>
+```
 
 </head>
 
-
 <body>
 
-
 <header class="header">
-
     <div class="brand">
-
-        <div class="brand-icon">
-            🍽️
-        </div>
-
+        <div class="brand-icon">🍽️</div>
         <div>
-
-            <h1>
-                RestaurantPro
-            </h1>
-
-            <p>
-                Super Admin Panel
-            </p>
-
+            <h1>RestaurantPro</h1>
+            <p>Super Admin Panel</p>
         </div>
-
     </div>
 
-
-    <button
-        class="logout-btn"
-        type="button"
-        id="logoutButton"
-    >
-        Logout
-    </button>
+```
+<button class="logout-btn" id="logoutButton">
+    Logout
+</button>
+```
 
 </header>
 
-
-
 <main class="container">
 
+```
+<div class="page-title">
+    <h2>Dashboard</h2>
+    <p>Manage your RestaurantPro customers and subscriptions.</p>
+</div>
 
-    <div class="page-title">
+<section class="stats">
 
-        <h2>
-            Dashboard
-        </h2>
-
-        <p>
-            Manage your RestaurantPro customers and subscriptions.
-        </p>
-
+    <div class="stat-card">
+        <span>Total Restaurants</span>
+        <h3 id="totalRestaurants">0</h3>
     </div>
 
+    <div class="stat-card">
+        <span>Active</span>
+        <h3 id="activeRestaurants">0</h3>
+    </div>
 
+    <div class="stat-card">
+        <span>Blocked</span>
+        <h3 id="blockedRestaurants">0</h3>
+    </div>
 
-    <section class="stats">
+    <div class="stat-card">
+        <span>Unpaid</span>
+        <h3 id="unpaidRestaurants">0</h3>
+    </div>
 
-        <div class="stat-card">
+</section>
 
-            <span>
-                Total Restaurants
-            </span>
+<section class="section">
 
-            <h3 id="totalRestaurants">
-                0
-            </h3>
+    <div class="section-header">
+        <h3>➕ Add Restaurant</h3>
+    </div>
+
+    <form id="restaurantForm">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Restaurant Name</label>
+                <input
+                    type="text"
+                    id="restaurantName"
+                    placeholder="Restaurant name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Owner Name</label>
+                <input
+                    type="text"
+                    id="ownerName"
+                    placeholder="Owner name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Login Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="owner@example.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Login Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Minimum 6 characters"
+                    minlength="6"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Monthly Fee (Rs.)</label>
+                <input
+                    type="number"
+                    id="monthlyFee"
+                    placeholder="5000"
+                    min="0"
+                    value="0"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Subscription Start</label>
+                <input
+                    type="date"
+                    id="subscriptionStart"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Subscription Expiry</label>
+                <input
+                    type="date"
+                    id="subscriptionExpiry"
+                    required
+                >
+            </div>
 
         </div>
 
+        <div class="form-actions">
 
-        <div class="stat-card">
+            <button
+                type="submit"
+                class="add-btn"
+                id="createButton"
+            >
+                Create Restaurant
+            </button>
 
-            <span>
-                Active
-            </span>
-
-            <h3 id="activeRestaurants">
-                0
-            </h3>
+            <button
+                type="reset"
+                class="cancel-btn"
+            >
+                Clear
+            </button>
 
         </div>
 
+    </form>
 
-        <div class="stat-card">
+    <div id="message" class="message"></div>
 
-            <span>
-                Blocked
-            </span>
+</section>
 
-            <h3 id="blockedRestaurant
+<section class="section">
+
+    <div class="section-header">
+        <h3>🏪 Restaurants</h3>
+    </div>
+
+    <div id="restaurantList">
+        <div class="loading">
+            Loading restaurants...
+        </div>
+    </div>
+
+</section>
 ```
+
+</main>
+
+<script>
+
+const SUPABASE_URL =
+    "https://ryixnwawmtglcibjmhjh.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+const FUNCTION_URL =
+    SUPABASE_URL + "/functions/v1/bright-responder";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+const messageBox =
+    document.getElementById("message");
+
+
+function showMessage(text, type) {
+
+    messageBox.textContent = text;
+
+    messageBox.className =
+        "message " + type;
+
+}
+
+
+function hideMessage() {
+
+    messageBox.textContent = "";
+
+    messageBox.className =
+        "message";
+
+}
+
+
+async function loadRestaurants() {
+
+    const list =
+        document.getElementById("restaurantList");
+
+    list.innerHTML =
+        '<div class="loading">Loading restaurants...</div>';
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("restaurants")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+    if (error) {
+
+        list.innerHTML =
+            '<div class="empty-state">Unable to load restaurants.</div>';
+
+        console.error(error);
+
+        return;
+    }
+
+
+    const restaurants = data || [];
+
+    updateStats(restaurants);
+
+
+    if (restaurants.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="icon">🍽️</div>
+                <div>No restaurants created yet.</div>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        restaurants.map(function (restaurant) {
+
+            const blocked =
+                String(restaurant.status).toLowerCase()
+                === "blocked";
+
+            const paymentUnpaid =
+                String(restaurant.payment_status).toLowerCase()
+                === "unpaid";
+
+
+            return `
+
+                <div class="restaurant-item">
+
+                    <div class="restaurant-name">
+                        ${escapeHtml(
+                            restaurant.restaurant_name || ""
+                        )}
+                    </div>
+
+                    <div class="restaurant-detail">
+                        Owner:
+                        ${escapeHtml(
+                            restaurant.owner_name || ""
+                        )}
+                    </div>
+
+                    <div class="restaurant-detail">
+                        Login:
+                        ${escapeHtml(
+                            restaurant.username || ""
+                        )}
+                    </div>
+
+                    <div class="restaurant-detail">
+                        Monthly Fee:
+                        Rs.
+                        ${Number(
+                            restaurant.monthly_fee || 0
+                        ).toLocaleString()}
+                    </div>
+
+                    <div class="restaurant-detail">
+                        Subscription:
+                        ${restaurant.subscription_start || "-"}
+                        to
+                        ${restaurant.subscription_expiry || "-"}
+                    </div>
+
+                    <div class="restaurant-detail">
+                        Status:
+                        <span class="${
+                            blocked
+                            ? "status-blocked"
+                            : "status-active"
+                        }">
+                            ${
+                                blocked
+                                ? "Blocked"
+                                : "Active"
+                            }
+                        </span>
+                    </div>
+
+                    <div class="restaurant-detail">
+                        Payment:
+                        <span class="${
+                            paymentUnpaid
+                            ? "payment-unpaid"
+                            : "payment-paid"
+                        }">
+                            ${
+                                restaurant.payment_status || "-"
+                            }
+                        </span>
+                    </div>
+
+                    <div class="restaurant-actions">
+
+                        <button
+                            class="${
+                                blocked
+                                ? "unblock-btn"
+                                : "block-btn"
+                            }"
+                            onclick="toggleRestaurant(
+                                '${restaurant.id}',
+                                ${blocked}
+                            )"
+                        >
+                            ${
+                                blocked
+                                ? "Unblock"
+                                : "Block"
+                            }
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function updateStats(restaurants) {
+
+    const total =
+        restaurants.length;
+
+    const active =
+        restaurants.filter(function (r) {
+
+            return String(r.status).toLowerCase()
+                === "active";
+
+        }).length;
+
+    const blocked =
+        restaurants.filter(function (r) {
+
+            return String(r.status).toLowerCase()
+                === "blocked";
+
+        }).length;
+
+    const unpaid =
+        restaurants.filter(function (r) {
+
+            return String(r.payment_status).toLowerCase()
+                === "unpaid";
+
+        }).length;
+
+
+    document.getElementById(
+        "totalRestaurants"
+    ).textContent = total;
+
+    document.getElementById(
+        "activeRestaurants"
+    ).textContent = active;
+
+    document.getElementById(
+        "blockedRestaurants"
+    ).textContent = blocked;
+
+    document.getElementById(
+        "unpaidRestaurants"
+    ).textContent = unpaid;
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+document
+    .getElementById("restaurantForm")
+    .addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+            hideMessage();
+
+
+            const button =
+                document.getElementById(
+                    "createButton"
+                );
+
+            button.disabled = true;
+
+            button.textContent =
+                "Creating...";
+
+
+            try {
+
+                const payload = {
+
+                    restaurantName:
+                        document.getElementById(
+                            "restaurantName"
+                        ).value.trim(),
+
+                    ownerName:
+                        document.getElementById(
+                            "ownerName"
+                        ).value.trim(),
+
+                    email:
+                        document.getElementById(
+                            "email"
+                        ).value.trim()
+                        .toLowerCase(),
+
+                    password:
+                        document.getElementById(
+                            "password"
+                        ).value,
+
+                    monthlyFee:
+                        Number(
+                            document.getElementById(
+                                "monthlyFee"
+                            ).value
+                        ) || 0,
+
+                    subscriptionStart:
+                        document.getElementById(
+                            "subscriptionStart"
+                        ).value,
+
+                    subscriptionExpiry:
+                        document.getElementById(
+                            "subscriptionExpiry"
+                        ).value
+
+                };
+
+
+                if (
+                    payload.password.length < 6
+                ) {
+
+                    throw new Error(
+                        "Password must be at least 6 characters."
+                    );
+
+                }
+
+
+                const response =
+                    await fetch(
+                        FUNCTION_URL,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    payload
+                                )
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Restaurant creation failed."
+                    );
+
+                }
+
+
+                showMessage(
+                    "Restaurant created successfully! Login account has also been created.",
+                    "success"
+                );
+
+
+                document
+                    .getElementById(
+                        "restaurantForm"
+                    )
+                    .reset();
+
+
+                await loadRestaurants();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    error.message ||
+                    "Something went wrong.",
+                    "error"
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Create Restaurant";
+
+            }
+
+        }
+    );
+
+
+async function toggleRestaurant(
+    restaurantId,
+    isBlocked
+) {
+
+    const newStatus =
+        isBlocked
+        ? "active"
+        : "blocked";
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("restaurants")
+            .update({
+                status: newStatus
+            })
+            .eq("id", restaurantId);
+
+
+    if (error) {
+
+        console.error(error);
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    showMessage(
+        "Restaurant status updated.",
+        "success"
+    );
+
+
+    await loadRestaurants();
+
+}
+
+
+document
+    .getElementById("logoutButton")
+    .addEventListener(
+        "click",
+        async function () {
+
+            localStorage.removeItem(
+                "restaurantpro_admin_logged_in"
+            );
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href =
+                "admin-login.html";
+
+        }
+    );
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadRestaurants();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
