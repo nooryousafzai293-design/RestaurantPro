@@ -1,14 +1,23 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
+
     <title>RestaurantPro - Super Admin Login</title>
 
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -95,6 +104,11 @@
             background: #d94f19;
         }
 
+        button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
         .error {
             display: none;
             margin-bottom: 15px;
@@ -111,41 +125,56 @@
             color: #999;
             font-size: 12px;
         }
+
     </style>
+
 </head>
 
 <body>
 
     <div class="login-card">
 
-        <div class="logo">🍽️</div>
+        <div class="logo">
+            🍽️
+        </div>
 
-        <h1>Super Admin</h1>
+        <h1>
+            Super Admin
+        </h1>
 
         <p class="subtitle">
             RestaurantPro Management
         </p>
 
-        <div id="loginError" class="error">
-            Invalid username or password.
-        </div>
+
+        <div
+            id="loginError"
+            class="error"
+        ></div>
+
 
         <form id="adminLoginForm">
 
+
             <div class="form-group">
-                <label for="adminUsername">
-                    Username
+
+                <label for="adminEmail">
+                    Admin Email
                 </label>
 
                 <input
-                    type="text"
-                    id="adminUsername"
-                    placeholder="Enter username"
+                    type="email"
+                    id="adminEmail"
+                    placeholder="Enter admin email"
+                    autocomplete="email"
                     required
                 >
+
             </div>
 
+
             <div class="form-group">
+
                 <label for="adminPassword">
                     Password
                 </label>
@@ -154,15 +183,23 @@
                     type="password"
                     id="adminPassword"
                     placeholder="Enter password"
+                    autocomplete="current-password"
                     required
                 >
+
             </div>
 
-            <button type="submit">
+
+            <button
+                type="submit"
+                id="loginButton"
+            >
                 Login
             </button>
 
+
         </form>
+
 
         <div class="footer">
             RestaurantPro Super Admin
@@ -170,48 +207,342 @@
 
     </div>
 
-    <script>
-        const ADMIN_USERNAME = "admin";
-        const ADMIN_PASSWORD = "admin123";
 
-        document
-            .getElementById("adminLoginForm")
-            .addEventListener("submit", function (event) {
+    <script>
+
+        /* =====================================================
+           SUPABASE CONFIG
+        ===================================================== */
+
+        const SUPABASE_URL =
+            "https://ryixnwawmtglcibjmhjh.supabase.co";
+
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
+
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const loginForm =
+            document.getElementById(
+                "adminLoginForm"
+            );
+
+
+        const emailInput =
+            document.getElementById(
+                "adminEmail"
+            );
+
+
+        const passwordInput =
+            document.getElementById(
+                "adminPassword"
+            );
+
+
+        const loginButton =
+            document.getElementById(
+                "loginButton"
+            );
+
+
+        const loginError =
+            document.getElementById(
+                "loginError"
+            );
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        function showError(message) {
+
+            loginError.textContent =
+                message;
+
+            loginError.style.display =
+                "block";
+
+        }
+
+
+        function hideError() {
+
+            loginError.textContent =
+                "";
+
+            loginError.style.display =
+                "none";
+
+        }
+
+
+        /* =====================================================
+           CHECK EXISTING SESSION
+        ===================================================== */
+
+        async function checkExistingSession() {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth.getSession();
+
+
+            if (error) {
+
+                console.error(error);
+
+                return;
+
+            }
+
+
+            const session =
+                data.session;
+
+
+            if (!session) {
+
+                return;
+
+            }
+
+
+            /*
+             Check whether this authenticated user
+             is actually registered as a Super Admin.
+            */
+
+            const {
+                data: adminRecord,
+                error: adminError
+            } =
+                await supabaseClient
+                    .from("admin_users")
+                    .select("user_id")
+                    .eq(
+                        "user_id",
+                        session.user.id
+                    )
+                    .maybeSingle();
+
+
+            if (adminError) {
+
+                console.error(adminError);
+
+                return;
+
+            }
+
+
+            if (adminRecord) {
+
+                window.location.href =
+                    "index.html";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ADMIN LOGIN
+        ===================================================== */
+
+        loginForm.addEventListener(
+            "submit",
+            async function (event) {
 
                 event.preventDefault();
 
-                const username =
-                    document
-                        .getElementById("adminUsername")
-                        .value
+                hideError();
+
+
+                const email =
+                    emailInput.value
                         .trim();
 
+
                 const password =
-                    document
-                        .getElementById("adminPassword")
-                        .value;
+                    passwordInput.value;
 
-                const error =
-                    document.getElementById("loginError");
 
-                if (
-                    username === ADMIN_USERNAME &&
-                    password === ADMIN_PASSWORD
-                ) {
-                    localStorage.setItem(
-                        "restaurantpro_admin_logged_in",
-                        "true"
+                if (!email || !password) {
+
+                    showError(
+                        "Please enter your email and password."
                     );
 
-                    window.location.href =
-                        "admin.html";
-
                     return;
+
                 }
 
-                error.style.display = "block";
-            });
+
+                loginButton.disabled =
+                    true;
+
+                loginButton.textContent =
+                    "Logging in...";
+
+
+                try {
+
+                    /*
+                     Supabase Authentication
+                    */
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient.auth
+                            .signInWithPassword({
+                                email: email,
+                                password: password
+                            });
+
+
+                    if (error) {
+
+                        console.error(error);
+
+                        showError(
+                            "Invalid email or password."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const user =
+                        data.user;
+
+
+                    if (!user) {
+
+                        await supabaseClient.auth
+                            .signOut();
+
+                        showError(
+                            "Login failed. Please try again."
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     Verify Super Admin permission.
+                    */
+
+                    const {
+                        data: adminRecord,
+                        error: adminError
+                    } =
+                        await supabaseClient
+                            .from("admin_users")
+                            .select("user_id")
+                            .eq(
+                                "user_id",
+                                user.id
+                            )
+                            .maybeSingle();
+
+
+                    if (adminError) {
+
+                        console.error(
+                            adminError
+                        );
+
+
+                        await supabaseClient.auth
+                            .signOut();
+
+
+                        showError(
+                            "Could not verify Super Admin access."
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     Authenticated but not an admin.
+                    */
+
+                    if (!adminRecord) {
+
+                        await supabaseClient.auth
+                            .signOut();
+
+
+                        showError(
+                            "This account is not authorized as Super Admin."
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     Everything is OK.
+                    */
+
+                    window.location.href =
+                        "index.html";
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showError(
+                        "Something went wrong. Please try again."
+                    );
+
+                } finally {
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Login";
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           START
+        ===================================================== */
+
+        checkExistingSession();
+
     </script>
 
 </body>
+
 </html>
+```
