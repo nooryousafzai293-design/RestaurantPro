@@ -2,32 +2,35 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>RestaurantPro - Dashboard</title>
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <!--
+        IMPORTANT:
+        Page hidden until authentication check is completed.
+    -->
+    <style>
+        html {
+            visibility: hidden;
+        }
 
-    <!-- =====================================================
-         RESTAURANT LOGIN PROTECTION
-    ====================================================== -->
+        html.auth-ready {
+            visibility: visible;
+        }
+    </style>
 
+    <!-- AUTHENTICATION CHECK -->
     <script>
-
         const SUPABASE_URL =
             "https://ryixnwawmtglcibjmhjh.supabase.co";
 
         const SUPABASE_PUBLISHABLE_KEY =
             "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
-
 
         const supabaseClient =
             window.supabase.createClient(
@@ -35,195 +38,165 @@
                 SUPABASE_PUBLISHABLE_KEY
             );
 
-
-        /*
-         * Hide page while authentication is checked.
-         */
-        document.documentElement.style.visibility =
-            "hidden";
-
-
-        async function checkRestaurantLogin() {
+        async function protectRestaurantPage() {
 
             try {
 
                 /*
-                 * Get current Supabase session.
+                 * Get current Supabase session
                  */
-
                 const {
-                    data: sessionData,
-                    error: sessionError
-                } =
-                    await supabaseClient.auth.getSession();
+                    data,
+                    error
+                } = await supabaseClient.auth.getSession();
 
-
-                /*
-                 * No valid login session.
-                 */
-
-                if (
-                    sessionError ||
-                    !sessionData ||
-                    !sessionData.session
-                ) {
-
-                    window.location.replace(
-                        "login.html"
-                    );
-
+                if (error) {
+                    console.error("Session error:", error);
+                    goToLogin();
                     return;
-
                 }
 
+                /*
+                 * NO SESSION = NOT LOGGED IN
+                 */
+                if (!data || !data.session || !data.session.user) {
+                    goToLogin();
+                    return;
+                }
 
-                const user =
-                    sessionData.session.user;
-
+                const user = data.session.user;
 
                 /*
-                 * Find restaurant belonging
-                 * to logged-in Auth user.
+                 * Find restaurant belonging to logged-in user
                  */
-
                 const {
                     data: restaurant,
                     error: restaurantError
-                } =
-                    await supabaseClient
-                        .from("restaurants")
-                        .select(
-                            "id, restaurant_name, owner_name, status, auth_user_id"
-                        )
-                        .eq(
-                            "auth_user_id",
-                            user.id
-                        )
-                        .maybeSingle();
+                } = await supabaseClient
+                    .from("restaurants")
+                    .select(`
+                        id,
+                        restaurant_name,
+                        owner_name,
+                        status,
+                        auth_user_id
+                    `)
+                    .eq("auth_user_id", user.id)
+                    .maybeSingle();
 
-
-                /*
-                 * No restaurant account found.
-                 */
-
-                if (
-                    restaurantError ||
-                    !restaurant
-                ) {
-
+                if (restaurantError) {
                     console.error(
                         "Restaurant lookup error:",
                         restaurantError
                     );
 
+                    await supabaseClient.auth.signOut();
+
+                    goToLogin();
+                    return;
+                }
+
+                /*
+                 * No restaurant connected to this account
+                 */
+                if (!restaurant) {
 
                     await supabaseClient.auth.signOut();
 
-
-                    window.location.replace(
-                        "login.html"
+                    alert(
+                        "Restaurant account not found. Please login again."
                     );
 
+                    goToLogin();
                     return;
-
                 }
 
-
                 /*
-                 * Restaurant must be active.
+                 * BLOCKED RESTAURANT
                  */
-
                 if (
-                    String(
-                        restaurant.status
-                    ).toLowerCase() !== "active"
+                    String(restaurant.status).toLowerCase() !== "active"
                 ) {
 
                     await supabaseClient.auth.signOut();
-
 
                     alert(
                         "Your restaurant account is blocked. Please contact the Super Admin."
                     );
 
-
-                    window.location.replace(
-                        "login.html"
-                    );
-
+                    goToLogin();
                     return;
-
                 }
 
-
                 /*
-                 * Save restaurant information.
+                 * Save restaurant information
                  */
-
                 localStorage.setItem(
                     "restaurantpro_restaurant_id",
                     restaurant.id
                 );
-
 
                 localStorage.setItem(
                     "restaurantpro_restaurant_name",
                     restaurant.restaurant_name || ""
                 );
 
-
                 localStorage.setItem(
                     "restaurantpro_owner_name",
                     restaurant.owner_name || ""
                 );
 
-
                 /*
-                 * Login is valid.
-                 * Show dashboard.
+                 * AUTHENTICATION SUCCESS
                  */
-
-                document.documentElement.style.visibility =
-                    "visible";
-
+                document.documentElement.classList.add(
+                    "auth-ready"
+                );
 
             } catch (error) {
 
                 console.error(
-                    "Restaurant authentication error:",
+                    "Authentication error:",
                     error
                 );
 
-
-                window.location.replace(
-                    "login.html"
-                );
-
+                goToLogin();
             }
-
         }
 
+        function goToLogin() {
+
+            /*
+             * Prevent redirect loop
+             */
+            if (
+                window.location.pathname.endsWith(
+                    "/login.html"
+                )
+            ) {
+                document.documentElement.classList.add(
+                    "auth-ready"
+                );
+
+                return;
+            }
+
+            window.location.replace("login.html");
+        }
 
         /*
-         * Start authentication check.
+         * Run immediately
          */
-
-        checkRestaurantLogin();
-
+        protectRestaurantPage();
     </script>
 
-
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 
 <body>
 
-
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
+    <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
@@ -234,15 +207,8 @@
             </div>
 
             <div>
-
-                <h2>
-                    RestaurantPro
-                </h2>
-
-                <span>
-                    Restaurant Management
-                </span>
-
+                <h2>RestaurantPro</h2>
+                <span>Restaurant Management</span>
             </div>
 
         </div>
@@ -250,136 +216,80 @@
 
         <nav class="sidebar-nav">
 
-
-            <a
-                href="index.html"
-                class="menu-item active"
-            >
+            <a href="index.html" class="menu-item active">
                 <span>🏠</span>
                 <span>Dashboard</span>
             </a>
 
-
-            <a
-                href="pos.html"
-                class="menu-item"
-            >
+            <a href="pos.html" class="menu-item">
                 <span>🧾</span>
                 <span>POS / Billing</span>
             </a>
 
-
-            <a
-                href="orders.html"
-                class="menu-item"
-            >
+            <a href="orders.html" class="menu-item">
                 <span>📋</span>
                 <span>Orders</span>
             </a>
 
-
-            <a
-                href="tables.html"
-                class="menu-item"
-            >
+            <a href="tables.html" class="menu-item">
                 <span>🪑</span>
                 <span>Tables</span>
             </a>
 
-
-            <a
-                href="kitchen.html"
-                class="menu-item"
-            >
+            <a href="kitchen.html" class="menu-item">
                 <span>👨‍🍳</span>
                 <span>Kitchen</span>
             </a>
 
-
-            <a
-                href="menu.html"
-                class="menu-item"
-            >
+            <a href="menu.html" class="menu-item">
                 <span>🍔</span>
                 <span>Menu</span>
             </a>
 
-
-            <a
-                href="inventory.html"
-                class="menu-item"
-            >
+            <a href="inventory.html" class="menu-item">
                 <span>📦</span>
                 <span>Inventory</span>
             </a>
 
-
-            <a
-                href="customers.html"
-                class="menu-item"
-            >
+            <a href="customers.html" class="menu-item">
                 <span>👥</span>
                 <span>Customers</span>
             </a>
 
-
-            <a
-                href="expenses.html"
-                class="menu-item"
-            >
+            <a href="expenses.html" class="menu-item">
                 <span>💰</span>
                 <span>Expenses</span>
             </a>
 
-
-            <a
-                href="reports.html"
-                class="menu-item"
-            >
+            <a href="reports.html" class="menu-item">
                 <span>📊</span>
                 <span>Reports</span>
             </a>
 
-
-            <a
-                href="settings.html"
-                class="menu-item"
-            >
+            <a href="settings.html" class="menu-item">
                 <span>⚙️</span>
                 <span>Settings</span>
             </a>
-
 
         </nav>
 
 
         <div class="sidebar-footer">
 
-            <strong>
-                RestaurantPro
-            </strong>
+            <strong>RestaurantPro</strong>
 
-            <small>
-                Version 1.0
-            </small>
+            <small>Version 1.0</small>
 
         </div>
 
     </aside>
 
 
-
-    <!-- =====================================================
-         MAIN CONTENT
-    ====================================================== -->
+    <!-- MAIN -->
 
     <main class="main-content">
 
-
-        <!-- HEADER -->
-
         <header class="page-header">
-
 
             <button
                 class="mobile-menu-button"
@@ -388,12 +298,9 @@
                 ☰
             </button>
 
-
             <div>
 
-                <h1>
-                    Dashboard
-                </h1>
+                <h1>Dashboard</h1>
 
                 <p>
                     Welcome back! Here's what's happening
@@ -405,16 +312,13 @@
 
             <div class="header-user">
 
-
                 <span class="notification">
                     🔔
                 </span>
 
-
                 <div class="user-avatar">
                     RO
                 </div>
-
 
                 <div class="user-info">
 
@@ -428,17 +332,10 @@
 
                 </div>
 
-
             </div>
-
 
         </header>
 
-
-
-        <!-- =====================================================
-             DASHBOARD
-        ====================================================== -->
 
         <section class="dashboard-content">
 
@@ -446,7 +343,6 @@
             <!-- STAT CARDS -->
 
             <div class="stats-grid">
-
 
                 <div class="stat-card">
 
@@ -456,13 +352,9 @@
 
                     <div class="stat-info">
 
-                        <span>
-                            Today's Sales
-                        </span>
+                        <span>Today's Sales</span>
 
-                        <h2>
-                            Rs. 0
-                        </h2>
+                        <h2>Rs. 0</h2>
 
                         <small>
                             Today's total sales
@@ -473,7 +365,6 @@
                 </div>
 
 
-
                 <div class="stat-card">
 
                     <div class="stat-icon">
@@ -482,13 +373,9 @@
 
                     <div class="stat-info">
 
-                        <span>
-                            Today's Orders
-                        </span>
+                        <span>Today's Orders</span>
 
-                        <h2>
-                            0
-                        </h2>
+                        <h2>0</h2>
 
                         <small>
                             Orders received today
@@ -499,7 +386,6 @@
                 </div>
 
 
-
                 <div class="stat-card">
 
                     <div class="stat-icon">
@@ -508,13 +394,9 @@
 
                     <div class="stat-info">
 
-                        <span>
-                            Menu Items
-                        </span>
+                        <span>Menu Items</span>
 
-                        <h2>
-                            0
-                        </h2>
+                        <h2>0</h2>
 
                         <small>
                             Food items available
@@ -525,7 +407,6 @@
                 </div>
 
 
-
                 <div class="stat-card">
 
                     <div class="stat-icon">
@@ -534,13 +415,9 @@
 
                     <div class="stat-info">
 
-                        <span>
-                            Tables
-                        </span>
+                        <span>Tables</span>
 
-                        <h2>
-                            0
-                        </h2>
+                        <h2>0</h2>
 
                         <small>
                             Restaurant tables
@@ -550,25 +427,18 @@
 
                 </div>
 
-
             </div>
 
 
-
-            <!-- =================================================
-                 ORDER STATUS
-            ================================================== -->
+            <!-- ORDER STATUS -->
 
             <section class="dashboard-section">
-
 
                 <div class="section-heading">
 
                     <div>
 
-                        <h2>
-                            Order Status
-                        </h2>
+                        <h2>Order Status</h2>
 
                         <p>
                             Current status of restaurant orders.
@@ -579,9 +449,7 @@
                 </div>
 
 
-
                 <div class="stats-grid">
-
 
                     <div class="stat-card">
 
@@ -591,9 +459,7 @@
 
                         <div class="stat-info">
 
-                            <span>
-                                New Orders
-                            </span>
+                            <span>New Orders</span>
 
                             <h2 id="newOrdersCount">
                                 0
@@ -608,7 +474,6 @@
                     </div>
 
 
-
                     <div class="stat-card">
 
                         <div class="stat-icon">
@@ -617,9 +482,7 @@
 
                         <div class="stat-info">
 
-                            <span>
-                                Preparing
-                            </span>
+                            <span>Preparing</span>
 
                             <h2 id="preparingOrdersCount">
                                 0
@@ -634,7 +497,6 @@
                     </div>
 
 
-
                     <div class="stat-card">
 
                         <div class="stat-icon">
@@ -643,9 +505,7 @@
 
                         <div class="stat-info">
 
-                            <span>
-                                Ready
-                            </span>
+                            <span>Ready</span>
 
                             <h2 id="readyOrdersCount">
                                 0
@@ -660,7 +520,6 @@
                     </div>
 
 
-
                     <div class="stat-card">
 
                         <div class="stat-icon">
@@ -669,9 +528,7 @@
 
                         <div class="stat-info">
 
-                            <span>
-                                Completed
-                            </span>
+                            <span>Completed</span>
 
                             <h2 id="completedOrdersCount">
                                 0
@@ -685,28 +542,20 @@
 
                     </div>
 
-
                 </div>
-
 
             </section>
 
 
-
-            <!-- =================================================
-                 QUICK ACTIONS
-            ================================================== -->
+            <!-- QUICK ACTIONS -->
 
             <section class="dashboard-section">
-
 
                 <div class="section-heading">
 
                     <div>
 
-                        <h2>
-                            Quick Actions
-                        </h2>
+                        <h2>Quick Actions</h2>
 
                         <p>
                             Quickly access the most used
@@ -718,103 +567,61 @@
                 </div>
 
 
-
                 <div class="quick-actions">
-
 
                     <button
                         class="quick-action"
                         onclick="window.location.href='pos.html'"
                     >
-
-                        <span>
-                            🧾
-                        </span>
-
-                        <strong>
-                            New Order
-                        </strong>
-
+                        <span>🧾</span>
+                        <strong>New Order</strong>
                         <small>
                             Create a new customer order
                         </small>
-
                     </button>
-
 
 
                     <button
                         class="quick-action"
                         onclick="window.location.href='menu.html'"
                     >
-
-                        <span>
-                            🍔
-                        </span>
-
-                        <strong>
-                            Add Food Item
-                        </strong>
-
+                        <span>🍔</span>
+                        <strong>Add Food Item</strong>
                         <small>
                             Add an item to your menu
                         </small>
-
                     </button>
-
 
 
                     <button
                         class="quick-action"
                         onclick="window.location.href='tables.html'"
                     >
-
-                        <span>
-                            🪑
-                        </span>
-
-                        <strong>
-                            Manage Tables
-                        </strong>
-
+                        <span>🪑</span>
+                        <strong>Manage Tables</strong>
                         <small>
                             View restaurant tables
                         </small>
-
                     </button>
-
 
 
                     <button
                         class="quick-action"
                         onclick="window.location.href='reports.html'"
                     >
-
-                        <span>
-                            📊
-                        </span>
-
-                        <strong>
-                            View Reports
-                        </strong>
-
+                        <span>📊</span>
+                        <strong>View Reports</strong>
                         <small>
                             Check restaurant performance
                         </small>
-
                     </button>
 
-
                 </div>
-
 
             </section>
 
 
-
-            <!-- =================================================
-                 LOWER GRID
-            ================================================== -->
+            <!-- LOWER GRID -->
 
             <div class="dashboard-grid">
 
@@ -823,22 +630,17 @@
 
                 <section class="dashboard-panel">
 
-
                     <div class="panel-header">
-
 
                         <div>
 
-                            <h2>
-                                Recent Orders
-                            </h2>
+                            <h2>Recent Orders</h2>
 
                             <p>
                                 Latest restaurant orders.
                             </p>
 
                         </div>
-
 
                         <button
                             class="view-all"
@@ -847,9 +649,7 @@
                             View All
                         </button>
 
-
                     </div>
-
 
 
                     <div
@@ -863,9 +663,7 @@
                                 🧾
                             </div>
 
-                            <h3>
-                                No orders yet
-                            </h3>
+                            <h3>No orders yet</h3>
 
                             <p>
                                 Your recent orders will appear here.
@@ -875,24 +673,18 @@
 
                     </div>
 
-
                 </section>
-
 
 
                 <!-- POPULAR ITEMS -->
 
                 <section class="dashboard-panel">
 
-
                     <div class="panel-header">
-
 
                         <div>
 
-                            <h2>
-                                Popular Items
-                            </h2>
+                            <h2>Popular Items</h2>
 
                             <p>
                                 Best selling food items.
@@ -900,9 +692,7 @@
 
                         </div>
 
-
                     </div>
-
 
 
                     <div
@@ -916,9 +706,7 @@
                                 🍽️
                             </div>
 
-                            <h3>
-                                No menu data
-                            </h3>
+                            <h3>No menu data</h3>
 
                             <p>
                                 Add food items to see popular products.
@@ -928,56 +716,41 @@
 
                     </div>
 
-
                 </section>
-
 
             </div>
 
-
         </section>
-
 
     </main>
 
 
-
-    <!-- =====================================================
-         OWNER NAME
-    ====================================================== -->
+    <!-- OWNER NAME -->
 
     <script>
-
-        const ownerName =
+        const savedOwnerName =
             localStorage.getItem(
                 "restaurantpro_owner_name"
             );
-
 
         const ownerElement =
             document.getElementById(
                 "dashboardOwnerName"
             );
 
-
         if (
-            ownerName &&
+            savedOwnerName &&
             ownerElement
         ) {
-
             ownerElement.textContent =
-                ownerName;
-
+                savedOwnerName;
         }
-
     </script>
 
 
-    <!-- APP JS -->
+    <!-- APP -->
 
     <script src="app.js"></script>
 
-
 </body>
-
 </html>
