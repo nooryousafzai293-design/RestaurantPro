@@ -15,7 +15,11 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- LOGIN PROTECTION -->
+
+    <!-- =====================================================
+         RESTAURANT LOGIN PROTECTION
+    ====================================================== -->
+
     <script>
 
         const SUPABASE_URL =
@@ -24,6 +28,7 @@
         const SUPABASE_PUBLISHABLE_KEY =
             "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
 
+
         const supabaseClient =
             window.supabase.createClient(
                 SUPABASE_URL,
@@ -31,12 +36,19 @@
             );
 
 
+        /*
+         * Hide page while authentication is checked.
+         */
+        document.documentElement.style.visibility =
+            "hidden";
+
+
         async function checkRestaurantLogin() {
 
             try {
 
                 /*
-                 * Check Supabase login session
+                 * Get current Supabase session.
                  */
 
                 const {
@@ -45,6 +57,10 @@
                 } =
                     await supabaseClient.auth.getSession();
 
+
+                /*
+                 * No valid login session.
+                 */
 
                 if (
                     sessionError ||
@@ -57,6 +73,7 @@
                     );
 
                     return;
+
                 }
 
 
@@ -66,7 +83,7 @@
 
                 /*
                  * Find restaurant belonging
-                 * to this logged-in user.
+                 * to logged-in Auth user.
                  */
 
                 const {
@@ -86,7 +103,7 @@
 
 
                 /*
-                 * Restaurant record not found
+                 * No restaurant account found.
                  */
 
                 if (
@@ -94,18 +111,26 @@
                     !restaurant
                 ) {
 
+                    console.error(
+                        "Restaurant lookup error:",
+                        restaurantError
+                    );
+
+
                     await supabaseClient.auth.signOut();
+
 
                     window.location.replace(
                         "login.html"
                     );
 
                     return;
+
                 }
 
 
                 /*
-                 * Blocked restaurant
+                 * Restaurant must be active.
                  */
 
                 if (
@@ -116,21 +141,23 @@
 
                     await supabaseClient.auth.signOut();
 
+
                     alert(
                         "Your restaurant account is blocked. Please contact the Super Admin."
                     );
+
 
                     window.location.replace(
                         "login.html"
                     );
 
                     return;
+
                 }
 
 
                 /*
-                 * Save restaurant information
-                 * for dashboard/app.js
+                 * Save restaurant information.
                  */
 
                 localStorage.setItem(
@@ -138,10 +165,12 @@
                     restaurant.id
                 );
 
+
                 localStorage.setItem(
                     "restaurantpro_restaurant_name",
                     restaurant.restaurant_name || ""
                 );
+
 
                 localStorage.setItem(
                     "restaurantpro_owner_name",
@@ -150,8 +179,8 @@
 
 
                 /*
-                 * User is authenticated.
-                 * Dashboard can remain open.
+                 * Login is valid.
+                 * Show dashboard.
                  */
 
                 document.documentElement.style.visibility =
@@ -165,6 +194,7 @@
                     error
                 );
 
+
                 window.location.replace(
                     "login.html"
                 );
@@ -175,12 +205,8 @@
 
 
         /*
-         * Hide page until login is checked.
+         * Start authentication check.
          */
-
-        document.documentElement.style.visibility =
-            "hidden";
-
 
         checkRestaurantLogin();
 
@@ -195,7 +221,9 @@
 <body>
 
 
-    <!-- SIDEBAR -->
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
     <aside class="sidebar">
 
@@ -221,6 +249,7 @@
 
 
         <nav class="sidebar-nav">
+
 
             <a
                 href="index.html"
@@ -320,6 +349,7 @@
                 <span>Settings</span>
             </a>
 
+
         </nav>
 
 
@@ -339,7 +369,9 @@
 
 
 
-    <!-- MAIN CONTENT -->
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
 
     <main class="main-content">
 
@@ -373,6 +405,7 @@
 
             <div class="header-user">
 
+
                 <span class="notification">
                     🔔
                 </span>
@@ -395,13 +428,17 @@
 
                 </div>
 
+
             </div>
+
 
         </header>
 
 
 
-        <!-- DASHBOARD -->
+        <!-- =====================================================
+             DASHBOARD
+        ====================================================== -->
 
         <section class="dashboard-content">
 
@@ -513,11 +550,14 @@
 
                 </div>
 
+
             </div>
 
 
 
-            <!-- ORDER STATUS -->
+            <!-- =================================================
+                 ORDER STATUS
+            ================================================== -->
 
             <section class="dashboard-section">
 
@@ -645,13 +685,17 @@
 
                     </div>
 
+
                 </div>
+
 
             </section>
 
 
 
-            <!-- QUICK ACTIONS -->
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
 
             <section class="dashboard-section">
 
@@ -763,11 +807,14 @@
 
                 </div>
 
+
             </section>
 
 
 
-            <!-- LOWER GRID -->
+            <!-- =================================================
+                 LOWER GRID
+            ================================================== -->
 
             <div class="dashboard-grid">
 
@@ -800,6 +847,7 @@
                             View All
                         </button>
 
+
                     </div>
 
 
@@ -827,6 +875,7 @@
 
                     </div>
 
+
                 </section>
 
 
@@ -837,6 +886,7 @@
 
 
                     <div class="panel-header">
+
 
                         <div>
 
@@ -849,6 +899,7 @@
                             </p>
 
                         </div>
+
 
                     </div>
 
@@ -877,6 +928,7 @@
 
                     </div>
 
+
                 </section>
 
 
@@ -889,21 +941,24 @@
     </main>
 
 
-    <script>
 
-        /*
-         * Display actual restaurant owner name
-         */
+    <!-- =====================================================
+         OWNER NAME
+    ====================================================== -->
+
+    <script>
 
         const ownerName =
             localStorage.getItem(
                 "restaurantpro_owner_name"
             );
 
+
         const ownerElement =
             document.getElementById(
                 "dashboardOwnerName"
             );
+
 
         if (
             ownerName &&
@@ -915,9 +970,10 @@
 
         }
 
-
     </script>
 
+
+    <!-- APP JS -->
 
     <script src="app.js"></script>
 
