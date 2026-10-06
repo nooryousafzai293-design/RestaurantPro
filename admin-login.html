@@ -1,23 +1,15 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>RestaurantPro - Super Admin Login</title>
 
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -30,22 +22,22 @@
             align-items: center;
             justify-content: center;
             font-family: Arial, sans-serif;
-            background: #f7f7f7;
+            background: linear-gradient(135deg, #fff7f2, #f6f7f9);
         }
 
         .login-card {
             width: 100%;
-            max-width: 400px;
+            max-width: 410px;
             margin: 20px;
             padding: 35px;
-            background: #ffffff;
+            background: #fff;
             border-radius: 16px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .10);
         }
 
         .logo {
             text-align: center;
-            font-size: 42px;
+            font-size: 44px;
             margin-bottom: 10px;
         }
 
@@ -86,6 +78,7 @@
 
         input:focus {
             border-color: #e85b22;
+            box-shadow: 0 0 0 3px rgba(232, 91, 34, .10);
         }
 
         button {
@@ -105,7 +98,7 @@
         }
 
         button:disabled {
-            opacity: 0.65;
+            opacity: .65;
             cursor: not-allowed;
         }
 
@@ -119,430 +112,416 @@
             font-size: 14px;
         }
 
+        .success {
+            display: none;
+            margin-bottom: 15px;
+            padding: 11px;
+            border-radius: 8px;
+            background: #e8f7ee;
+            color: #237447;
+            font-size: 14px;
+        }
+
         .footer {
             margin-top: 22px;
             text-align: center;
             color: #999;
             font-size: 12px;
         }
-
     </style>
-
 </head>
 
 <body>
 
-    <div class="login-card">
+<div class="login-card">
 
-        <div class="logo">
-            🍽️
-        </div>
+    <div class="logo">🍽️</div>
 
-        <h1>
-            Super Admin
-        </h1>
+    <h1>Super Admin</h1>
 
-        <p class="subtitle">
-            RestaurantPro Management
-        </p>
+    <p class="subtitle">
+        RestaurantPro Management
+    </p>
 
+    <div id="loginError" class="error"></div>
 
-        <div
-            id="loginError"
-            class="error"
-        ></div>
+    <div id="loginSuccess" class="success"></div>
 
+    <form id="adminLoginForm">
 
-        <form id="adminLoginForm">
+        <div class="form-group">
 
+            <label for="adminEmail">
+                Admin Email
+            </label>
 
-            <div class="form-group">
-
-                <label for="adminEmail">
-                    Admin Email
-                </label>
-
-                <input
-                    type="email"
-                    id="adminEmail"
-                    placeholder="Enter admin email"
-                    autocomplete="email"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="adminPassword">
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    id="adminPassword"
-                    placeholder="Enter password"
-                    autocomplete="current-password"
-                    required
-                >
-
-            </div>
-
-
-            <button
-                type="submit"
-                id="loginButton"
+            <input
+                type="email"
+                id="adminEmail"
+                placeholder="Enter admin email"
+                autocomplete="email"
+                required
             >
-                Login
-            </button>
 
-
-        </form>
-
-
-        <div class="footer">
-            RestaurantPro Super Admin
         </div>
 
+        <div class="form-group">
+
+            <label for="adminPassword">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Enter password"
+                autocomplete="current-password"
+                required
+            >
+
+        </div>
+
+        <button
+            type="submit"
+            id="loginButton"
+        >
+            Login
+        </button>
+
+    </form>
+
+    <div class="footer">
+        RestaurantPro Super Admin
     </div>
 
-
-    <script>
-
-        /* =====================================================
-           SUPABASE CONFIG
-        ===================================================== */
-
-        const SUPABASE_URL =
-            "https://ryixnwawmtglcibjmhjh.supabase.co";
+</div>
 
 
-        const SUPABASE_PUBLISHABLE_KEY =
-            "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
+<script>
+
+const SUPABASE_URL =
+    "https://ryixnwawmtglcibjmhjh.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
 
 
-        const supabaseClient =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_PUBLISHABLE_KEY
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+const loginForm =
+    document.getElementById("adminLoginForm");
+
+const emailInput =
+    document.getElementById("adminEmail");
+
+const passwordInput =
+    document.getElementById("adminPassword");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginError =
+    document.getElementById("loginError");
+
+const loginSuccess =
+    document.getElementById("loginSuccess");
+
+
+function showError(message) {
+
+    loginError.textContent = message;
+    loginError.style.display = "block";
+
+    loginSuccess.textContent = "";
+    loginSuccess.style.display = "none";
+}
+
+
+function showSuccess(message) {
+
+    loginSuccess.textContent = message;
+    loginSuccess.style.display = "block";
+
+    loginError.textContent = "";
+    loginError.style.display = "none";
+}
+
+
+function hideMessages() {
+
+    loginError.textContent = "";
+    loginError.style.display = "none";
+
+    loginSuccess.textContent = "";
+    loginSuccess.style.display = "none";
+}
+
+
+/* =========================================
+   CHECK EXISTING LOGIN
+========================================= */
+
+async function checkExistingSession() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth.getSession();
+
+
+        if (error) {
+
+            console.error(
+                "Session error:",
+                error
             );
 
-
-        /* =====================================================
-           ELEMENTS
-        ===================================================== */
-
-        const loginForm =
-            document.getElementById(
-                "adminLoginForm"
-            );
-
-
-        const emailInput =
-            document.getElementById(
-                "adminEmail"
-            );
-
-
-        const passwordInput =
-            document.getElementById(
-                "adminPassword"
-            );
-
-
-        const loginButton =
-            document.getElementById(
-                "loginButton"
-            );
-
-
-        const loginError =
-            document.getElementById(
-                "loginError"
-            );
-
-
-        /* =====================================================
-           ERROR
-        ===================================================== */
-
-        function showError(message) {
-
-            loginError.textContent =
-                message;
-
-            loginError.style.display =
-                "block";
-
+            return;
         }
 
 
-        function hideError() {
+        const session =
+            data.session;
 
-            loginError.textContent =
-                "";
 
-            loginError.style.display =
-                "none";
-
+        if (!session) {
+            return;
         }
 
 
-        /* =====================================================
-           CHECK EXISTING SESSION
-        ===================================================== */
+        const {
+            data: adminRecord,
+            error: adminError
+        } =
+        await supabaseClient
+            .from("admin_users")
+            .select("user_id")
+            .eq(
+                "user_id",
+                session.user.id
+            )
+            .maybeSingle();
 
-        async function checkExistingSession() {
+
+        if (adminError) {
+
+            console.error(
+                "Admin check error:",
+                adminError
+            );
+
+            return;
+        }
+
+
+        if (adminRecord) {
+
+            window.location.href =
+                "admin.html";
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Session check failed:",
+            error
+        );
+    }
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        hideMessages();
+
+
+        const email =
+            emailInput.value
+                .trim()
+                .toLowerCase();
+
+        const password =
+            passwordInput.value;
+
+
+        if (!email || !password) {
+
+            showError(
+                "Please enter your email and password."
+            );
+
+            return;
+        }
+
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+            "Logging in...";
+
+
+        try {
+
+            /* LOGIN WITH SUPABASE */
 
             const {
                 data,
                 error
             } =
-                await supabaseClient.auth.getSession();
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email: email,
+                    password: password
+                });
 
 
             if (error) {
 
-                console.error(error);
+                console.error(
+                    "Login error:",
+                    error
+                );
+
+                showError(
+                    "Invalid email or password."
+                );
 
                 return;
-
             }
 
 
-            const session =
-                data.session;
+            const user =
+                data.user;
 
 
-            if (!session) {
+            if (!user) {
+
+                await supabaseClient.auth
+                    .signOut();
+
+                showError(
+                    "Login failed. Please try again."
+                );
 
                 return;
-
             }
 
 
-            /*
-             Check whether this authenticated user
-             is actually registered as a Super Admin.
-            */
+            /* CHECK SUPER ADMIN */
 
             const {
                 data: adminRecord,
                 error: adminError
             } =
-                await supabaseClient
-                    .from("admin_users")
-                    .select("user_id")
-                    .eq(
-                        "user_id",
-                        session.user.id
-                    )
-                    .maybeSingle();
+            await supabaseClient
+                .from("admin_users")
+                .select("user_id")
+                .eq(
+                    "user_id",
+                    user.id
+                )
+                .maybeSingle();
 
 
             if (adminError) {
 
-                console.error(adminError);
+                console.error(
+                    "Admin verification error:",
+                    adminError
+                );
+
+
+                await supabaseClient.auth
+                    .signOut();
+
+
+                showError(
+                    "Could not verify Super Admin access."
+                );
 
                 return;
-
             }
 
 
-            if (adminRecord) {
+            /* NOT ADMIN */
 
-                window.location.href =
-                    "index.html";
+            if (!adminRecord) {
 
+                await supabaseClient.auth
+                    .signOut();
+
+
+                showError(
+                    "This account is not authorized as Super Admin."
+                );
+
+                return;
             }
 
-        }
+
+            /* SUCCESS */
+
+            showSuccess(
+                "Login successful. Opening dashboard..."
+            );
 
 
-        /* =====================================================
-           ADMIN LOGIN
-        ===================================================== */
-
-        loginForm.addEventListener(
-            "submit",
-            async function (event) {
-
-                event.preventDefault();
-
-                hideError();
-
-
-                const email =
-                    emailInput.value
-                        .trim();
-
-
-                const password =
-                    passwordInput.value;
-
-
-                if (!email || !password) {
-
-                    showError(
-                        "Please enter your email and password."
-                    );
-
-                    return;
-
-                }
-
-
-                loginButton.disabled =
-                    true;
-
-                loginButton.textContent =
-                    "Logging in...";
-
-
-                try {
-
-                    /*
-                     Supabase Authentication
-                    */
-
-                    const {
-                        data,
-                        error
-                    } =
-                        await supabaseClient.auth
-                            .signInWithPassword({
-                                email: email,
-                                password: password
-                            });
-
-
-                    if (error) {
-
-                        console.error(error);
-
-                        showError(
-                            "Invalid email or password."
-                        );
-
-                        return;
-
-                    }
-
-
-                    const user =
-                        data.user;
-
-
-                    if (!user) {
-
-                        await supabaseClient.auth
-                            .signOut();
-
-                        showError(
-                            "Login failed. Please try again."
-                        );
-
-                        return;
-
-                    }
-
-
-                    /*
-                     Verify Super Admin permission.
-                    */
-
-                    const {
-                        data: adminRecord,
-                        error: adminError
-                    } =
-                        await supabaseClient
-                            .from("admin_users")
-                            .select("user_id")
-                            .eq(
-                                "user_id",
-                                user.id
-                            )
-                            .maybeSingle();
-
-
-                    if (adminError) {
-
-                        console.error(
-                            adminError
-                        );
-
-
-                        await supabaseClient.auth
-                            .signOut();
-
-
-                        showError(
-                            "Could not verify Super Admin access."
-                        );
-
-                        return;
-
-                    }
-
-
-                    /*
-                     Authenticated but not an admin.
-                    */
-
-                    if (!adminRecord) {
-
-                        await supabaseClient.auth
-                            .signOut();
-
-
-                        showError(
-                            "This account is not authorized as Super Admin."
-                        );
-
-                        return;
-
-                    }
-
-
-                    /*
-                     Everything is OK.
-                    */
+            setTimeout(
+                function() {
 
                     window.location.href =
-                        "index.html";
+                        "admin.html";
 
-                } catch (error) {
+                },
+                500
+            );
 
-                    console.error(error);
+        } catch (error) {
 
-                    showError(
-                        "Something went wrong. Please try again."
-                    );
+            console.error(
+                "Unexpected login error:",
+                error
+            );
 
-                } finally {
+            showError(
+                "Something went wrong. Please try again."
+            );
 
-                    loginButton.disabled =
-                        false;
+        } finally {
 
-                    loginButton.textContent =
-                        "Login";
+            loginButton.disabled = false;
 
-                }
+            loginButton.textContent =
+                "Login";
+        }
 
-            }
-        );
+    }
+);
 
 
-        /* =====================================================
-           START
-        ===================================================== */
+/* =========================================
+   START
+========================================= */
 
-        checkExistingSession();
+checkExistingSession();
 
-    </script>
+</script>
 
 </body>
-
 </html>
-```
