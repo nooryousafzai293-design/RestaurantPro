@@ -1,18 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial;background:#f6f7f9;padding:20px}
+.top{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:15px 20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:20px}
+.card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:20px}
+input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px}
+button{padding:12px 18px;border:none;border-radius:8px;background:#e85b22;color:#fff;font-weight:600;cursor:pointer}
+.item{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #eee}
+.badge{padding:3px 8px;border-radius:20px;font-size:12px;background:#e8ffe8;color:green}
+</style>
 </head>
-<body style="font-family:Arial;text-align:center;padding-top:100px;">
-<h1>🎉 Login Successful!</h1>
-<h2 id="name"></h2>
-<p>Restaurant ID: <span id="rid"></span></p>
-<button onclick="localStorage.clear();location.href='login.html'" style="padding:10px 20px;background:#e85b22;color:white;border:none;border-radius:8px;">Logout</button>
+<body>
+<div class="top">
+<div><b id="rname"></b><br><small id="rid" style="color:#888"></small></div>
+<button onclick="localStorage.clear();location.href='login.html'">Logout</button>
+</div>
+
+<div class="card">
+<h3>Add Menu Item</h3><br>
+<input id="iname" placeholder="Item Name e.g. Chicken Karahi">
+<input id="iprice" type="number" placeholder="Price e.g. 1200">
+<input id="icat" placeholder="Category e.g. Karahi, BBQ">
+<button id="addBtn">Add Item</button>
+</div>
+
+<div class="card">
+<h3>My Menu</h3>
+<div id="menuList">Loading...</div>
+</div>
+
 <script>
-document.getElementById('name').innerText = localStorage.getItem('restaurant_name') || 'Restaurant';
-document.getElementById('rid').innerText = localStorage.getItem('restaurant_id') || 'N/A';
-if(!localStorage.getItem('restaurant_id')){ location.href='login.html'; }
+const supabaseClient = supabase.createClient("https://ryixnwawmtglcibjmhjh.supabase.co","sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k");
+const restaurant_id = localStorage.getItem("restaurant_id");
+const restaurant_name = localStorage.getItem("restaurant_name");
+if(!restaurant_id) location.href="login.html";
+document.getElementById("rname").innerText = restaurant_name;
+document.getElementById("rid").innerText = restaurant_id;
+
+async function loadMenu(){
+  const {data} = await supabaseClient.from("menu_items").select("*").eq("restaurant_id",restaurant_id).order("created_at",{ascending:false});
+  const list=document.getElementById("menuList");
+  if(!data || data.length==0){list.innerHTML="No items yet. Add one above.";return;}
+  list.innerHTML=data.map(i=>`<div class="item"><div><b>${i.name}</b> - Rs.${i.price} <small>(${i.category||''})</small></div><div><span class="badge">${i.is_available?'Available':''}</span> <span onclick="delItem('${i.id}')" style="color:red;cursor:pointer;margin-left:10px;">Delete</span></div></div>`).join("");
+}
+async function delItem(id){
+  if(!confirm("Delete?"))return;
+  await supabaseClient.from("menu_items").delete().eq("id",id);
+  loadMenu();
+}
+document.getElementById("addBtn").onclick=async()=>{
+  const name=document.getElementById("iname").value.trim();
+  const price=parseInt(document.getElementById("iprice").value);
+  const category=document.getElementById("icat").value.trim();
+  if(!name||!price){alert("Name and Price required");return;}
+  const {error}=await supabaseClient.from("menu_items").insert({restaurant_id,name,price,category});
+  if(error){alert(error.message);return;}
+  document.getElementById("iname").value="";document.getElementById("iprice").value="";document.getElementById("icat").value="";
+  loadMenu();
+}
+loadMenu();
 </script>
 </body>
 </html>
