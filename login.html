@@ -25,7 +25,7 @@ button{width:100%;padding:14px;border:none;border-radius:9px;background:#e85b22;
 <p class="sub">RestaurantPro</p>
 <div id="err" class="error"></div>
 <form id="form">
-<label>Email</label><input type="email" id="email" placeholder="Restaurant email" required>
+<label>Email (Username)</label><input type="email" id="email" placeholder="Restaurant email" required>
 <label>Password</label><input type="password" id="pass" placeholder="Password" required>
 <button id="btn" type="submit">Login</button>
 </form>
@@ -44,11 +44,11 @@ form.addEventListener("submit",async(e)=>{
  const password=document.getElementById("pass").value;
  btn.textContent="Logging in..."; btn.disabled=true;
  try{
-  const {data,error}=await supabaseClient.from("restaurants").select("*").eq("email",email).eq("password",password).maybeSingle();
+  const {data,error}=await supabaseClient.from("restaurants").select("*").eq("username",email).eq("password",password).maybeSingle();
   if(error) throw error;
   if(!data){err.textContent="Invalid email or password.";err.style.display="block";return;}
   localStorage.setItem("restaurant_id",data.id);
-  localStorage.setItem("restaurant_name",data.name);
+  localStorage.setItem("restaurant_name",data.restaurant_name);
   location.href="dashboard.html";
  }catch(ex){
   err.textContent="Login failed: "+ex.message;err.style.display="block";
