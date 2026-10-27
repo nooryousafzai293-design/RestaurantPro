@@ -3,57 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RestaurantPro - Restaurant Login</title>
+<title>RestaurantPro - Login</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Arial;background:linear-gradient(135deg,#fff7f2,#f6f7f9)}
-.login-card{width:100%;max-width:410px;margin:20px;padding:35px;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.10)}
+.card{width:100%;max-width:410px;margin:20px;padding:35px;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.10)}
 .logo{text-align:center;font-size:44px;margin-bottom:10px}
-h1{text-align:center;color:#222;font-size:26px;margin-bottom:6px}
-.subtitle{text-align:center;color:#777;font-size:14px;margin-bottom:28px}
-.form-group{margin-bottom:18px}
-label{display:block;margin-bottom:7px;font-size:14px;font-weight:600;color:#333}
-input{width:100%;padding:13px 14px;border:1px solid #ddd;border-radius:9px;font-size:15px;outline:none}
-button{width:100%;padding:14px;border:none;border-radius:9px;background:#e85b22;color:white;font-size:16px;font-weight:600;cursor:pointer}
+h1{text-align:center;font-size:26px} .sub{text-align:center;color:#777;font-size:14px;margin-bottom:28px}
+label{display:block;margin-bottom:7px;font-size:14px;font-weight:600}
+input{width:100%;padding:13px;border:1px solid #ddd;border-radius:9px;margin-bottom:18px}
+button{width:100%;padding:14px;border:none;border-radius:9px;background:#e85b22;color:#fff;font-weight:600;cursor:pointer}
 .error{display:none;margin-bottom:15px;padding:11px;border-radius:8px;background:#ffe8e8;color:#c62828;font-size:14px}
+.foot{margin-top:18px;text-align:center;font-size:13px} .foot a{color:#e85b22;text-decoration:none}
 </style>
 </head>
 <body>
-<div class="login-card">
+<div class="card">
 <div class="logo">🍽️</div>
-<h1>RestaurantPro</h1>
-<p class="subtitle">Restaurant Login</p>
-<div id="loginError" class="error"></div>
-<form id="loginForm">
-<div class="form-group"><label>Login Email</label><input type="email" id="email" required></div>
-<div class="form-group"><label>Password</label><input type="password" id="password" required></div>
-<button type="submit" id="btn">Login</button>
+<h1>Restaurant Login</h1>
+<p class="sub">RestaurantPro</p>
+<div id="err" class="error"></div>
+<form id="form">
+<label>Email</label><input type="email" id="email" placeholder="Restaurant email" required>
+<label>Password</label><input type="password" id="pass" placeholder="Password" required>
+<button id="btn" type="submit">Login</button>
 </form>
-<div style="margin-top:15px;text-align:center"><a href="admin-login.html" style="color:#e85b22;font-size:13px;text-decoration:none">Super Admin Login?</a></div>
+<div class="foot"><a href="admin-login.html">Super Admin Login</a></div>
 </div>
 <script>
-const SUPABASE_URL="https://ryixnwawmtglcibjmhjh.supabase.co";
-const SUPABASE_KEY="sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const form=document.getElementById("loginForm");
-const errorBox=document.getElementById("loginError");
+const supabaseClient = supabase.createClient(
+ "https://ryixnwawmtglcibjmhjh.supabase.co",
+ "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k"
+);
+const form=document.getElementById("form"),err=document.getElementById("err"),btn=document.getElementById("btn");
 form.addEventListener("submit",async(e)=>{
  e.preventDefault();
- errorBox.style.display="none";
+ err.style.display="none";
  const email=document.getElementById("email").value.trim().toLowerCase();
- const password=document.getElementById("password").value;
- document.getElementById("btn").textContent="Logging in...";
+ const password=document.getElementById("pass").value;
+ btn.textContent="Logging in..."; btn.disabled=true;
  try{
-   const {data,error}=await supabaseClient.from("restaurants").select("*").eq("email",email).eq("password",password).maybeSingle();
-   if(error) throw error;
-   if(!data){errorBox.textContent="Invalid email or password for restaurant.";errorBox.style.display="block";return;}
-   if(data.status!=="active"){errorBox.textContent="Restaurant is not active. Contact Super Admin.";errorBox.style.display="block";return;}
-   localStorage.setItem("restaurant_id",data.id);
-   localStorage.setItem("restaurant_name",data.name);
-   window.location.href="dashboard.html";
- }catch(err){console.error(err);errorBox.textContent="Login failed: "+err.message;errorBox.style.display="block";}
- finally{document.getElementById("btn").textContent="Login";}
+  const {data,error}=await supabaseClient.from("restaurants").select("*").eq("email",email).eq("password",password).maybeSingle();
+  if(error) throw error;
+  if(!data){err.textContent="Invalid email or password.";err.style.display="block";return;}
+  localStorage.setItem("restaurant_id",data.id);
+  localStorage.setItem("restaurant_name",data.name);
+  location.href="dashboard.html";
+ }catch(ex){
+  err.textContent="Login failed: "+ex.message;err.style.display="block";
+ }finally{btn.textContent="Login";btn.disabled=false;}
 });
 </script>
 </body>
