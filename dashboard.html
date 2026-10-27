@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+</head>
+<body style="font-family:Arial;text-align:center;padding-top:100px;">
+<h1>🎉 Login Successful!</h1>
+<h2 id="name"></h2>
+<p>Restaurant ID: <span id="rid"></span></p>
+<button onclick="localStorage.clear();location.href='login.html'" style="padding:10px 20px;background:#e85b22;color:white;border:none;border-radius:8px;">Logout</button>
+<script>
+document.getElementById('name').innerText = localStorage.getItem('restaurant_name') || 'Restaurant';
+document.getElementById('rid').innerText = localStorage.getItem('restaurant_id') || 'N/A';
+if(!localStorage.getItem('restaurant_id')){ location.href='login.html'; }
+</script>
+</body>
+</html>
