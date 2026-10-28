@@ -25,7 +25,7 @@ button{width:100%;padding:14px;border:none;border-radius:9px;background:#e85b22;
 <p class="sub">RestaurantPro</p>
 <div id="err" class="error"></div>
 <form id="form">
-<label>Email (Username)</label><input type="email" id="email" placeholder="Restaurant email" required>
+<label>Email</label><input type="email" id="email" placeholder="Restaurant email" required>
 <label>Password</label><input type="password" id="pass" placeholder="Password" required>
 <button id="btn" type="submit">Login</button>
 </form>
@@ -37,6 +37,7 @@ const supabaseClient = supabase.createClient(
  "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k"
 );
 const form=document.getElementById("form"),err=document.getElementById("err"),btn=document.getElementById("btn");
+
 form.addEventListener("submit",async(e)=>{
  e.preventDefault();
  err.style.display="none";
@@ -44,14 +45,28 @@ form.addEventListener("submit",async(e)=>{
  const password=document.getElementById("pass").value;
  btn.textContent="Logging in..."; btn.disabled=true;
  try{
-  const {data,error}=await supabaseClient.from("restaurants").select("*").eq("username",email).eq("password",password).maybeSingle();
-  if(error) throw error;
-  if(!data){err.textContent="Invalid email or password.";err.style.display="block";return;}
-  localStorage.setItem("restaurant_id",data.id);
-  localStorage.setItem("restaurant_name",data.restaurant_name);
-  location.href="dashboard.html";
+  const {data:authData, error:authError} = await supabaseClient.auth.signInWithPassword({email,password});
+  if(authError) throw authError;
+  const user = authData.user;
+  
+  const {data:restaurant, error:restError} = await supabaseClient.from("restaurants").select("*").eq("auth_user_id", user.id).maybeSingle();
+  if(restError) throw restError;
+  if(!restaurant){ throw new Error("Restaurant account not found for this user."); }
+  if(String(restaurant.status).toLowerCase() !== "active"){ 
+     await supabaseClient.auth.signOut();
+     throw new Error("Your account is blocked. Contact Super Admin."); 
+  }
+
+  // Aap ke purane naam bhi save + naye naam bhi save
+  localStorage.setItem("restaurant_id", restaurant.id);
+  localStorage.setItem("restaurantpro_restaurant_id", restaurant.id);
+  localStorage.setItem("restaurant_name", restaurant.restaurant_name);
+  localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name);
+  localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
+  
+  location.href="index.html";
  }catch(ex){
-  err.textContent="Login failed: "+ex.message;err.style.display="block";
+  err.textContent=ex.message; err.style.display="block";
  }finally{btn.textContent="Login";btn.disabled=false;}
 });
 </script>
