@@ -1,17 +1,24 @@
 /* ==========================================
-   RESTAURANTPRO - MENU WITH SUPABASE
+   RESTAURANTPRO - MENU WITH SUPABASE - FIXED
 ========================================== */
-
 const SUPABASE_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const RESTAURANT_ID = localStorage.getItem("restaurantpro_restaurant_id");
+
+let supabaseClient;
+if (window.supabase) {
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
 let editingCategoryId = null;
 let editingFoodId = null;
 
+function getRestaurantId() {
+  return localStorage.getItem("restaurantpro_restaurant_id") || localStorage.getItem("restaurant_id");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-    if(!RESTAURANT_ID){ location.href="login.html"; return; }
+    const RID = getRestaurantId();
+    if(!RID){ location.href="login.html"; return; }
     renderCategories();
     renderCategoryFilter();
     renderFoodItems();
@@ -27,7 +34,8 @@ function setupSearch(){
 
 /* CATEGORIES */
 async function getCategories(){
-    const {data} = await supabaseClient.from("categories").select("*").eq("restaurant_id", RESTAURANT_ID).order("created_at");
+    const RID = getRestaurantId();
+    const {data} = await supabaseClient.from("categories").select("*").eq("restaurant_id", RID).order("created_at");
     return data || [];
 }
 async function renderCategories(){
@@ -55,7 +63,6 @@ async function renderCategories(){
         container.appendChild(card);
     });
 }
-
 async function renderCategoryFilter(){
     const filter=document.getElementById("categoryFilter");
     if(!filter) return;
@@ -73,24 +80,19 @@ async function renderCategoryFilter(){
 
 /* FOODS */
 async function getFoods(){
-    const {data} = await supabaseClient.from("menu_items").select("*").eq("restaurant_id", RESTAURANT_ID).order("created_at",{ascending:false});
+    const RID = getRestaurantId();
+    const {data} = await supabaseClient.from("menu_items").select("*").eq("restaurant_id", RID).order("created_at",{ascending:false});
     return data || [];
 }
-
 async function renderFoodItems(){
     const container=document.getElementById("foodContainer");
     const count=document.getElementById("foodItemCount");
-    const searchInput=document.getElementById("menuSearch");
-    const filter=document.getElementById("categoryFilter");
-    const search=searchInput?searchInput.value.toLowerCase().trim():"";
-    const selectedCategory=filter?filter.value:"all";
-
+    const search= (document.getElementById("menuSearch")?.value || "").toLowerCase().trim();
+    const selectedCategory=document.getElementById("categoryFilter")?.value || "all";
     let foods=await getFoods();
     const categories=await getCategories();
-
     if(search) foods=foods.filter(f=>f.name.toLowerCase().includes(search));
     if(selectedCategory!=="all") foods=foods.filter(f=>f.category_id===selectedCategory);
-
     container.innerHTML="";
     count.textContent=foods.length + (foods.length===1?" Item":" Items");
     if(foods.length===0){
@@ -101,22 +103,15 @@ async function renderFoodItems(){
         const category=categories.find(c=>c.id===food.category_id);
         const categoryName=category?category.name:"Unknown Category";
         let priceHTML="";
-        const opts=food.options||[];
-        opts.forEach(function(option){
+        (food.options||[]).forEach(function(option){
             priceHTML+=`<div class="price-row"><span>${escapeHTML(option.name)}</span><strong>Rs. ${Number(option.price).toLocaleString()}</strong></div>`;
         });
         const card=document.createElement("div");
         card.className="food-card";
         card.innerHTML=`
-            <div class="food-card-top">
-                <div class="food-icon">${escapeHTML(food.icon||"🍽️")}</div>
-                <div class="food-actions">
-                    <button type="button" onclick="editFood('${food.id}')" title="Edit">✏️</button>
-                    <button type="button" onclick="deleteFood('${food.id}')" title="Delete">🗑️</button>
-                </div>
-            </div>
-            <h3>${escapeHTML(food.name)}</h3>
-            <span class="food-category">${escapeHTML(categoryName)}</span>
+            <div class="food-card-top"><div class="food-icon">${escapeHTML(food.icon||"🍽️")}</div>
+            <div class="food-actions"><button type="button" onclick="editFood('${food.id}')">✏️</button><button type="button" onclick="deleteFood('${food.id}')">🗑️</button></div></div>
+            <h3>${escapeHTML(food.name)}</h3><span class="food-category">${escapeHTML(categoryName)}</span>
             ${food.description?`<p class="food-description">${escapeHTML(food.description)}</p>`:""}
             <div class="price-list">${priceHTML}</div>`;
         container.appendChild(card);
@@ -126,19 +121,15 @@ async function renderFoodItems(){
 /* MODALS */
 function openCategoryModal(){ editingCategoryId=null; document.getElementById("categoryModalTitle").textContent="Add Category"; document.getElementById("categoryName").value=""; document.getElementById("categoryIcon").value=""; document.getElementById("categoryModal").classList.add("show"); }
 function closeCategoryModal(){ document.getElementById("categoryModal").classList.remove("show"); }
-
 async function saveCategory(){
+    const RID = getRestaurantId();
     const name=document.getElementById("categoryName").value.trim();
     const icon=document.getElementById("categoryIcon").value.trim()||"🍽️";
     if(!name){ alert("Please enter category name."); return; }
-    if(editingCategoryId){
-        await supabaseClient.from("categories").update({name,icon}).eq("id",editingCategoryId);
-    }else{
-        await supabaseClient.from("categories").insert({restaurant_id:RESTAURANT_ID,name,icon});
-    }
+    if(editingCategoryId){ await supabaseClient.from("categories").update({name,icon}).eq("id",editingCategoryId); }
+    else{ await supabaseClient.from("categories").insert({restaurant_id:RID,name,icon}); }
     closeCategoryModal(); renderCategories(); renderCategoryFilter(); renderFoodItems();
 }
-
 async function editCategory(id){
     const {data} = await supabaseClient.from("categories").select("*").eq("id",id).single();
     if(!data) return;
@@ -148,7 +139,6 @@ async function editCategory(id){
     document.getElementById("categoryIcon").value=data.icon;
     document.getElementById("categoryModal").classList.add("show");
 }
-
 async function deleteCategory(id){
     const foods=await getFoods();
     const count=foods.filter(f=>f.category_id===id).length;
@@ -158,7 +148,6 @@ async function deleteCategory(id){
     renderCategories(); renderCategoryFilter(); renderFoodItems();
 }
 
-/* FOOD MODAL */
 async function openFoodModal(){
     const cats=await getCategories();
     if(cats.length===0){ alert("Please create a category first."); openCategoryModal(); return; }
@@ -171,7 +160,6 @@ async function openFoodModal(){
     document.getElementById("foodModal").classList.add("show");
 }
 function closeFoodModal(){ document.getElementById("foodModal").classList.remove("show"); }
-
 async function loadFoodCategories(selectedId=""){
     const select=document.getElementById("foodCategory");
     select.innerHTML="";
@@ -183,17 +171,16 @@ async function loadFoodCategories(selectedId=""){
         select.appendChild(option);
     });
 }
-
 function addPriceOption(optionName="",optionPrice=""){
     const container=document.getElementById("priceOptionsContainer");
     const row=document.createElement("div");
     row.className="price-option-row";
-    row.innerHTML=`<input type="text" class="option-name" placeholder="Half / Full" value="${escapeAttribute(optionName)}"><input type="number" class="option-price" placeholder="Price" min="0" step="1" value="${escapeAttribute(optionPrice)}"><button type="button" class="remove-option" title="Remove">🗑️</button>`;
+    row.innerHTML=`<input type="text" class="option-name" placeholder="Half / Full" value="${escapeAttribute(optionName)}"><input type="number" class="option-price" placeholder="Price" min="0" step="1" value="${escapeAttribute(optionPrice)}"><button type="button" class="remove-option">🗑️</button>`;
     row.querySelector(".remove-option").addEventListener("click",function(){ row.remove(); });
     container.appendChild(row);
 }
-
 async function saveFoodItem(){
+    const RID = getRestaurantId();
     const name=document.getElementById("foodName").value.trim();
     const categoryId=document.getElementById("foodCategory").value;
     const description=document.getElementById("foodDescription").value.trim();
@@ -207,15 +194,10 @@ async function saveFoodItem(){
     if(!name){ alert("Please enter food item name."); return; }
     if(!categoryId){ alert("Please select a category."); return; }
     if(options.length===0){ alert("Please add at least one price option."); return; }
-
-    if(editingFoodId){
-        await supabaseClient.from("menu_items").update({name,category_id:categoryId,description,options}).eq("id",editingFoodId);
-    }else{
-        await supabaseClient.from("menu_items").insert({restaurant_id:RESTAURANT_ID,name,category_id:categoryId,description,options,icon:"🍽️"});
-    }
+    if(editingFoodId){ await supabaseClient.from("menu_items").update({name,category_id:categoryId,description,options}).eq("id",editingFoodId); }
+    else{ await supabaseClient.from("menu_items").insert({restaurant_id:RID,name,category_id:categoryId,description,options,icon:"🍽️"}); }
     closeFoodModal(); renderFoodItems(); renderCategories();
 }
-
 async function editFood(id){
     const {data:food} = await supabaseClient.from("menu_items").select("*").eq("id",id).single();
     if(!food) return;
@@ -229,17 +211,12 @@ async function editFood(id){
     (food.options||[]).forEach(function(option){ addPriceOption(option.name,option.price); });
     document.getElementById("foodModal").classList.add("show");
 }
-
 async function deleteFood(id){
-    const {data:food} = await supabaseClient.from("menu_items").select("*").eq("id",id).single();
-    if(!food) return;
-    if(!confirm("Delete '"+food.name+"'?")) return;
+    if(!confirm("Delete this food?")) return;
     await supabaseClient.from("menu_items").delete().eq("id",id);
     renderCategories(); renderFoodItems();
 }
-
 function escapeHTML(value){ return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
 function escapeAttribute(value){ return String(value).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#039;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
 document.addEventListener("click",function(event){ if(event.target.id==="categoryModal") closeCategoryModal(); if(event.target.id==="foodModal") closeFoodModal(); });
 document.addEventListener("keydown",function(event){ if(event.key!=="Escape") return; closeCategoryModal(); closeFoodModal(); });
