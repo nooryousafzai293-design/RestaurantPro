@@ -51,13 +51,3 @@ form.addEventListener("submit",async(e)=>{
  finally{btn.disabled=false;btn.textContent="Login";}
 });
 </script>
- <script>
-  (function() {
-    const rid = localStorage.getItem("restaurantpro_restaurant_id") || localStorage.getItem("restaurant_id");
-    if (!rid) {
-      window.location.replace("login.html");
-    }
-  })();
-</script>
-</body>
-</html>
