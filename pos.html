@@ -172,5 +172,29 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
     <script src="pos.js"></script>
+    <!-- PRINT BILL - SIRF PRINT KE LIYE -->
+<div id="printBillArea" style="display:none;"></div>
+
+<style>
+@media print {
+  body * { visibility: hidden; }
+  #printBillArea, #printBillArea * { visibility: visible; }
+  #printBillArea {
+    display: block !important;
+    position: absolute;
+    left: 0; top: 0;
+    width: 300px;
+    padding: 15px;
+    font-family: monospace;
+    color: #000;
+    background: #fff;
+  }
+  #printBillArea h2 { text-align:center; margin:0; font-size:20px; }
+  #printBillArea p { text-align:center; margin:2px 0; font-size:12px; }
+  #printBillArea hr { border:1px dashed #000; }
+  #printBillArea table { width:100%; font-size:13px; }
+  #printBillArea td { padding:3px 0; }
+}
+</style>
 </body>
 </html>
