@@ -168,9 +168,9 @@
     window.loadDashboardData = loadDashboardData;
     if(document.documentElement.classList.contains("auth-ready")) loadDashboardData();
 
-    // LOGOUT - YE NAYA HAI
+    // LOGOUT - ENGLISH ONLY
     async function doLogout(){
-        if(!confirm("Kya aap logout karna chahte hain?")) return;
+        if(!confirm("Are you sure you want to logout?")) return;
         try{ await supabaseClient.auth.signOut(); }catch(e){ console.log(e); }
         localStorage.clear();
         sessionStorage.clear();
