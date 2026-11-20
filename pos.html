@@ -4,6 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RestaurantPro - POS / Billing</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        html { visibility: hidden; }
+        html.auth-ready { visibility: visible; }
+    </style>
+    <!-- AUTH CHECK - ENGLISH ONLY -->
+    <script>
+        const AUTH_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
+        const AUTH_KEY = "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
+        const authClient = window.supabase.createClient(AUTH_URL, AUTH_KEY);
+        async function protectRestaurantPage() {
+            try {
+                const { data, error } = await authClient.auth.getSession();
+                if (error || !data || !data.session || !data.session.user) { goToLogin(); return; }
+                const user = data.session.user;
+                const { data: restaurant, error: restaurantError } = await authClient.from("restaurants").select(`id,restaurant_name,owner_name,status,auth_user_id`).eq("auth_user_id", user.id).maybeSingle();
+                if (restaurantError || !restaurant) { await authClient.auth.signOut(); goToLogin(); return; }
+                if (String(restaurant.status).toLowerCase() !== "active") { await authClient.auth.signOut(); alert("Your restaurant account is blocked. Please contact the Super Admin."); goToLogin(); return; }
+                localStorage.setItem("restaurantpro_restaurant_id", restaurant.id);
+                localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name || "");
+                localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
+                document.documentElement.classList.add("auth-ready");
+            } catch (error) { console.error("Authentication error:", error); goToLogin(); }
+        }
+        function goToLogin() {
+            if (window.location.pathname.endsWith("/login.html")) { document.documentElement.classList.add("auth-ready"); return; }
+            window.location.replace("login.html");
+        }
+        protectRestaurantPage();
+    </script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="pos.css">
 </head>
@@ -34,12 +64,14 @@
         <div class="sidebar-footer">
             <strong>RestaurantPro</strong>
             <small>Version 1.0</small>
+            <button onclick="doLogout()" style="width:100%;margin-top:10px;background:#ff4757;color:#fff;border:none;padding:9px;border-radius:8px;cursor:pointer;font-weight:600;">🚪 Logout</button>
         </div>
     </aside>
 
     <!-- MAIN -->
     <main class="main-content">
         <header class="page-header">
+            <button class="mobile-menu-button" onclick="toggleMobileMenu()">☰</button>
             <div>
                 <h1>POS / Billing</h1>
                 <p>Create a new customer order.</p>
@@ -48,14 +80,14 @@
                 <span class="notification">🔔</span>
                 <div class="user-avatar">RO</div>
                 <div class="user-info">
-                    <strong>Restaurant Owner</strong>
+                    <strong id="posOwnerName">Restaurant Owner</strong>
                     <span>Administrator</span>
                 </div>
+                <button onclick="doLogout()" style="margin-left:10px;background:#ff4757;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;white-space:nowrap;">🚪 Logout</button>
             </div>
         </header>
 
         <section class="pos-content">
-            <!-- ORDER INFORMATION -->
             <div class="order-info-bar">
                 <div class="order-info-item">
                     <label>Order Type</label>
@@ -80,9 +112,7 @@
                 </div>
             </div>
 
-            <!-- POS GRID -->
             <div class="pos-grid">
-                <!-- PRODUCTS -->
                 <section class="products-panel">
                     <div class="products-header">
                         <div>
@@ -98,7 +128,6 @@
                     <div id="posProducts" class="pos-products"></div>
                 </section>
 
-                <!-- CART -->
                 <section class="cart-panel">
                     <div class="cart-header">
                         <div>
@@ -168,33 +197,49 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT - ORDER IS IMPORTANT -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- PRINT BILL - ONLY BILL WILL PRINT -->
+    <div id="printBillArea" style="display:none;"></div>
+
+    <style>
+    @media print {
+      body * { visibility: hidden; }
+      #printBillArea, #printBillArea * { visibility: visible; }
+      #printBillArea {
+        display: block !important;
+        position: absolute;
+        left: 0; top: 0;
+        width: 300px;
+        padding: 15px;
+        font-family: monospace;
+        color: #000;
+        background: #fff;
+      }
+      #printBillArea h2 { text-align:center; margin:0; font-size:20px; }
+      #printBillArea p { text-align:center; margin:2px 0; font-size:12px; }
+      #printBillArea hr { border:1px dashed #000; }
+      #printBillArea table { width:100%; font-size:13px; }
+      #printBillArea td { padding:3px 0; }
+    }
+    </style>
+
+    <script>
+        const savedOwner = localStorage.getItem("restaurantpro_owner_name");
+        const ownerEl = document.getElementById("posOwnerName");
+        if(savedOwner && ownerEl) ownerEl.textContent = savedOwner;
+    </script>
     <script src="app.js"></script>
     <script src="pos.js"></script>
-    <!-- PRINT BILL - SIRF PRINT KE LIYE -->
-<div id="printBillArea" style="display:none;"></div>
-
-<style>
-@media print {
-  body * { visibility: hidden; }
-  #printBillArea, #printBillArea * { visibility: visible; }
-  #printBillArea {
-    display: block !important;
-    position: absolute;
-    left: 0; top: 0;
-    width: 300px;
-    padding: 15px;
-    font-family: monospace;
-    color: #000;
-    background: #fff;
-  }
-  #printBillArea h2 { text-align:center; margin:0; font-size:20px; }
-  #printBillArea p { text-align:center; margin:2px 0; font-size:12px; }
-  #printBillArea hr { border:1px dashed #000; }
-  #printBillArea table { width:100%; font-size:13px; }
-  #printBillArea td { padding:3px 0; }
-}
-</style>
+    <!-- FALLBACK LOGOUT - Agar pos.js me na ho to ye chalega - ENGLISH -->
+    <script>
+    if(typeof window.doLogout !== "function"){
+        window.doLogout = async function(){
+            if(!confirm("Are you sure you want to logout?")) return;
+            try{ await authClient.auth.signOut(); }catch(e){}
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.replace("login.html");
+        }
+    }
+    </script>
 </body>
 </html>
