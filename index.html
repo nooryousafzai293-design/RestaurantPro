@@ -1,756 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>RestaurantPro - Dashboard</title>
-
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!--
-        IMPORTANT:
-        Page hidden until authentication check is completed.
-    -->
     <style>
-        html {
-            visibility: hidden;
-        }
-
-        html.auth-ready {
-            visibility: visible;
-        }
+        html { visibility: hidden; }
+        html.auth-ready { visibility: visible; }
     </style>
-
-    <!-- AUTHENTICATION CHECK -->
     <script>
-        const SUPABASE_URL =
-            "https://ryixnwawmtglcibjmhjh.supabase.co";
-
-        const SUPABASE_PUBLISHABLE_KEY =
-            "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
-
-        const supabaseClient =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_PUBLISHABLE_KEY
-            );
-
+        const SUPABASE_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
         async function protectRestaurantPage() {
-
             try {
-
-                /*
-                 * Get current Supabase session
-                 */
-                const {
-                    data,
-                    error
-                } = await supabaseClient.auth.getSession();
-
-                if (error) {
-                    console.error("Session error:", error);
-                    goToLogin();
-                    return;
-                }
-
-                /*
-                 * NO SESSION = NOT LOGGED IN
-                 */
-                if (!data || !data.session || !data.session.user) {
-                    goToLogin();
-                    return;
-                }
-
+                const { data, error } = await supabaseClient.auth.getSession();
+                if (error || !data || !data.session || !data.session.user) { goToLogin(); return; }
                 const user = data.session.user;
-
-                /*
-                 * Find restaurant belonging to logged-in user
-                 */
-                const {
-                    data: restaurant,
-                    error: restaurantError
-                } = await supabaseClient
-                    .from("restaurants")
-                    .select(`
-                        id,
-                        restaurant_name,
-                        owner_name,
-                        status,
-                        auth_user_id
-                    `)
-                    .eq("auth_user_id", user.id)
-                    .maybeSingle();
-
-                if (restaurantError) {
-                    console.error(
-                        "Restaurant lookup error:",
-                        restaurantError
-                    );
-
-                    await supabaseClient.auth.signOut();
-
-                    goToLogin();
-                    return;
-                }
-
-                /*
-                 * No restaurant connected to this account
-                 */
-                if (!restaurant) {
-
-                    await supabaseClient.auth.signOut();
-
-                    alert(
-                        "Restaurant account not found. Please login again."
-                    );
-
-                    goToLogin();
-                    return;
-                }
-
-                /*
-                 * BLOCKED RESTAURANT
-                 */
-                if (
-                    String(restaurant.status).toLowerCase() !== "active"
-                ) {
-
-                    await supabaseClient.auth.signOut();
-
-                    alert(
-                        "Your restaurant account is blocked. Please contact the Super Admin."
-                    );
-
-                    goToLogin();
-                    return;
-                }
-
-                /*
-                 * Save restaurant information
-                 */
-                localStorage.setItem(
-                    "restaurantpro_restaurant_id",
-                    restaurant.id
-                );
-
-                localStorage.setItem(
-                    "restaurantpro_restaurant_name",
-                    restaurant.restaurant_name || ""
-                );
-
-                localStorage.setItem(
-                    "restaurantpro_owner_name",
-                    restaurant.owner_name || ""
-                );
-
-                /*
-                 * AUTHENTICATION SUCCESS
-                 */
-                document.documentElement.classList.add(
-                    "auth-ready"
-                );
-
-            } catch (error) {
-
-                console.error(
-                    "Authentication error:",
-                    error
-                );
-
-                goToLogin();
-            }
+                const { data: restaurant, error: restaurantError } = await supabaseClient.from("restaurants").select(`id,restaurant_name,owner_name,status,auth_user_id`).eq("auth_user_id", user.id).maybeSingle();
+                if (restaurantError || !restaurant) { await supabaseClient.auth.signOut(); goToLogin(); return; }
+                if (String(restaurant.status).toLowerCase() !== "active") { await supabaseClient.auth.signOut(); alert("Your restaurant account is blocked. Please contact the Super Admin."); goToLogin(); return; }
+                localStorage.setItem("restaurantpro_restaurant_id", restaurant.id);
+                localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name || "");
+                localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
+                document.documentElement.classList.add("auth-ready");
+                // Auth ho gaya ab dashboard load karo
+                if (window.loadDashboardData) window.loadDashboardData();
+            } catch (error) { console.error("Authentication error:", error); goToLogin(); }
         }
-
         function goToLogin() {
-
-            /*
-             * Prevent redirect loop
-             */
-            if (
-                window.location.pathname.endsWith(
-                    "/login.html"
-                )
-            ) {
-                document.documentElement.classList.add(
-                    "auth-ready"
-                );
-
-                return;
-            }
-
+            if (window.location.pathname.endsWith("/login.html")) { document.documentElement.classList.add("auth-ready"); return; }
             window.location.replace("login.html");
         }
-
-        /*
-         * Run immediately
-         */
         protectRestaurantPage();
     </script>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
-
-    <!-- SIDEBAR -->
-
     <aside class="sidebar">
-
-        <div class="brand">
-
-            <div class="brand-logo">
-                🍽️
-            </div>
-
-            <div>
-                <h2>RestaurantPro</h2>
-                <span>Restaurant Management</span>
-            </div>
-
-        </div>
-
-
+        <div class="brand"><div class="brand-logo">🍽️</div><div><h2>RestaurantPro</h2><span>Restaurant Management</span></div></div>
         <nav class="sidebar-nav">
-
-            <a href="index.html" class="menu-item active">
-                <span>🏠</span>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="pos.html" class="menu-item">
-                <span>🧾</span>
-                <span>POS / Billing</span>
-            </a>
-
-            <a href="orders.html" class="menu-item">
-                <span>📋</span>
-                <span>Orders</span>
-            </a>
-
-            <a href="tables.html" class="menu-item">
-                <span>🪑</span>
-                <span>Tables</span>
-            </a>
-
-            <a href="kitchen.html" class="menu-item">
-                <span>👨‍🍳</span>
-                <span>Kitchen</span>
-            </a>
-
-            <a href="menu.html" class="menu-item">
-                <span>🍔</span>
-                <span>Menu</span>
-            </a>
-
-            <a href="inventory.html" class="menu-item">
-                <span>📦</span>
-                <span>Inventory</span>
-            </a>
-
-            <a href="customers.html" class="menu-item">
-                <span>👥</span>
-                <span>Customers</span>
-            </a>
-
-            <a href="expenses.html" class="menu-item">
-                <span>💰</span>
-                <span>Expenses</span>
-            </a>
-
-            <a href="reports.html" class="menu-item">
-                <span>📊</span>
-                <span>Reports</span>
-            </a>
-
-            <a href="settings.html" class="menu-item">
-                <span>⚙️</span>
-                <span>Settings</span>
-            </a>
-
+            <a href="index.html" class="menu-item active"><span>🏠</span><span>Dashboard</span></a>
+            <a href="pos.html" class="menu-item"><span>🧾</span><span>POS / Billing</span></a>
+            <a href="orders.html" class="menu-item"><span>📋</span><span>Orders</span></a>
+            <a href="tables.html" class="menu-item"><span>🪑</span><span>Tables</span></a>
+            <a href="kitchen.html" class="menu-item"><span>👨‍🍳</span><span>Kitchen</span></a>
+            <a href="menu.html" class="menu-item"><span>🍔</span><span>Menu</span></a>
+            <a href="inventory.html" class="menu-item"><span>📦</span><span>Inventory</span></a>
+            <a href="customers.html" class="menu-item"><span>👥</span><span>Customers</span></a>
+            <a href="expenses.html" class="menu-item"><span>💰</span><span>Expenses</span></a>
+            <a href="reports.html" class="menu-item"><span>📊</span><span>Reports</span></a>
+            <a href="settings.html" class="menu-item"><span>⚙️</span><span>Settings</span></a>
         </nav>
-
-
-        <div class="sidebar-footer">
-
-            <strong>RestaurantPro</strong>
-
-            <small>Version 1.0</small>
-
-        </div>
-
+        <div class="sidebar-footer"><strong>RestaurantPro</strong><small>Version 1.0</small></div>
     </aside>
-
-
-    <!-- MAIN -->
-
     <main class="main-content">
-
         <header class="page-header">
-
-            <button
-                class="mobile-menu-button"
-                onclick="toggleMobileMenu()"
-            >
-                ☰
-            </button>
-
-            <div>
-
-                <h1>Dashboard</h1>
-
-                <p>
-                    Welcome back! Here's what's happening
-                    at your restaurant today.
-                </p>
-
-            </div>
-
-
-            <div class="header-user">
-
-                <span class="notification">
-                    🔔
-                </span>
-
-                <div class="user-avatar">
-                    RO
-                </div>
-
-                <div class="user-info">
-
-                    <strong id="dashboardOwnerName">
-                        Restaurant Owner
-                    </strong>
-
-                    <span>
-                        Administrator
-                    </span>
-
-                </div>
-
-            </div>
-
+            <button class="mobile-menu-button" onclick="toggleMobileMenu()">☰</button>
+            <div><h1>Dashboard</h1><p>Welcome back! Here's what's happening at your restaurant today.</p></div>
+            <div class="header-user"><span class="notification">🔔</span><div class="user-avatar">RO</div><div class="user-info"><strong id="dashboardOwnerName">Restaurant Owner</strong><span>Administrator</span></div></div>
         </header>
-
-
         <section class="dashboard-content">
-
-
-            <!-- STAT CARDS -->
-
+            <!-- STAT CARDS - IDs FIX KI HAIN -->
             <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        💰
-                    </div>
-
-                    <div class="stat-info">
-
-                        <span>Today's Sales</span>
-
-                        <h2>Rs. 0</h2>
-
-                        <small>
-                            Today's total sales
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        🧾
-                    </div>
-
-                    <div class="stat-info">
-
-                        <span>Today's Orders</span>
-
-                        <h2>0</h2>
-
-                        <small>
-                            Orders received today
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        🍔
-                    </div>
-
-                    <div class="stat-info">
-
-                        <span>Menu Items</span>
-
-                        <h2>0</h2>
-
-                        <small>
-                            Food items available
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        🪑
-                    </div>
-
-                    <div class="stat-info">
-
-                        <span>Tables</span>
-
-                        <h2>0</h2>
-
-                        <small>
-                            Restaurant tables
-                        </small>
-
-                    </div>
-
-                </div>
-
+                <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-info"><span>Today's Sales</span><h2 id="todaysSales">Rs. 0</h2><small>Today's total sales</small></div></div>
+                <div class="stat-card"><div class="stat-icon">🧾</div><div class="stat-info"><span>Today's Orders</span><h2 id="todaysOrders">0</h2><small>Orders received today</small></div></div>
+                <div class="stat-card"><div class="stat-icon">🍔</div><div class="stat-info"><span>Menu Items</span><h2 id="menuCount">0</h2><small>Food items available</small></div></div>
+                <div class="stat-card"><div class="stat-icon">🪑</div><div class="stat-info"><span>Tables</span><h2 id="tablesCount">0</h2><small>Restaurant tables</small></div></div>
             </div>
-
-
             <!-- ORDER STATUS -->
-
             <section class="dashboard-section">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <h2>Order Status</h2>
-
-                        <p>
-                            Current status of restaurant orders.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
+                <div class="section-heading"><div><h2>Order Status</h2><p>Current status of restaurant orders.</p></div></div>
                 <div class="stats-grid">
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon">
-                            🆕
-                        </div>
-
-                        <div class="stat-info">
-
-                            <span>New Orders</span>
-
-                            <h2 id="newOrdersCount">
-                                0
-                            </h2>
-
-                            <small>
-                                Waiting to be prepared
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon">
-                            👨‍🍳
-                        </div>
-
-                        <div class="stat-info">
-
-                            <span>Preparing</span>
-
-                            <h2 id="preparingOrdersCount">
-                                0
-                            </h2>
-
-                            <small>
-                                Currently in kitchen
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon">
-                            ✅
-                        </div>
-
-                        <div class="stat-info">
-
-                            <span>Ready</span>
-
-                            <h2 id="readyOrdersCount">
-                                0
-                            </h2>
-
-                            <small>
-                                Ready to serve
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-icon">
-                            🏁
-                        </div>
-
-                        <div class="stat-info">
-
-                            <span>Completed</span>
-
-                            <h2 id="completedOrdersCount">
-                                0
-                            </h2>
-
-                            <small>
-                                Completed orders
-                            </small>
-
-                        </div>
-
-                    </div>
-
+                    <div class="stat-card"><div class="stat-icon">🆕</div><div class="stat-info"><span>New Orders</span><h2 id="newOrdersCount">0</h2><small>Waiting to be prepared</small></div></div>
+                    <div class="stat-card"><div class="stat-icon">👨‍🍳</div><div class="stat-info"><span>Preparing</span><h2 id="preparingOrdersCount">0</h2><small>Currently in kitchen</small></div></div>
+                    <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-info"><span>Ready</span><h2 id="readyOrdersCount">0</h2><small>Ready to serve</small></div></div>
+                    <div class="stat-card"><div class="stat-icon">🏁</div><div class="stat-info"><span>Completed</span><h2 id="completedOrdersCount">0</h2><small>Completed orders</small></div></div>
                 </div>
-
             </section>
-
-
             <!-- QUICK ACTIONS -->
-
             <section class="dashboard-section">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <h2>Quick Actions</h2>
-
-                        <p>
-                            Quickly access the most used
-                            restaurant features.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
+                <div class="section-heading"><div><h2>Quick Actions</h2><p>Quickly access the most used restaurant features.</p></div></div>
                 <div class="quick-actions">
-
-                    <button
-                        class="quick-action"
-                        onclick="window.location.href='pos.html'"
-                    >
-                        <span>🧾</span>
-                        <strong>New Order</strong>
-                        <small>
-                            Create a new customer order
-                        </small>
-                    </button>
-
-
-                    <button
-                        class="quick-action"
-                        onclick="window.location.href='menu.html'"
-                    >
-                        <span>🍔</span>
-                        <strong>Add Food Item</strong>
-                        <small>
-                            Add an item to your menu
-                        </small>
-                    </button>
-
-
-                    <button
-                        class="quick-action"
-                        onclick="window.location.href='tables.html'"
-                    >
-                        <span>🪑</span>
-                        <strong>Manage Tables</strong>
-                        <small>
-                            View restaurant tables
-                        </small>
-                    </button>
-
-
-                    <button
-                        class="quick-action"
-                        onclick="window.location.href='reports.html'"
-                    >
-                        <span>📊</span>
-                        <strong>View Reports</strong>
-                        <small>
-                            Check restaurant performance
-                        </small>
-                    </button>
-
+                    <button class="quick-action" onclick="window.location.href='pos.html'"><span>🧾</span><strong>New Order</strong><small>Create a new customer order</small></button>
+                    <button class="quick-action" onclick="window.location.href='menu.html'"><span>🍔</span><strong>Add Food Item</strong><small>Add an item to your menu</small></button>
+                    <button class="quick-action" onclick="window.location.href='tables.html'"><span>🪑</span><strong>Manage Tables</strong><small>View restaurant tables</small></button>
+                    <button class="quick-action" onclick="window.location.href='reports.html'"><span>📊</span><strong>View Reports</strong><small>Check restaurant performance</small></button>
                 </div>
-
             </section>
-
-
             <!-- LOWER GRID -->
-
             <div class="dashboard-grid">
-
-
-                <!-- RECENT ORDERS -->
-
                 <section class="dashboard-panel">
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2>Recent Orders</h2>
-
-                            <p>
-                                Latest restaurant orders.
-                            </p>
-
-                        </div>
-
-                        <button
-                            class="view-all"
-                            onclick="window.location.href='orders.html'"
-                        >
-                            View All
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        id="recentOrdersList"
-                        class="recent-orders-list"
-                    >
-
-                        <div class="empty-state">
-
-                            <div class="empty-icon">
-                                🧾
-                            </div>
-
-                            <h3>No orders yet</h3>
-
-                            <p>
-                                Your recent orders will appear here.
-                            </p>
-
-                        </div>
-
-                    </div>
-
+                    <div class="panel-header"><div><h2>Recent Orders</h2><p>Latest restaurant orders.</p></div><button class="view-all" onclick="window.location.href='orders.html'">View All</button></div>
+                    <div id="recentOrdersList" class="recent-orders-list"><div class="empty-state"><div class="empty-icon">🧾</div><h3>No orders yet</h3><p>Your recent orders will appear here.</p></div></div>
                 </section>
-
-
-                <!-- POPULAR ITEMS -->
-
                 <section class="dashboard-panel">
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2>Popular Items</h2>
-
-                            <p>
-                                Best selling food items.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        id="popularItemsList"
-                        class="popular-items-list"
-                    >
-
-                        <div class="empty-state">
-
-                            <div class="empty-icon">
-                                🍽️
-                            </div>
-
-                            <h3>No menu data</h3>
-
-                            <p>
-                                Add food items to see popular products.
-                            </p>
-
-                        </div>
-
-                    </div>
-
+                    <div class="panel-header"><div><h2>Popular Items</h2><p>Best selling food items.</p></div></div>
+                    <div id="popularItemsList" class="popular-items-list"><div class="empty-state"><div class="empty-icon">🍽️</div><h3>No menu data</h3><p>Add food items to see popular products.</p></div></div>
                 </section>
-
             </div>
-
         </section>
-
     </main>
-
-
-    <!-- OWNER NAME -->
-
     <script>
-        const savedOwnerName =
-            localStorage.getItem(
-                "restaurantpro_owner_name"
-            );
-
-        const ownerElement =
-            document.getElementById(
-                "dashboardOwnerName"
-            );
-
-        if (
-            savedOwnerName &&
-            ownerElement
-        ) {
-            ownerElement.textContent =
-                savedOwnerName;
-        }
+        const savedOwnerName = localStorage.getItem("restaurantpro_owner_name");
+        const ownerElement = document.getElementById("dashboardOwnerName");
+        if (savedOwnerName && ownerElement) ownerElement.textContent = savedOwnerName;
     </script>
-
-
-    <!-- APP -->
-
     <script src="app.js"></script>
+    <!-- DASHBOARD DATA - YE NAYA HAI -->
+    <script>
+    async function loadDashboardData(){
+        const rid = localStorage.getItem("restaurantpro_restaurant_id");
+        if(!rid) return;
+        try{
+            // Menu + Tables count
+            const { data: menu } = await supabaseClient.from("menu_items").select("id").eq("restaurant_id", rid);
+            const { data: tables } = await supabaseClient.from("tables").select("id").eq("restaurant_id", rid);
+            const { data: orders, error } = await supabaseClient.from("orders").select("*").eq("restaurant_id", rid).order("created_at", {ascending:false});
+            if(error){ console.log("Dashboard error:", error.message); return; }
+            const all = orders || [];
+            document.getElementById("menuCount").textContent = menu ? menu.length : 0;
+            document.getElementById("tablesCount").textContent = tables ? tables.length : 0;
 
+            // Today's Sales - Pakistan Time
+            const todayPK = new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Karachi'});
+            const todays = all.filter(o => new Date(o.created_at).toLocaleDateString('en-CA', {timeZone:'Asia/Karachi'}) === todayPK);
+            const sales = todays.reduce((s,o)=> s + Number(o.total||0), 0);
+            document.getElementById("todaysSales").textContent = "Rs. " + sales.toLocaleString();
+            document.getElementById("todaysOrders").textContent = todays.length;
+
+            // Order Status
+            const c = (st) => all.filter(o => (o.status||"pending").toLowerCase() === st).length;
+            document.getElementById("newOrdersCount").textContent = c("pending");
+            document.getElementById("preparingOrdersCount").textContent = c("preparing");
+            document.getElementById("readyOrdersCount").textContent = c("ready");
+            document.getElementById("completedOrdersCount").textContent = c("completed");
+
+            // Recent Orders
+            const recentEl = document.getElementById("recentOrdersList");
+            if(all.length===0){
+                recentEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🧾</div><h3>No orders yet</h3><p>Your recent orders will appear here.</p></div>`;
+            } else {
+                recentEl.innerHTML = all.slice(0,5).map(o=>`
+                <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee;">
+                    <div><b>${o.customer_name||"Walk-in"}</b><br><small>${o.order_type||""} • ${o.status||"pending"} • ${new Date(o.created_at).toLocaleTimeString()}</small></div>
+                    <b>Rs.${Number(o.total||0).toLocaleString()}</b>
+                </div>`).join("");
+            }
+
+            // Popular Items
+            let popular = {};
+            all.forEach(o=>{
+                let items = o.items;
+                if(typeof items==="string"){ try{ items=JSON.parse(items); }catch(e){ items=[]; } }
+                (items||[]).forEach(it=>{
+                    const key = it.name + (it.variant ? " ("+it.variant+")" : "");
+                    popular[key] = (popular[key]||0) + Number(it.qty||1);
+                });
+            });
+            let sorted = Object.entries(popular).sort((a,b)=>b[1]-a[1]).slice(0,5);
+            const popEl = document.getElementById("popularItemsList");
+            if(sorted.length===0){
+                popEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><h3>No menu data</h3><p>Add food items to see popular products.</p></div>`;
+            } else {
+                popEl.innerHTML = sorted.map(([name,qty])=>`
+                <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee;">
+                    <span>🍽️ ${name}</span><b>${qty} sold</b>
+                </div>`).join("");
+            }
+        }catch(e){ console.log("Dashboard load fail", e); }
+    }
+    window.loadDashboardData = loadDashboardData;
+    // Agar auth pehle se ho gaya ho to bhi chala do
+    if(document.documentElement.classList.contains("auth-ready")) loadDashboardData();
+    </script>
 </body>
 </html>
