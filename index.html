@@ -25,7 +25,6 @@
                 localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name || "");
                 localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
                 document.documentElement.classList.add("auth-ready");
-                // Auth ho gaya ab dashboard load karo
                 if (window.loadDashboardData) window.loadDashboardData();
             } catch (error) { console.error("Authentication error:", error); goToLogin(); }
         }
@@ -53,23 +52,30 @@
             <a href="reports.html" class="menu-item"><span>📊</span><span>Reports</span></a>
             <a href="settings.html" class="menu-item"><span>⚙️</span><span>Settings</span></a>
         </nav>
-        <div class="sidebar-footer"><strong>RestaurantPro</strong><small>Version 1.0</small></div>
+        <div class="sidebar-footer">
+            <strong>RestaurantPro</strong>
+            <small>Version 1.0</small>
+            <button onclick="doLogout()" style="width:100%;margin-top:10px;background:#ff4757;color:#fff;border:none;padding:9px;border-radius:8px;cursor:pointer;font-weight:600;">🚪 Logout</button>
+        </div>
     </aside>
     <main class="main-content">
         <header class="page-header">
             <button class="mobile-menu-button" onclick="toggleMobileMenu()">☰</button>
             <div><h1>Dashboard</h1><p>Welcome back! Here's what's happening at your restaurant today.</p></div>
-            <div class="header-user"><span class="notification">🔔</span><div class="user-avatar">RO</div><div class="user-info"><strong id="dashboardOwnerName">Restaurant Owner</strong><span>Administrator</span></div></div>
+            <div class="header-user">
+                <span class="notification">🔔</span>
+                <div class="user-avatar">RO</div>
+                <div class="user-info"><strong id="dashboardOwnerName">Restaurant Owner</strong><span>Administrator</span></div>
+                <button onclick="doLogout()" style="margin-left:10px;background:#ff4757;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;white-space:nowrap;">🚪 Logout</button>
+            </div>
         </header>
         <section class="dashboard-content">
-            <!-- STAT CARDS - IDs FIX KI HAIN -->
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-info"><span>Today's Sales</span><h2 id="todaysSales">Rs. 0</h2><small>Today's total sales</small></div></div>
                 <div class="stat-card"><div class="stat-icon">🧾</div><div class="stat-info"><span>Today's Orders</span><h2 id="todaysOrders">0</h2><small>Orders received today</small></div></div>
                 <div class="stat-card"><div class="stat-icon">🍔</div><div class="stat-info"><span>Menu Items</span><h2 id="menuCount">0</h2><small>Food items available</small></div></div>
                 <div class="stat-card"><div class="stat-icon">🪑</div><div class="stat-info"><span>Tables</span><h2 id="tablesCount">0</h2><small>Restaurant tables</small></div></div>
             </div>
-            <!-- ORDER STATUS -->
             <section class="dashboard-section">
                 <div class="section-heading"><div><h2>Order Status</h2><p>Current status of restaurant orders.</p></div></div>
                 <div class="stats-grid">
@@ -79,7 +85,6 @@
                     <div class="stat-card"><div class="stat-icon">🏁</div><div class="stat-info"><span>Completed</span><h2 id="completedOrdersCount">0</h2><small>Completed orders</small></div></div>
                 </div>
             </section>
-            <!-- QUICK ACTIONS -->
             <section class="dashboard-section">
                 <div class="section-heading"><div><h2>Quick Actions</h2><p>Quickly access the most used restaurant features.</p></div></div>
                 <div class="quick-actions">
@@ -89,7 +94,6 @@
                     <button class="quick-action" onclick="window.location.href='reports.html'"><span>📊</span><strong>View Reports</strong><small>Check restaurant performance</small></button>
                 </div>
             </section>
-            <!-- LOWER GRID -->
             <div class="dashboard-grid">
                 <section class="dashboard-panel">
                     <div class="panel-header"><div><h2>Recent Orders</h2><p>Latest restaurant orders.</p></div><button class="view-all" onclick="window.location.href='orders.html'">View All</button></div>
@@ -108,13 +112,11 @@
         if (savedOwnerName && ownerElement) ownerElement.textContent = savedOwnerName;
     </script>
     <script src="app.js"></script>
-    <!-- DASHBOARD DATA - YE NAYA HAI -->
     <script>
     async function loadDashboardData(){
         const rid = localStorage.getItem("restaurantpro_restaurant_id");
         if(!rid) return;
         try{
-            // Menu + Tables count
             const { data: menu } = await supabaseClient.from("menu_items").select("id").eq("restaurant_id", rid);
             const { data: tables } = await supabaseClient.from("tables").select("id").eq("restaurant_id", rid);
             const { data: orders, error } = await supabaseClient.from("orders").select("*").eq("restaurant_id", rid).order("created_at", {ascending:false});
@@ -122,22 +124,16 @@
             const all = orders || [];
             document.getElementById("menuCount").textContent = menu ? menu.length : 0;
             document.getElementById("tablesCount").textContent = tables ? tables.length : 0;
-
-            // Today's Sales - Pakistan Time
             const todayPK = new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Karachi'});
             const todays = all.filter(o => new Date(o.created_at).toLocaleDateString('en-CA', {timeZone:'Asia/Karachi'}) === todayPK);
             const sales = todays.reduce((s,o)=> s + Number(o.total||0), 0);
             document.getElementById("todaysSales").textContent = "Rs. " + sales.toLocaleString();
             document.getElementById("todaysOrders").textContent = todays.length;
-
-            // Order Status
             const c = (st) => all.filter(o => (o.status||"pending").toLowerCase() === st).length;
             document.getElementById("newOrdersCount").textContent = c("pending");
             document.getElementById("preparingOrdersCount").textContent = c("preparing");
             document.getElementById("readyOrdersCount").textContent = c("ready");
             document.getElementById("completedOrdersCount").textContent = c("completed");
-
-            // Recent Orders
             const recentEl = document.getElementById("recentOrdersList");
             if(all.length===0){
                 recentEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🧾</div><h3>No orders yet</h3><p>Your recent orders will appear here.</p></div>`;
@@ -148,8 +144,6 @@
                     <b>Rs.${Number(o.total||0).toLocaleString()}</b>
                 </div>`).join("");
             }
-
-            // Popular Items
             let popular = {};
             all.forEach(o=>{
                 let items = o.items;
@@ -172,8 +166,17 @@
         }catch(e){ console.log("Dashboard load fail", e); }
     }
     window.loadDashboardData = loadDashboardData;
-    // Agar auth pehle se ho gaya ho to bhi chala do
     if(document.documentElement.classList.contains("auth-ready")) loadDashboardData();
+
+    // LOGOUT - YE NAYA HAI
+    async function doLogout(){
+        if(!confirm("Kya aap logout karna chahte hain?")) return;
+        try{ await supabaseClient.auth.signOut(); }catch(e){ console.log(e); }
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.replace("login.html");
+    }
+    window.doLogout = doLogout;
     </script>
 </body>
 </html>
