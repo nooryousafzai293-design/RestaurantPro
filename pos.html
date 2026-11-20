@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RestaurantPro - POS / Billing</title>
+    <title>Al Noor Pizza House - POS / Billing</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         html { visibility: hidden; }
         html.auth-ready { visibility: visible; }
     </style>
-    <!-- AUTH CHECK - ENGLISH ONLY -->
     <script>
         const AUTH_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
         const AUTH_KEY = "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
@@ -23,7 +22,7 @@
                 if (restaurantError || !restaurant) { await authClient.auth.signOut(); goToLogin(); return; }
                 if (String(restaurant.status).toLowerCase() !== "active") { await authClient.auth.signOut(); alert("Your restaurant account is blocked. Please contact the Super Admin."); goToLogin(); return; }
                 localStorage.setItem("restaurantpro_restaurant_id", restaurant.id);
-                localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name || "");
+                localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name || "Al Noor Pizza House");
                 localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
                 document.documentElement.classList.add("auth-ready");
             } catch (error) { console.error("Authentication error:", error); goToLogin(); }
@@ -38,15 +37,10 @@
     <link rel="stylesheet" href="pos.css">
 </head>
 <body>
-
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="brand">
-            <div class="brand-logo">🍽️</div>
-            <div>
-                <h2>RestaurantPro</h2>
-                <span>Restaurant Management</span>
-            </div>
+            <div class="brand-logo" style="overflow:hidden;"><img src="logo.png" onerror="this.style.display='none';this.parentNode.innerHTML='🍽️';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+            <div><h2>Al Noor Pizza House</h2><span>Restaurant Management</span></div>
         </div>
         <nav class="sidebar-nav">
             <a href="index.html" class="menu-item"><span>🏠</span><span>Dashboard</span></a>
@@ -62,163 +56,83 @@
             <a href="settings.html" class="menu-item"><span>⚙️</span><span>Settings</span></a>
         </nav>
         <div class="sidebar-footer">
-            <strong>RestaurantPro</strong>
+            <strong>Al Noor Pizza House</strong>
             <small>Version 1.0</small>
             <button onclick="doLogout()" style="width:100%;margin-top:10px;background:#ff4757;color:#fff;border:none;padding:9px;border-radius:8px;cursor:pointer;font-weight:600;">🚪 Logout</button>
         </div>
     </aside>
-
-    <!-- MAIN -->
     <main class="main-content">
         <header class="page-header">
             <button class="mobile-menu-button" onclick="toggleMobileMenu()">☰</button>
-            <div>
-                <h1>POS / Billing</h1>
-                <p>Create a new customer order.</p>
-            </div>
+            <div><h1>POS / Billing</h1><p>Create a new customer order.</p></div>
             <div class="header-user">
                 <span class="notification">🔔</span>
                 <div class="user-avatar">RO</div>
-                <div class="user-info">
-                    <strong id="posOwnerName">Restaurant Owner</strong>
-                    <span>Administrator</span>
-                </div>
+                <div class="user-info"><strong id="posOwnerName">Restaurant Owner</strong><span>Administrator</span></div>
                 <button onclick="doLogout()" style="margin-left:10px;background:#ff4757;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;white-space:nowrap;">🚪 Logout</button>
             </div>
         </header>
-
         <section class="pos-content">
             <div class="order-info-bar">
-                <div class="order-info-item">
-                    <label>Order Type</label>
-                    <select id="orderType">
-                        <option value="dine-in">Dine In</option>
-                        <option value="takeaway">Takeaway</option>
-                        <option value="delivery">Delivery</option>
-                    </select>
-                </div>
-                <div class="order-info-item" id="tableField">
-                    <label>Table</label>
-                    <input type="text" id="tableNumber" placeholder="Table 1">
-                </div>
-                <div class="order-info-item">
-                    <label>Customer Name</label>
-                    <input type="text" id="customerName" placeholder="Optional">
-                </div>
-                <div class="order-info-item">
-                    <label>Customer Phone</label>
-                    <input type="text" id="customerPhone" list="customerPhoneList" placeholder="03XXXXXXXXX">
-                    <datalist id="customerPhoneList"></datalist>
-                </div>
+                <div class="order-info-item"><label>Order Type</label><select id="orderType"><option value="dine-in">Dine In</option><option value="takeaway">Takeaway</option><option value="delivery">Delivery</option></select></div>
+                <div class="order-info-item" id="tableField"><label>Table</label><input type="text" id="tableNumber" placeholder="Table 1"></div>
+                <div class="order-info-item"><label>Customer Name</label><input type="text" id="customerName" placeholder="Optional"></div>
+                <div class="order-info-item"><label>Customer Phone</label><input type="text" id="customerPhone" list="customerPhoneList" placeholder="03XXXXXXXXX"><datalist id="customerPhoneList"></datalist></div>
             </div>
-
             <div class="pos-grid">
                 <section class="products-panel">
-                    <div class="products-header">
-                        <div>
-                            <h2>Menu</h2>
-                            <p>Select food items to add to the order.</p>
-                        </div>
-                    </div>
-                    <div class="pos-search">
-                        <span>🔍</span>
-                        <input type="text" id="posSearch" placeholder="Search food...">
-                    </div>
+                    <div class="products-header"><div><h2>Menu</h2><p>Select food items to add to the order.</p></div></div>
+                    <div class="pos-search"><span>🔍</span><input type="text" id="posSearch" placeholder="Search food..."></div>
                     <div id="posCategories" class="pos-categories"></div>
                     <div id="posProducts" class="pos-products"></div>
                 </section>
-
                 <section class="cart-panel">
-                    <div class="cart-header">
-                        <div>
-                            <h2>Current Order</h2>
-                            <p id="cartItemCount">0 items</p>
-                        </div>
-                        <button type="button" class="clear-cart" onclick="clearCart()">Clear</button>
-                    </div>
+                    <div class="cart-header"><div><h2>Current Order</h2><p id="cartItemCount">0 items</p></div><button type="button" class="clear-cart" onclick="clearCart()">Clear</button></div>
                     <div id="cartItems" class="cart-items"></div>
-
                     <div class="bill-summary">
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <strong id="subtotal">Rs. 0</strong>
-                        </div>
-                        <div class="discount-row">
-                            <div><span>Discount</span></div>
-                            <div class="discount-input">
-                                <input type="number" id="discount" value="0" min="0" step="1">
-                                <span>Rs.</span>
-                            </div>
-                        </div>
-                        <div class="tax-row">
-                            <div><span>Tax</span></div>
-                            <div class="tax-input">
-                                <input type="number" id="taxRate" value="0" min="0" max="100" step="0.1">
-                                <span>%</span>
-                            </div>
-                        </div>
-                        <div class="summary-row">
-                            <span>Tax Amount</span>
-                            <strong id="taxAmount">Rs. 0</strong>
-                        </div>
-                        <div class="grand-total">
-                            <span>Grand Total</span>
-                            <strong id="grandTotal">Rs. 0</strong>
-                        </div>
+                        <div class="summary-row"><span>Subtotal</span><strong id="subtotal">Rs. 0</strong></div>
+                        <div class="discount-row"><div><span>Discount</span></div><div class="discount-input"><input type="number" id="discount" value="0" min="0" step="1"><span>Rs.</span></div></div>
+                        <div class="tax-row"><div><span>Tax</span></div><div class="tax-input"><input type="number" id="taxRate" value="0" min="0" max="100" step="0.1"><span>%</span></div></div>
+                        <div class="summary-row"><span>Tax Amount</span><strong id="taxAmount">Rs. 0</strong></div>
+                        <div class="grand-total"><span>Grand Total</span><strong id="grandTotal">Rs. 0</strong></div>
                     </div>
-
-                    <div class="payment-section">
-                        <h3>Payment Method</h3>
-                        <div class="payment-methods">
-                            <button type="button" class="payment-method active" data-payment="cash">💵<span>Cash</span></button>
-                            <button type="button" class="payment-method" data-payment="card">💳<span>Card</span></button>
-                            <button type="button" class="payment-method" data-payment="online">📱<span>Online</span></button>
-                        </div>
-                    </div>
-
+                    <div class="payment-section"><h3>Payment Method</h3><div class="payment-methods"><button type="button" class="payment-method active" data-payment="cash">💵<span>Cash</span></button><button type="button" class="payment-method" data-payment="card">💳<span>Card</span></button><button type="button" class="payment-method" data-payment="online">📱<span>Online</span></button></div></div>
                     <button type="button" class="complete-order" onclick="completeOrder()">Complete Order</button>
                     <button type="button" class="print-preview" onclick="printCurrentBill()">🖨️ Print Bill</button>
                 </section>
             </div>
         </section>
     </main>
+    <div id="priceModal" class="modal"><div class="price-modal-box"><div class="modal-header"><div><h2>Select Option</h2><p id="priceModalFoodName">Select size or quantity.</p></div><button type="button" class="modal-close" onclick="closePriceModal()">×</button></div><div id="priceOptions" class="price-options"></div></div></div>
 
-    <!-- PRICE OPTION MODAL -->
-    <div id="priceModal" class="modal">
-        <div class="price-modal-box">
-            <div class="modal-header">
-                <div>
-                    <h2>Select Option</h2>
-                    <p id="priceModalFoodName">Select size or quantity.</p>
-                </div>
-                <button type="button" class="modal-close" onclick="closePriceModal()">×</button>
-            </div>
-            <div id="priceOptions" class="price-options"></div>
-        </div>
-    </div>
-
-    <!-- PRINT BILL - ONLY BILL WILL PRINT -->
     <div id="printBillArea" style="display:none;"></div>
 
     <style>
+    /* ===== THERMAL 80mm BILL - AL NOOR Pizza House ===== */
     @media print {
+      @page { size: 80mm auto; margin: 0; }
       body * { visibility: hidden; }
       #printBillArea, #printBillArea * { visibility: visible; }
       #printBillArea {
         display: block !important;
-        position: absolute;
-        left: 0; top: 0;
-        width: 300px;
-        padding: 15px;
-        font-family: monospace;
-        color: #000;
-        background: #fff;
+        position: absolute; left: 0; top: 0;
+        width: 80mm !important;
+        max-width: 80mm !important;
+        margin: 0 !important;
+        padding: 4mm 3mm !important;
+        font-family: 'Courier New', monospace;
+        font-size: 12px; line-height: 1.3;
+        color: #000; background: #fff;
       }
-      #printBillArea h2 { text-align:center; margin:0; font-size:20px; }
-      #printBillArea p { text-align:center; margin:2px 0; font-size:12px; }
-      #printBillArea hr { border:1px dashed #000; }
-      #printBillArea table { width:100%; font-size:13px; }
-      #printBillArea td { padding:3px 0; }
+      #printBillArea h2 { text-align:center; margin:2px 0 0 0; font-size:19px; font-weight:900; line-height:1.1; }
+      #printBillArea .r-logo { width:58px; height:58px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 4px auto; }
+      #printBillArea .r-center { text-align:center; }
+      #printBillArea .r-small { font-size:11px; margin:1px 0; }
+      #printBillArea hr { border:none; border-top:1px dashed #000; margin:6px 0; }
+      #printBillArea table { width:100%; font-size:12px; border-collapse:collapse; }
+      #printBillArea td { padding:2px 0; vertical-align:top; }
+      #printBillArea .r-right { text-align:right; white-space:nowrap; }
+      #printBillArea .r-total { font-weight:900; font-size:14px; }
     }
     </style>
 
@@ -229,14 +143,83 @@
     </script>
     <script src="app.js"></script>
     <script src="pos.js"></script>
-    <!-- FALLBACK LOGOUT - Agar pos.js me na ho to ye chalega - ENGLISH -->
     <script>
+    // ===== NEW THERMAL BILL - OVERRIDE OLD PRINT =====
+    window.printCurrentBill = function(){
+      const area = document.getElementById("printBillArea");
+      const cust = document.getElementById("customerName")?.value || "Walk-in";
+      const table = document.getElementById("tableNumber")?.value || "-";
+      const type = document.getElementById("orderType")?.value || "dine-in";
+      const phone = document.getElementById("customerPhone")?.value || "";
+      const payBtn = document.querySelector(".payment-method.active");
+      const pay = payBtn ? payBtn.getAttribute("data-payment") : "cash";
+      const sub = document.getElementById("subtotal")?.textContent || "Rs. 0";
+      const discVal = document.getElementById("discount")?.value || "0";
+      const taxAmt = document.getElementById("taxAmount")?.textContent || "Rs. 0";
+      const grand = document.getElementById("grandTotal")?.textContent || "Rs. 0";
+      const now = new Date().toLocaleString("en-PK", { timeZone: "Asia/Karachi" });
+
+      // Cart items from pos.js variable if available, else from DOM
+      let rows = "";
+      if (typeof window.cart !== "undefined" && Array.isArray(window.cart) && window.cart.length) {
+        rows = window.cart.map(it => {
+          const name = it.name || it.item_name || "Item";
+          const variant = it.variant || it.size || it.option || "";
+          const qty = it.qty || it.quantity || 1;
+          const price = Number(it.price || it.unit_price || 0);
+          const total = qty * price;
+          return `<tr><td>${name} ${variant ? "("+variant+")" : ""}<br><small>${qty} x Rs.${price}</small></td><td class="r-right">Rs.${total}</td></tr>`;
+        }).join("");
+      } else {
+        // Fallback: copy what is shown in cart panel
+        const cartEl = document.getElementById("cartItems");
+        if (cartEl && cartEl.innerText.trim()) {
+          rows = `<tr><td colspan="2">${cartEl.innerText.replace(/\n/g,"<br>")}</td></tr>`;
+        } else {
+          rows = `<tr><td>No items</td><td class="r-right">Rs.0</td></tr>`;
+        }
+      }
+
+      area.innerHTML = `
+        <div class="r-center">
+          <img src="logo.png" class="r-logo" onerror="this.style.display='none'">
+          <h2>Al Noor Pizza House</h2>
+          <p class="r-small">Restaurant Management</p>
+          <p class="r-small">Main Bazar, Al Noor Pizza House</p>
+          <p class="r-small">Phone: 0300-0000000</p>
+        </div>
+        <hr>
+        <div style="font-size:12px;">
+          Customer: ${cust}<br>
+          ${phone ? "Phone: " + phone + "<br>" : ""}
+          Table: ${table} | Type: ${type}<br>
+          Date: ${now}<br>
+          Payment: ${pay}
+        </div>
+        <hr>
+        <table>${rows}</table>
+        <hr>
+        <table>
+          <tr><td>Subtotal</td><td class="r-right">${sub}</td></tr>
+          <tr><td>Discount</td><td class="r-right">Rs. ${discVal}</td></tr>
+          <tr><td>Tax</td><td class="r-right">${taxAmt}</td></tr>
+          <tr><td class="r-total">Grand Total</td><td class="r-right r-total">${grand}</td></tr>
+        </table>
+        <hr>
+        <div class="r-center" style="font-weight:bold;">
+          Thank You! Visit Again<br>
+          *** Al Noor Pizza House ***
+        </div>
+        <div style="height:10px;"></div>
+      `;
+      area.style.display = "block";
+      setTimeout(()=>{ window.print(); setTimeout(()=>{ area.style.display="none"; }, 500); }, 100);
+    };
     if(typeof window.doLogout !== "function"){
         window.doLogout = async function(){
             if(!confirm("Are you sure you want to logout?")) return;
             try{ await authClient.auth.signOut(); }catch(e){}
-            localStorage.clear();
-            sessionStorage.clear();
+            localStorage.clear(); sessionStorage.clear();
             window.location.replace("login.html");
         }
     }
