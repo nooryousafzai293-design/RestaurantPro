@@ -1,4 +1,4 @@
-// POS - FIXED - Supabase se Menu uthayega
+// POS - FIXED - Menu from Supabase
 const SUPABASE_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
 let supabaseClient = null;
@@ -50,7 +50,6 @@ async function loadPOSData(){
   allFoods = foods || [];
   renderCategories();
   renderProducts();
-  // customer phones ke liye
   try{
     const { data: custs } = await supabaseClient.from("customers").select("phone").eq("restaurant_id", rid);
     const list = document.getElementById("customerPhoneList");
@@ -74,7 +73,7 @@ function renderProducts(){
   if(!box) return;
   const q = (document.getElementById("posSearch")?.value || "").toLowerCase();
   let list = allFoods.filter(f => (selectedCategory==="all" || f.category_id===selectedCategory) && f.name.toLowerCase().includes(q));
-  if(list.length===0){ box.innerHTML = `<p style="padding:20px">No items found. Pehle Menu me item add karo.</p>`; return; }
+  if(list.length===0){ box.innerHTML = `<p style="padding:20px">No items found. Please add items in Menu first.</p>`; return; }
   box.innerHTML = list.map(f=>{
     const opts = f.options || [];
     const firstPrice = opts.length ? opts[0].price : 0;
@@ -155,7 +154,8 @@ function updateBill(){
 }
 
 async function completeOrder(){
-  if(cart.length===0){ alert("Cart empty hai!"); return; }
+  if(cart.length===0){ alert("Cart is empty!"); return; }
+  if(!confirm("Are you sure you want to complete this order?")) return;
   const rid = getRestaurantId();
   const {sub, disc, taxAmt, grand} = updateBill();
   const orderData = {
@@ -167,18 +167,68 @@ async function completeOrder(){
     items: cart,
     subtotal: sub, discount: disc, tax: taxAmt, total: grand,
     payment_method: selectedPayment,
-    status: "completed",
+    status: "pending",
     created_at: new Date().toISOString()
   };
   const { error } = await supabaseClient.from("orders").insert([orderData]);
-  if(error){ alert("Order save nahi hua: " + error.message); return; }
-  alert("Order Complete! Rs. " + grand);
+  if(error){ alert("Order could not be saved: " + error.message); return; }
+  // Print bill first, then clear cart
+  printCurrentBill(orderData);
+  alert("Order Completed! Sent to Kitchen. Total: Rs. " + Math.round(grand).toLocaleString());
   clearCart();
   document.getElementById("customerName").value="";
   document.getElementById("customerPhone").value="";
 }
 
-function printCurrentBill(){
-  if(cart.length===0){ alert("Pehle items add karo"); return; }
-  window.print();
+// PRINT - Only bill will print, not full page - ENGLISH
+function printCurrentBill(lastOrder){
+  const order = lastOrder || {
+    customer_name: document.getElementById("customerName")?.value || "Walk-in",
+    table_no: document.getElementById("tableNumber")?.value || "-",
+    order_type: document.getElementById("orderType")?.value || "",
+    payment_method: selectedPayment
+  };
+  if(cart.length===0 && !lastOrder){ alert("Please add items first"); return; }
+  const {sub, disc, taxAmt, grand} = updateBill();
+  const itemsHtml = cart.map(i=>`
+    <tr><td>${i.name} (${i.variant})<br><small>${i.qty} x Rs.${i.price}</small></td>
+    <td style="text-align:right">Rs.${(i.price*i.qty).toLocaleString()}</td></tr>`).join("");
+  const billHtml = `
+    <h2>RestaurantPro</h2>
+    <p>Restaurant Management</p>
+    <hr>
+    <p style="text-align:left">Customer: ${order.customer_name}<br>
+    Table: ${order.table_no} | Type: ${order.order_type}<br>
+    Date: ${new Date().toLocaleString()}<br>
+    Payment: ${order.payment_method}</p>
+    <hr>
+    <table>${itemsHtml}</table>
+    <hr>
+    <table>
+      <tr><td>Subtotal</td><td style="text-align:right">Rs.${sub.toLocaleString()}</td></tr>
+      <tr><td>Discount</td><td style="text-align:right">Rs.${disc}</td></tr>
+      <tr><td>Tax</td><td style="text-align:right">Rs.${Math.round(taxAmt)}</td></tr>
+      <tr><td><b>Grand Total</b></td><td style="text-align:right"><b>Rs.${Math.round(grand).toLocaleString()}</b></td></tr>
+    </table>
+    <hr>
+    <p>Thank You! Visit Again</p>
+  `;
+  let area = document.getElementById("printBillArea");
+  if(!area){
+    area = document.createElement("div");
+    area.id = "printBillArea";
+    area.style.display = "none";
+    document.body.appendChild(area);
+  }
+  area.innerHTML = billHtml;
+  setTimeout(()=> window.print(), 200);
+}
+
+// LOGOUT - ENGLISH ONLY
+async function doLogout(){
+  if(!confirm("Are you sure you want to logout?")) return;
+  try{ await supabaseClient.auth.signOut(); }catch(e){ console.log(e); }
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.replace("login.html");
 }
