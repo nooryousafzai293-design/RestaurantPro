@@ -1,465 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>RestaurantPro - Settings</title>
-
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="settings.css">
+    <style>
+        /* Logo Preview Fix */
+        .logo-preview-box{width:90px;height:90px;border:2px dashed #ddd;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:10px;background:#f9f9f9}
+        .logo-preview-box img{width:100%;height:100%;object-fit:cover}
+        .logo-preview-box span{font-size:12px;color:#888;text-align:center;padding:5px}
+        .remove-logo-button{background:#ff4444;color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;margin-top:10px}
+        .optional-tag{font-size:12px;color:#888;font-weight:normal}
+        .sidebar-brand-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;display:none;background:#fff}
+    </style>
 </head>
-
 <body>
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-
         <div class="brand">
-
-            <div class="brand-logo">
-                🍽️
+            <div class="brand-logo" id="sidebarLogoWrap">
+                <span id="sidebarEmoji">🍽️</span>
+                <img id="sidebarLogoImg" class="sidebar-brand-logo" alt="">
             </div>
-
             <div>
-                <h2>RestaurantPro</h2>
+                <!-- Yahan Client ka Naam aayega, RestaurantPro nahi -->
+                <h2 id="sidebarRestName">RestaurantPro</h2>
                 <span>Restaurant Management</span>
             </div>
-
         </div>
 
-
         <nav class="sidebar-nav">
-
-            <a href="index.html" class="menu-item">
-                <span>🏠</span>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="pos.html" class="menu-item">
-                <span>🧾</span>
-                <span>POS / Billing</span>
-            </a>
-
-            <a href="orders.html" class="menu-item">
-                <span>📋</span>
-                <span>Orders</span>
-            </a>
-
-            <a href="tables.html" class="menu-item">
-                <span>🪑</span>
-                <span>Tables</span>
-            </a>
-
-            <a href="kitchen.html" class="menu-item">
-                <span>👨‍🍳</span>
-                <span>Kitchen</span>
-            </a>
-
-            <a href="menu.html" class="menu-item">
-                <span>🍔</span>
-                <span>Menu</span>
-            </a>
-
-            <a href="inventory.html" class="menu-item">
-                <span>📦</span>
-                <span>Inventory</span>
-            </a>
-
-            <a href="customers.html" class="menu-item">
-                <span>👥</span>
-                <span>Customers</span>
-            </a>
-
-            <a href="expenses.html" class="menu-item">
-                <span>💰</span>
-                <span>Expenses</span>
-            </a>
-
-            <a href="reports.html" class="menu-item">
-                <span>📊</span>
-                <span>Reports</span>
-            </a>
-
- <a href="settings.html" class="menu-item">
-    <span>⚙️</span>
-    <span>Settings</span>
-</a>
-
+            <a href="index.html" class="menu-item"><span>🏠</span><span>Dashboard</span></a>
+            <a href="pos.html" class="menu-item"><span>🧾</span><span>POS / Billing</span></a>
+            <a href="orders.html" class="menu-item"><span>📋</span><span>Orders</span></a>
+            <a href="tables.html" class="menu-item"><span>🪑</span><span>Tables</span></a>
+            <a href="kitchen.html" class="menu-item"><span>👨‍🍳</span><span>Kitchen</span></a>
+            <a href="menu.html" class="menu-item"><span>🍔</span><span>Menu</span></a>
+            <a href="inventory.html" class="menu-item"><span>📦</span><span>Inventory</span></a>
+            <a href="customers.html" class="menu-item"><span>👥</span><span>Customers</span></a>
+            <a href="expenses.html" class="menu-item"><span>💰</span><span>Expenses</span></a>
+            <a href="reports.html" class="menu-item"><span>📊</span><span>Reports</span></a>
+            <a href="settings.html" class="menu-item"><span>⚙️</span><span>Settings</span></a>
         </nav>
-
 
         <div class="sidebar-footer">
             <strong>RestaurantPro</strong>
             <small>Version 1.0</small>
         </div>
-
     </aside>
-
-
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
-
-        <!-- HEADER -->
         <header class="page-header">
-
             <div>
-
                 <h1>Settings</h1>
-
-                <p>
-                    Manage your restaurant information and system settings.
-                </p>
-
+                <p>Manage your restaurant information and system settings.</p>
             </div>
-
-
             <div class="header-user">
-
-                <span class="notification">
-                    🔔
-                </span>
-
-                <div class="user-avatar">
-                    RO
-                </div>
-
-                <div class="user-info">
-
-                    <strong>
-                        Restaurant Owner
-                    </strong>
-
-                    <span>
-                        Administrator
-                    </span>
-
-                </div>
-
+                <span class="notification">🔔</span>
+                <div class="user-avatar">RO</div>
+                <div class="user-info"><strong>Restaurant Owner</strong><span>Administrator</span></div>
             </div>
-
         </header>
 
-
-
-        <!-- SETTINGS CONTENT -->
         <section class="settings-content">
-
-
             <!-- RESTAURANT INFORMATION -->
             <div class="settings-card">
-
                 <div class="settings-card-header">
-
-                    <div class="settings-card-icon">
-                        🍽️
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Restaurant Information
-                        </h2>
-
-                        <p>
-                            Basic information about your restaurant.
-                        </p>
-
-                    </div>
-
+                    <div class="settings-card-icon">🍽️</div>
+                    <div><h2>Restaurant Information</h2><p>Basic information about your restaurant.</p></div>
                 </div>
 
-
                 <form id="restaurantSettingsForm">
-
                     <div class="settings-form-grid">
-
                         <div class="settings-form-group">
-
-                            <label for="restaurantName">
-                                Restaurant Name
-                            </label>
-
-                            <input
-                                type="text"
-                                id="restaurantName"
-                                placeholder="Enter restaurant name"
-                                required
-                            >
-
+                            <label for="restaurantName">Restaurant Name *</label>
+                            <input type="text" id="restaurantName" placeholder="Enter restaurant name" required>
                         </div>
-
-
                         <div class="settings-form-group">
-
-                            <label for="restaurantPhone">
-                                Phone Number
-                            </label>
-
-                            <input
-                                type="tel"
-                                id="restaurantPhone"
-                                placeholder="03XX-XXXXXXX"
-                            >
-
+                            <label for="restaurantPhone">Phone Number</label>
+                            <input type="tel" id="restaurantPhone" placeholder="03XX-XXXXXXX">
                         </div>
-
-
                         <div class="settings-form-group full-width">
-
-                            <label for="restaurantAddress">
-                                Address
-                            </label>
-
-                            <textarea
-                                id="restaurantAddress"
-                                rows="3"
-                                placeholder="Enter restaurant address"
-                            ></textarea>
-
+                            <label for="restaurantAddress">Address</label>
+                            <textarea id="restaurantAddress" rows="3" placeholder="Enter restaurant address"></textarea>
                         </div>
-
                     </div>
-<div class="settings-form-group full-width">
 
-    <label for="restaurantLogo">
-        Restaurant Logo
-    </label>
-
-    <input
-        type="file"
-        id="restaurantLogo"
-        accept="image/png,image/jpeg,image/webp"
-    >
-
-    <div class="logo-preview-box">
-        <img
-            id="logoPreview"
-            src=""
-            alt="Restaurant Logo Preview"
-            style="display: none;"
-        >
-
-        <span id="logoPlaceholder">
-            No logo selected
-        </span>
-    </div>
-
-    <button
-        type="button"
-        id="removeLogoButton"
-        class="remove-logo-button"
-    >
-        Remove Logo
-    </button>
-
-</div>
+                    <!-- LOGO - OPTIONAL -->
+                    <div class="settings-form-group full-width">
+                        <label for="restaurantLogo">Restaurant Logo <span class="optional-tag">(Optional hai - Marzi hai lagao ya na lagao)</span></label>
+                        <input type="file" id="restaurantLogo" accept="image/png,image/jpeg,image/webp">
+                        <div class="logo-preview-box">
+                            <img id="logoPreview" src="" alt="Restaurant Logo Preview" style="display:none;">
+                            <span id="logoPlaceholder">No logo selected</span>
+                        </div>
+                        <button type="button" id="removeLogoButton" class="remove-logo-button">Remove Logo</button>
+                        <p style="font-size:12px;color:#888;margin-top:8px;">Agar logo nahi lagao ge to bill pe sirf Restaurant ka Naam aayega, bill kharab nahi hoga.</p>
+                    </div>
 
                     <div class="settings-card-footer">
-
-                        <button
-                            type="submit"
-                            class="settings-save-button"
-                        >
-                            Save Restaurant Information
-                        </button>
-
+                        <button type="submit" class="settings-save-button">Save Restaurant Information</button>
                     </div>
-
                 </form>
-
             </div>
-
-
 
             <!-- SYSTEM SETTINGS -->
             <div class="settings-card">
-
                 <div class="settings-card-header">
-
-                    <div class="settings-card-icon">
-                        ⚙️
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            System Settings
-                        </h2>
-
-                        <p>
-                            Configure currency and basic system preferences.
-                        </p>
-
-                    </div>
-
+                    <div class="settings-card-icon">⚙️</div>
+                    <div><h2>System Settings</h2><p>Configure currency and basic system preferences.</p></div>
                 </div>
-
-
                 <form id="systemSettingsForm">
-
                     <div class="settings-form-grid">
-
-                        <div class="settings-form-group">
-
-                            <label for="currency">
-                                Currency
-                            </label>
-
-                            <select id="currency">
-
-                                <option value="PKR">
-                                    PKR - Pakistani Rupee
-                                </option>
-
-                                <option value="USD">
-                                    USD - US Dollar
-                                </option>
-
-                                <option value="AED">
-                                    AED - UAE Dirham
-                                </option>
-
-                                <option value="SAR">
-                                    SAR - Saudi Riyal
-                                </option>
-
-                            </select>
-
+                        <div class="settings-form-group"><label for="currency">Currency</label>
+                            <select id="currency"><option value="PKR">PKR - Pakistani Rupee</option><option value="USD">USD - US Dollar</option><option value="AED">AED - UAE Dirham</option><option value="SAR">SAR - Saudi Riyal</option></select>
                         </div>
-
-
-                        <div class="settings-form-group">
-
-                            <label for="taxRate">
-                                Tax Rate (%)
-                            </label>
-
-                            <input
-                                type="number"
-                                id="taxRate"
-                                min="0"
-                                max="100"
-                                step="0.01"
-                                placeholder="0"
-                            >
-
-                        </div>
-
-
-                        <div class="settings-form-group">
-
-                            <label for="orderPrefix">
-                                Order Number Prefix
-                            </label>
-
-                            <input
-                                type="text"
-                                id="orderPrefix"
-                                placeholder="ORD-"
-                            >
-
-                        </div>
-
-
-                        <div class="settings-form-group">
-
-                            <label for="tableCount">
-                                Number of Tables
-                            </label>
-
-                            <input
-                                type="number"
-                                id="tableCount"
-                                min="1"
-                                max="500"
-                                placeholder="20"
-                            >
-
-                        </div>
-
+                        <div class="settings-form-group"><label for="taxRate">Tax Rate (%)</label><input type="number" id="taxRate" min="0" max="100" step="0.01" placeholder="0"></div>
+                        <div class="settings-form-group"><label for="orderPrefix">Order Number Prefix</label><input type="text" id="orderPrefix" placeholder="ORD-"></div>
+                        <div class="settings-form-group"><label for="tableCount">Number of Tables</label><input type="number" id="tableCount" min="1" max="500" placeholder="20"></div>
                     </div>
-
-
-                    <div class="settings-card-footer">
-
-                        <button
-                            type="submit"
-                            class="settings-save-button"
-                        >
-                            Save System Settings
-                        </button>
-
-                    </div>
-
+                    <div class="settings-card-footer"><button type="submit" class="settings-save-button">Save System Settings</button></div>
                 </form>
-
             </div>
-
-
 
             <!-- DANGER ZONE -->
             <div class="settings-card danger-card">
-
-                <div class="settings-card-header">
-
-                    <div class="settings-card-icon">
-                        🗑️
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Data Management
-                        </h2>
-
-                        <p>
-                            Manage locally stored restaurant data.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
+                <div class="settings-card-header"><div class="settings-card-icon">🗑️</div><div><h2>Data Management</h2><p>Manage locally stored restaurant data.</p></div></div>
                 <div class="data-management">
-
-                    <div>
-
-                        <strong>
-                            Clear All Restaurant Data
-                        </strong>
-
-                        <p>
-                            This will remove locally saved menu,
-                            orders, customers, expenses and settings.
-                        </p>
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        id="clearDataButton"
-                        class="clear-data-button"
-                    >
-                        Clear All Data
-                    </button>
-
+                    <div><strong>Clear All Restaurant Data</strong><p>This will remove locally saved menu, orders, customers, expenses and settings.</p></div>
+                    <button type="button" id="clearDataButton" class="clear-data-button">Clear All Data</button>
                 </div>
-
             </div>
-
-
         </section>
-
     </main>
 
+<script>
+// ===== DYNAMIC RESTAURANT PROFILE - Logo Optional =====
+document.addEventListener("DOMContentLoaded", function(){
+  // 1. Pehle se saved data load karo
+  const savedName = localStorage.getItem("restaurantpro_restaurant_name");
+  const savedPhone = localStorage.getItem("restaurantpro_phone");
+  const savedAddr = localStorage.getItem("restaurantpro_address");
+  const savedLogo = localStorage.getItem("restaurantpro_logo");
 
-    <script src="settings.js"></script>
+  if(savedName) document.getElementById("restaurantName").value = savedName;
+  if(savedPhone) document.getElementById("restaurantPhone").value = savedPhone;
+  if(savedAddr) document.getElementById("restaurantAddress").value = savedAddr;
+
+  // Sidebar update
+  if(savedName) document.getElementById("sidebarRestName").textContent = savedName;
+  if(savedLogo){
+    const sImg = document.getElementById("sidebarLogoImg");
+    sImg.src = savedLogo; sImg.style.display = "block";
+    document.getElementById("sidebarEmoji").style.display = "none";
+    // Preview bhi dikhao
+    const prev = document.getElementById("logoPreview");
+    prev.src = savedLogo; prev.style.display = "block";
+    document.getElementById("logoPlaceholder").style.display = "none";
+  }
+
+  // 2. Logo select karte hi preview
+  document.getElementById("restaurantLogo").addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const prev = document.getElementById("logoPreview");
+      prev.src = ev.target.result; prev.style.display = "block";
+      document.getElementById("logoPlaceholder").style.display = "none";
+      // Temp save taake preview rahe
+      localStorage.setItem("restaurantpro_logo_temp", ev.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // 3. Remove Logo - Sirf logo delete hoga, naam nahi
+  document.getElementById("removeLogoButton").addEventListener("click", function(){
+    localStorage.removeItem("restaurantpro_logo");
+    localStorage.removeItem("restaurantpro_logo_temp");
+    document.getElementById("restaurantLogo").value = "";
+    document.getElementById("logoPreview").style.display = "none";
+    document.getElementById("logoPlaceholder").style.display = "block";
+    document.getElementById("sidebarLogoImg").style.display = "none";
+    document.getElementById("sidebarEmoji").style.display = "block";
+    alert("Logo hata diya gaya! Ab bill pe sirf Naam aayega.");
+  });
+
+  // 4. Save Restaurant Info
+  document.getElementById("restaurantSettingsForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const name = document.getElementById("restaurantName").value.trim();
+    const phone = document.getElementById("restaurantPhone").value.trim();
+    const address = document.getElementById("restaurantAddress").value.trim();
+    const file = document.getElementById("restaurantLogo").files[0];
+
+    if(!name){ alert("Pehle Restaurant ka Naam to likho!"); return; }
+
+    localStorage.setItem("restaurantpro_restaurant_name", name);
+    localStorage.setItem("restaurantpro_phone", phone);
+    localStorage.setItem("restaurantpro_address", address);
+    document.getElementById("sidebarRestName").textContent = name;
+
+    // Logo - OPTIONAL: Sirf tab save hoga jab file lagi ho
+    if(file){
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        localStorage.setItem("restaurantpro_logo", ev.target.result);
+        // Sidebar logo update
+        const sImg = document.getElementById("sidebarLogoImg");
+        sImg.src = ev.target.result; sImg.style.display = "block";
+        document.getElementById("sidebarEmoji").style.display = "none";
+        alert("Save ho gaya! Naam + Logo dono bill pe aayenge.");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // Agar pehle se logo tha aur naya nahi lagaya to purana rehne do
+      // Agar temp me hai to us ko pakka kar do
+      const temp = localStorage.getItem("restaurantpro_logo_temp");
+      if(temp && !localStorage.getItem("restaurantpro_logo")){
+        localStorage.setItem("restaurantpro_logo", temp);
+      }
+      alert("Save ho gaya! Bill pe Naam aayega" + (localStorage.getItem("restaurantpro_logo") ? " + Logo bhi aayega." : " (Logo Optional tha, is liye sirf Naam)."));
+    }
+
+    // Supabase me bhi save karna ho to yahan apna supabase code lagao
+    // if(window.supabaseClient){ ... update restaurants table ... }
+    localStorage.removeItem("restaurantpro_logo_temp");
+  });
+});
+</script>
+
+<script src="settings.js"></script>
 <script src="app.js"></script>
 </body>
-
 </html>
