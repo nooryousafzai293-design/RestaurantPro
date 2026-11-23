@@ -8,6 +8,18 @@
     <style>
         html { visibility: hidden; }
         html.auth-ready { visibility: visible; }
+        /* Support Bar - Bohot chota, client ko tang na kare */
+        .support-bar{
+            text-align:center;
+            font-size:10px;
+            color:#888;
+            background:#f8f9fa;
+            padding:4px 8px;
+            border-bottom:1px solid #eee;
+            letter-spacing:0.2px;
+        }
+        .support-bar a{ color:#2ecc71; text-decoration:none; font-weight:600; }
+        .support-bar a:hover{ text-decoration:underline; }
     </style>
     <script>
         const SUPABASE_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
@@ -20,10 +32,15 @@
                 const user = data.session.user;
                 const { data: restaurant, error: restaurantError } = await supabaseClient.from("restaurants").select(`id,restaurant_name,owner_name,status,auth_user_id`).eq("auth_user_id", user.id).maybeSingle();
                 if (restaurantError || !restaurant) { await supabaseClient.auth.signOut(); goToLogin(); return; }
-                if (String(restaurant.status).toLowerCase() !== "active") { await supabaseClient.auth.signOut(); alert("Your restaurant account is blocked. Please contact the Super Admin."); goToLogin(); return; }
+                if (String(restaurant.status).toLowerCase() !== "active") { await supabaseClient.auth.signOut(); alert("Your restaurant account is blocked. Please contact Support."); goToLogin(); return; }
                 localStorage.setItem("restaurantpro_restaurant_id", restaurant.id);
-                localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name || "");
                 localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
+                // FIX: Settings wala naam pehle - Supabase se overwrite mat karo
+                const settingsName = localStorage.getItem("restaurantpro_restaurant_name");
+                const settingsObj = JSON.parse(localStorage.getItem("restaurantpro_settings") || "{}");
+                if (!settingsName && !settingsObj.restaurantName && restaurant.restaurant_name) {
+                    localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name);
+                }
                 document.documentElement.classList.add("auth-ready");
                 if (window.loadDashboardData) window.loadDashboardData();
             } catch (error) { console.error("Authentication error:", error); goToLogin(); }
@@ -38,7 +55,13 @@
 </head>
 <body>
     <aside class="sidebar">
-        <div class="brand"><div class="brand-logo">🍽️</div><div><h2>RestaurantPro</h2><span>Restaurant Management</span></div></div>
+        <div class="brand">
+            <div class="brand-logo" style="overflow:hidden;">
+                <span id="sidebarEmoji">🍽️</span>
+                <img id="sidebarLogoImg" src="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;" alt="">
+            </div>
+            <div><h2 id="sidebarRestName">RestaurantPro</h2><span>Restaurant Management</span></div>
+        </div>
         <nav class="sidebar-nav">
             <a href="index.html" class="menu-item active"><span>🏠</span><span>Dashboard</span></a>
             <a href="pos.html" class="menu-item"><span>🧾</span><span>POS / Billing</span></a>
@@ -53,12 +76,17 @@
             <a href="settings.html" class="menu-item"><span>⚙️</span><span>Settings</span></a>
         </nav>
         <div class="sidebar-footer">
-            <strong>RestaurantPro</strong>
+            <strong id="sidebarFooterName">RestaurantPro</strong>
             <small>Version 1.0</small>
             <button onclick="doLogout()" style="width:100%;margin-top:10px;background:#ff4757;color:#fff;border:none;padding:9px;border-radius:8px;cursor:pointer;font-weight:600;">🚪 Logout</button>
         </div>
     </aside>
     <main class="main-content">
+        <!-- SUPPORT BAR - TOP PE, BOHOT CHOTA -->
+        <div class="support-bar">
+            For customer support please drop a text message on WhatsApp <a href="https://wa.me/923175121763" target="_blank">03175121763</a> or Email <a href="mailto:nooryousafzai293@gmail.com">nooryousafzai293@gmail.com</a>
+        </div>
+
         <header class="page-header">
             <button class="mobile-menu-button" onclick="toggleMobileMenu()">☰</button>
             <div><h1>Dashboard</h1><p>Welcome back! Here's what's happening at your restaurant today.</p></div>
@@ -107,6 +135,20 @@
         </section>
     </main>
     <script>
+        // Sidebar Dynamic - Naam + Logo Optional
+        const _sName = localStorage.getItem("restaurantpro_restaurant_name") || (JSON.parse(localStorage.getItem("restaurantpro_settings")||"{}").restaurantName) || "RestaurantPro";
+        const _sLogo = localStorage.getItem("restaurantpro_logo");
+        const _nameEl = document.getElementById("sidebarRestName");
+        const _footEl = document.getElementById("sidebarFooterName");
+        if(_nameEl) _nameEl.textContent = _sName;
+        if(_footEl) _footEl.textContent = _sName;
+        if(_sLogo){
+            const _img = document.getElementById("sidebarLogoImg");
+            const _em = document.getElementById("sidebarEmoji");
+            if(_img){ _img.src = _sLogo; _img.style.display = "block"; }
+            if(_em) _em.style.display = "none";
+        }
+        document.title = _sName + " - Dashboard";
         const savedOwnerName = localStorage.getItem("restaurantpro_owner_name");
         const ownerElement = document.getElementById("dashboardOwnerName");
         if (savedOwnerName && ownerElement) ownerElement.textContent = savedOwnerName;
@@ -168,11 +210,11 @@
     window.loadDashboardData = loadDashboardData;
     if(document.documentElement.classList.contains("auth-ready")) loadDashboardData();
 
-    // LOGOUT - ENGLISH ONLY
+    // LOGOUT - FIXED: Naam/Logo delete nahi hoga
     async function doLogout(){
         if(!confirm("Are you sure you want to logout?")) return;
         try{ await supabaseClient.auth.signOut(); }catch(e){ console.log(e); }
-        localStorage.clear();
+        // localStorage.clear() -> HATA DIYA, is se naam delete hota tha
         sessionStorage.clear();
         window.location.replace("login.html");
     }
