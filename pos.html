@@ -13,32 +13,42 @@
         const AUTH_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
         const AUTH_KEY = "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
         const authClient = window.supabase.createClient(AUTH_URL, AUTH_KEY);
+
+        // ===== TUMHARA FIXED FUNCTION - SAME TO SAME =====
         async function protectRestaurantPage() {
             try {
                 const { data, error } = await authClient.auth.getSession();
                 if (error || !data || !data.session || !data.session.user) { goToLogin(); return; }
                 const user = data.session.user;
-                const { data: restaurant, error: restaurantError } = await authClient.from("restaurants").select(`id,restaurant_name,owner_name,status,auth_user_id,phone,address`).eq("auth_user_id", user.id).maybeSingle();
-                if (restaurantError || !restaurant) { await authClient.auth.signOut(); goToLogin(); return; }
-                if (String(restaurant.status).toLowerCase() !== "active") { await authClient.auth.signOut(); alert("Your restaurant account is blocked. Please contact the Super Admin."); goToLogin(); return; }
-
+                // FIX: Sirf wahi columns mango jo table me pakka hain
+                // phone,address yahan mat mango, warna error aake logout ho jayega
+                const { data: restaurant, error: restaurantError } = await authClient.from("restaurants").select(`id,restaurant_name,owner_name,status,auth_user_id`).eq("auth_user_id", user.id).maybeSingle();
+                if (restaurantError || !restaurant) { 
+                    console.log("Restaurant not found:", restaurantError);
+                    await authClient.auth.signOut(); 
+                    goToLogin(); 
+                    return; 
+                }
+                if (String(restaurant.status).toLowerCase() !== "active") { 
+                    await authClient.auth.signOut(); 
+                    alert("Your restaurant account is blocked. Please contact Support."); 
+                    goToLogin(); 
+                    return; 
+                }
                 localStorage.setItem("restaurantpro_restaurant_id", restaurant.id);
                 localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
 
-                // FIX: Supabase se naam sirf tab lo jab Settings me naam nahi hai
-                // Agar Settings me naam hai to wahi chalega (client ki marzi)
+                // Settings wala naam pehle, Supabase wala baad me
                 const settingsName = localStorage.getItem("restaurantpro_restaurant_name");
                 const settingsObj = JSON.parse(localStorage.getItem("restaurantpro_settings") || "{}");
-
                 if (!settingsName && !settingsObj.restaurantName && restaurant.restaurant_name) {
                     localStorage.setItem("restaurantpro_restaurant_name", restaurant.restaurant_name);
                 }
-                // Phone / Address bhi agar Settings me nahi to Supabase se le lo
-                if (!localStorage.getItem("restaurantpro_phone") && restaurant.phone) localStorage.setItem("restaurantpro_phone", restaurant.phone);
-                if (!localStorage.getItem("restaurantpro_address") && restaurant.address) localStorage.setItem("restaurantpro_address", restaurant.address);
-
                 document.documentElement.classList.add("auth-ready");
-            } catch (error) { console.error("Authentication error:", error); goToLogin(); }
+            } catch (error) { 
+                console.error("Authentication error:", error); 
+                goToLogin(); 
+            }
         }
         function goToLogin() {
             if (window.location.pathname.endsWith("/login.html")) { document.documentElement.classList.add("auth-ready"); return; }
@@ -52,7 +62,6 @@
 <body>
     <aside class="sidebar">
         <div class="brand">
-            <!-- FIX: Dynamic Logo - Agar hai to dikhega, nahi to emoji -->
             <div class="brand-logo" style="overflow:hidden;">
                 <span id="sidebarEmoji">🍽️</span>
                 <img id="sidebarLogoImg" src="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;" alt="">
@@ -140,7 +149,6 @@
     }
     </style>
     <script>
-        // Sidebar + Owner Name - Dynamic
         function refreshSidebarBrand(){
           const name = localStorage.getItem("restaurantpro_restaurant_name") || (JSON.parse(localStorage.getItem("restaurantpro_settings")||"{}").restaurantName) || "RestaurantPro";
           const logo = localStorage.getItem("restaurantpro_logo");
@@ -164,17 +172,14 @@
     <script src="app.js"></script>
     <script src="pos.js"></script>
     <script>
-    // ===== DYNAMIC THERMAL BILL - Name + Logo Optional =====
+    // ===== DYNAMIC BILL - Name + Logo Optional =====
     window.printCurrentBill = function(){
       const area = document.getElementById("printBillArea");
-      // Settings se naam/logo lo - Hardcode nahi
       const settings = JSON.parse(localStorage.getItem("restaurantpro_settings") || "{}");
       const restName = localStorage.getItem("restaurantpro_restaurant_name") || settings.restaurantName || "Restaurant Name";
-      const restLogo = localStorage.getItem("restaurantpro_logo") || ""; // Agar khali to logo nahi aayega
+      const restLogo = localStorage.getItem("restaurantpro_logo") || "";
       const restPhone = localStorage.getItem("restaurantpro_phone") || settings.restaurantPhone || "";
       const restAddress = localStorage.getItem("restaurantpro_address") || settings.restaurantAddress || "";
-
-      // Logo OPTIONAL: Hai to dikhao, nahi to khali
       const logoHTML = restLogo ? `<img src="${restLogo}" class="r-logo" onerror="this.style.display='none'">` : ``;
 
       const cust = document.getElementById("customerName")?.value || "Walk-in";
@@ -237,7 +242,7 @@
           Thank You! Visit Again<br>
           *** ${restName} ***
         </div>
-        <div class="r-center" style="font-size:10px;">Powered by RestaurantPro</div>
+        <div style="text-align:center; font-size:8px; color:#2ecc71; margin-top:4px; letter-spacing:0.3px;">Powered by Noor Yousafzai 03175121763</div>
         <div style="height:10px;"></div>
       `;
       area.style.display = "block";
@@ -248,8 +253,6 @@
     window.doLogout = async function(){
         if(!confirm("Are you sure you want to logout?")) return;
         try{ await authClient.auth.signOut(); }catch(e){}
-        // localStorage.clear() -> DELETE KAR DIYA, is waja se naam delete hota tha
-        // Sirf session clear karo, restaurant ka naam/logo rehne do
         sessionStorage.clear();
         window.location.replace("login.html");
     };
