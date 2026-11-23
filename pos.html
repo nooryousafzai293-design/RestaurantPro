@@ -13,15 +13,11 @@
         const AUTH_URL = "https://ryixnwawmtglcibjmhjh.supabase.co";
         const AUTH_KEY = "sb_publishable_zcD4aBCDk1yz8RFD1JoBqA_aToCuo7k";
         const authClient = window.supabase.createClient(AUTH_URL, AUTH_KEY);
-
-        // ===== TUMHARA FIXED FUNCTION - SAME TO SAME =====
         async function protectRestaurantPage() {
             try {
                 const { data, error } = await authClient.auth.getSession();
                 if (error || !data || !data.session || !data.session.user) { goToLogin(); return; }
                 const user = data.session.user;
-                // FIX: Sirf wahi columns mango jo table me pakka hain
-                // phone,address yahan mat mango, warna error aake logout ho jayega
                 const { data: restaurant, error: restaurantError } = await authClient.from("restaurants").select(`id,restaurant_name,owner_name,status,auth_user_id`).eq("auth_user_id", user.id).maybeSingle();
                 if (restaurantError || !restaurant) { 
                     console.log("Restaurant not found:", restaurantError);
@@ -37,8 +33,6 @@
                 }
                 localStorage.setItem("restaurantpro_restaurant_id", restaurant.id);
                 localStorage.setItem("restaurantpro_owner_name", restaurant.owner_name || "");
-
-                // Settings wala naam pehle, Supabase wala baad me
                 const settingsName = localStorage.getItem("restaurantpro_restaurant_name");
                 const settingsObj = JSON.parse(localStorage.getItem("restaurantpro_settings") || "{}");
                 if (!settingsName && !settingsObj.restaurantName && restaurant.restaurant_name) {
@@ -131,23 +125,44 @@
     </main>
     <div id="priceModal" class="modal"><div class="price-modal-box"><div class="modal-header"><div><h2>Select Option</h2><p id="priceModalFoodName">Select size or quantity.</p></div><button type="button" class="modal-close" onclick="closePriceModal()">×</button></div><div id="priceOptions" class="price-options"></div></div></div>
     <div id="printBillArea" style="display:none;"></div>
+
+    <!-- ===== THERMAL BILL - Asal Restaurant Jaisa - Chota, Beech Me ===== -->
     <style>
+    #printBillArea{ display:none; font-family:'Courier New', monospace; }
     @media print {
-      @page { size: 80mm auto; margin: 0; }
+      @page { size: 58mm auto; margin: 0; }
+      html, body{ margin:0 !important; padding:0 !important; width:58mm !important; background:#fff !important; }
       body * { visibility: hidden; }
       #printBillArea, #printBillArea * { visibility: visible; }
-      #printBillArea { display: block !important; position: absolute; left: 0; top: 0; width: 80mm !important; max-width: 80mm !important; margin: 0 !important; padding: 4mm 3mm !important; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.3; color: #000; background: #fff; }
-      #printBillArea h2 { text-align:center; margin:2px 0 0 0; font-size:19px; font-weight:900; line-height:1.1; }
-      #printBillArea .r-logo { width:58px; height:58px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 4px auto; }
+      #printBillArea {
+        display: block !important;
+        position: absolute;
+        left: 50% !important;
+        top: 0 !important;
+        transform: translateX(-50%) !important;
+        width: 52mm !important;
+        max-width: 52mm !important;
+        margin: 0 auto !important;
+        padding: 3mm 2mm !important;
+        font-family: 'Courier New', monospace;
+        font-size: 11px;
+        line-height: 1.35;
+        color: #000;
+        background: #fff;
+        text-align:center;
+      }
+      #printBillArea h2 { text-align:center; margin:2px 0 0 0; font-size:16px; font-weight:900; line-height:1.1; }
+      #printBillArea .r-logo { width:45px; height:45px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 3px auto; }
       #printBillArea .r-center { text-align:center; }
-      #printBillArea .r-small { font-size:11px; margin:1px 0; }
-      #printBillArea hr { border:none; border-top:1px dashed #000; margin:6px 0; }
-      #printBillArea table { width:100%; font-size:12px; border-collapse:collapse; }
-      #printBillArea td { padding:2px 0; vertical-align:top; }
+      #printBillArea .r-small { font-size:10px; margin:1px 0; text-align:center; }
+      #printBillArea hr { border:none; border-top:1px dashed #000; margin:5px 0; }
+      #printBillArea table { width:100%; font-size:11px; border-collapse:collapse; text-align:left; }
+      #printBillArea td { padding:1px 0; vertical-align:top; }
       #printBillArea .r-right { text-align:right; white-space:nowrap; }
-      #printBillArea .r-total { font-weight:900; font-size:14px; }
+      #printBillArea .r-total { font-weight:900; font-size:13px; }
     }
     </style>
+
     <script>
         function refreshSidebarBrand(){
           const name = localStorage.getItem("restaurantpro_restaurant_name") || (JSON.parse(localStorage.getItem("restaurantpro_settings")||"{}").restaurantName) || "RestaurantPro";
@@ -172,7 +187,7 @@
     <script src="app.js"></script>
     <script src="pos.js"></script>
     <script>
-    // ===== DYNAMIC BILL - Name + Logo Optional =====
+    // ===== DYNAMIC BILL - Name + Logo Optional - ALL ALERTS IN ENGLISH =====
     window.printCurrentBill = function(){
       const area = document.getElementById("printBillArea");
       const settings = JSON.parse(localStorage.getItem("restaurantpro_settings") || "{}");
@@ -221,7 +236,7 @@
           ${restPhone ? `<p class="r-small">Phone: ${restPhone}</p>` : ``}
         </div>
         <hr>
-        <div style="font-size:12px;">
+        <div style="font-size:11px; text-align:left;">
           Customer: ${cust}<br>
           ${phone ? "Phone: " + phone + "<br>" : ""}
           Table: ${table} | Type: ${type}<br>
@@ -249,7 +264,7 @@
       setTimeout(()=>{ window.print(); setTimeout(()=>{ area.style.display="none"; }, 500); }, 100);
     };
 
-    // ===== FIXED LOGOUT - Naam/Logo Delete Nahi Hoga =====
+    // ===== LOGOUT - ENGLISH ONLY =====
     window.doLogout = async function(){
         if(!confirm("Are you sure you want to logout?")) return;
         try{ await authClient.auth.signOut(); }catch(e){}
