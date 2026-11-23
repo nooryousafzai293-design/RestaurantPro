@@ -126,37 +126,39 @@
     <div id="priceModal" class="modal"><div class="price-modal-box"><div class="modal-header"><div><h2>Select Option</h2><p id="priceModalFoodName">Select size or quantity.</p></div><button type="button" class="modal-close" onclick="closePriceModal()">×</button></div><div id="priceOptions" class="price-options"></div></div></div>
     <div id="printBillArea" style="display:none;"></div>
 
-    <!-- ===== THERMAL BILL - Asal Restaurant Jaisa - Chota, Beech Me ===== -->
+    <!-- ===== THERMAL BILL - 1 PAGE ONLY - Chota, Beech Me ===== -->
     <style>
     #printBillArea{ display:none; font-family:'Courier New', monospace; }
     @media print {
       @page { size: 58mm auto; margin: 0; }
-      html, body{ margin:0 !important; padding:0 !important; width:58mm !important; background:#fff !important; }
-      body * { visibility: hidden; }
-      #printBillArea, #printBillArea * { visibility: visible; }
+      html, body{
+        margin:0 !important; padding:0 !important;
+        width:58mm !important; height:auto !important;
+        overflow:hidden !important; background:#fff !important;
+      }
+      /* FIX: visibility nahi, display:none - taake 4 khaali pages na banein */
+      body * { display:none !important; }
+      #printBillArea, #printBillArea * { display:block !important; }
+      #printBillArea table { display:table !important; width:100% !important; }
+      #printBillArea tr { display:table-row !important; }
+      #printBillArea td { display:table-cell !important; }
+      #printBillArea img { display:block !important; }
+      #printBillArea br, #printBillArea small { display:inline !important; }
       #printBillArea {
-        display: block !important;
-        position: absolute;
-        left: 50% !important;
-        top: 0 !important;
+        position: absolute !important;
+        left: 50% !important; top: 0 !important;
         transform: translateX(-50%) !important;
-        width: 52mm !important;
-        max-width: 52mm !important;
-        margin: 0 auto !important;
-        padding: 3mm 2mm !important;
+        width: 52mm !important; max-width: 52mm !important;
+        margin: 0 auto !important; padding: 3mm 2mm !important;
         font-family: 'Courier New', monospace;
-        font-size: 11px;
-        line-height: 1.35;
-        color: #000;
-        background: #fff;
-        text-align:center;
+        font-size: 11px; line-height: 1.35; color: #000; background: #fff; text-align:center;
       }
       #printBillArea h2 { text-align:center; margin:2px 0 0 0; font-size:16px; font-weight:900; line-height:1.1; }
-      #printBillArea .r-logo { width:45px; height:45px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 3px auto; }
+      #printBillArea .r-logo { width:45px; height:45px; border-radius:50%; object-fit:cover; margin:0 auto 3px auto; }
       #printBillArea .r-center { text-align:center; }
       #printBillArea .r-small { font-size:10px; margin:1px 0; text-align:center; }
       #printBillArea hr { border:none; border-top:1px dashed #000; margin:5px 0; }
-      #printBillArea table { width:100%; font-size:11px; border-collapse:collapse; text-align:left; }
+      #printBillArea table { font-size:11px; border-collapse:collapse; text-align:left; }
       #printBillArea td { padding:1px 0; vertical-align:top; }
       #printBillArea .r-right { text-align:right; white-space:nowrap; }
       #printBillArea .r-total { font-weight:900; font-size:13px; }
@@ -187,7 +189,7 @@
     <script src="app.js"></script>
     <script src="pos.js"></script>
     <script>
-    // ===== DYNAMIC BILL - Name + Logo Optional - ALL ALERTS IN ENGLISH =====
+    // ===== DYNAMIC BILL - Name + Logo Optional - ALL ENGLISH =====
     window.printCurrentBill = function(){
       const area = document.getElementById("printBillArea");
       const settings = JSON.parse(localStorage.getItem("restaurantpro_settings") || "{}");
@@ -196,7 +198,6 @@
       const restPhone = localStorage.getItem("restaurantpro_phone") || settings.restaurantPhone || "";
       const restAddress = localStorage.getItem("restaurantpro_address") || settings.restaurantAddress || "";
       const logoHTML = restLogo ? `<img src="${restLogo}" class="r-logo" onerror="this.style.display='none'">` : ``;
-
       const cust = document.getElementById("customerName")?.value || "Walk-in";
       const table = document.getElementById("tableNumber")?.value || "-";
       const type = document.getElementById("orderType")?.value || "dine-in";
@@ -208,7 +209,6 @@
       const taxAmt = document.getElementById("taxAmount")?.textContent || "Rs. 0";
       const grand = document.getElementById("grandTotal")?.textContent || "Rs. 0";
       const now = new Date().toLocaleString("en-PK", { timeZone: "Asia/Karachi" });
-
       let rows = "";
       if (typeof window.cart !== "undefined" && Array.isArray(window.cart) && window.cart.length) {
         rows = window.cart.map(it => {
@@ -227,7 +227,6 @@
           rows = `<tr><td>No items</td><td class="r-right">Rs.0</td></tr>`;
         }
       }
-
       area.innerHTML = `
         <div class="r-center">
           ${logoHTML}
@@ -263,7 +262,6 @@
       area.style.display = "block";
       setTimeout(()=>{ window.print(); setTimeout(()=>{ area.style.display="none"; }, 500); }, 100);
     };
-
     // ===== LOGOUT - ENGLISH ONLY =====
     window.doLogout = async function(){
         if(!confirm("Are you sure you want to logout?")) return;
