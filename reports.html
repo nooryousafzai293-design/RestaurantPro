@@ -1,471 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>RestaurantPro - Reports</title>
-
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="reports.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .reports-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+        .download-pdf-button{background:#e85b22;color:#fff;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px}
+        .share-wa-button{background:#25D366;color:#fff;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px}
+        .print-report-button{background:#fff;border:1px solid #ddd;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px}
+        @media print{
+            .sidebar,.reports-actions,.page-header .header-user{display:none!important}
+            .main-content{margin-left:0!important;width:100%!important}
+            body{background:#fff}
+        }
+    </style>
 </head>
-
 <body>
-
     <!-- SIDEBAR -->
     <aside class="sidebar">
-
         <div class="brand">
-
-            <div class="brand-logo">
-                🍽️
-            </div>
-
-            <div>
-                <h2>RestaurantPro</h2>
-                <span>Restaurant Management</span>
-            </div>
-
+            <div class="brand-logo">🍽️</div>
+            <div><h2>RestaurantPro</h2><span>Restaurant Management</span></div>
         </div>
-
-
         <nav class="sidebar-nav">
-
-            <a href="index.html" class="menu-item">
-                <span>🏠</span>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="pos.html" class="menu-item">
-                <span>🧾</span>
-                <span>POS / Billing</span>
-            </a>
-
-            <a href="orders.html" class="menu-item">
-                <span>📋</span>
-                <span>Orders</span>
-            </a>
-
-            <a href="tables.html" class="menu-item">
-                <span>🪑</span>
-                <span>Tables</span>
-            </a>
-
-            <a href="kitchen.html" class="menu-item">
-                <span>👨‍🍳</span>
-                <span>Kitchen</span>
-            </a>
-
-            <a href="menu.html" class="menu-item">
-                <span>🍔</span>
-                <span>Menu</span>
-            </a>
-
-            <a href="inventory.html" class="menu-item">
-                <span>📦</span>
-                <span>Inventory</span>
-            </a>
-
-            <a href="customers.html" class="menu-item">
-                <span>👥</span>
-                <span>Customers</span>
-            </a>
-
-            <a href="expenses.html" class="menu-item">
-                <span>💰</span>
-                <span>Expenses</span>
-            </a>
-
-            <a href="reports.html" class="menu-item active">
-                <span>📊</span>
-                <span>Reports</span>
-            </a>
-
-  <a href="settings.html" class="menu-item">
-    <span>⚙️</span>
-    <span>Settings</span>
-</a>
-
+            <a href="index.html" class="menu-item"><span>🏠</span><span>Dashboard</span></a>
+            <a href="pos.html" class="menu-item"><span>🧾</span><span>POS / Billing</span></a>
+            <a href="orders.html" class="menu-item"><span>📋</span><span>Orders</span></a>
+            <a href="tables.html" class="menu-item"><span>🪑</span><span>Tables</span></a>
+            <a href="kitchen.html" class="menu-item"><span>👨‍🍳</span><span>Kitchen</span></a>
+            <a href="menu.html" class="menu-item"><span>🍔</span><span>Menu</span></a>
+            <a href="inventory.html" class="menu-item"><span>📦</span><span>Inventory</span></a>
+            <a href="customers.html" class="menu-item"><span>👥</span><span>Customers</span></a>
+            <a href="expenses.html" class="menu-item"><span>💰</span><span>Expenses</span></a>
+            <a href="reports.html" class="menu-item active"><span>📊</span><span>Reports</span></a>
+            <a href="settings.html" class="menu-item"><span>⚙️</span><span>Settings</span></a>
         </nav>
-
-
-        <div class="sidebar-footer">
-            <strong>RestaurantPro</strong>
-            <small>Version 1.0</small>
-        </div>
-
+        <div class="sidebar-footer"><strong>RestaurantPro</strong><small>Version 1.0</small></div>
     </aside>
-
-
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
-
         <!-- HEADER -->
         <header class="page-header">
-
-            <div>
-
-                <h1>Reports</h1>
-
-                <p>
-                    View your restaurant sales, expenses and performance.
-                </p>
-
-            </div>
-
-
+            <div><h1>Reports</h1><p>View your restaurant sales, expenses and performance.</p></div>
             <div class="header-user">
-
-                <span class="notification">
-                    🔔
-                </span>
-
-                <div class="user-avatar">
-                    RO
-                </div>
-
-                <div class="user-info">
-
-                    <strong>
-                        Restaurant Owner
-                    </strong>
-
-                    <span>
-                        Administrator
-                    </span>
-
-                </div>
-
+                <span class="notification">🔔</span>
+                <div class="user-avatar">RO</div>
+                <div class="user-info"><strong>Restaurant Owner</strong><span>Administrator</span></div>
             </div>
-
         </header>
 
-
-
-        <!-- REPORT CONTENT -->
-        <section class="reports-content">
-
-
+        <!-- REPORT CONTENT - YEHI HISSA PDF ME JAYEGA -->
+        <section class="reports-content" id="reportArea">
             <!-- FILTER -->
             <div class="reports-filter-card">
-
-                <div>
-
-                    <h2>
-                        Report Period
-                    </h2>
-
-                    <p>
-                        Select the period you want to analyze.
-                    </p>
-
-                </div>
-
-
+                <div><h2>Report Period</h2><p>Select the period you want to analyze.</p></div>
                 <div class="report-period-buttons">
-
-                    <button
-                        type="button"
-                        class="period-button active"
-                        data-period="today"
-                    >
-                        Today
-                    </button>
-
-                    <button
-                        type="button"
-                        class="period-button"
-                        data-period="week"
-                    >
-                        This Week
-                    </button>
-
-                    <button
-                        type="button"
-                        class="period-button"
-                        data-period="month"
-                    >
-                        This Month
-                    </button>
-
-                    <button
-                        type="button"
-                        class="period-button"
-                        data-period="year"
-                    >
-                        This Year
-                    </button>
-
-                    <button
-                        type="button"
-                        class="period-button"
-                        data-period="all"
-                    >
-                        All Time
-                    </button>
-
+                    <button type="button" class="period-button active" data-period="today">Today</button>
+                    <button type="button" class="period-button" data-period="week">This Week</button>
+                    <button type="button" class="period-button" data-period="month">This Month</button>
+                    <button type="button" class="period-button" data-period="year">This Year</button>
+                    <button type="button" class="period-button" data-period="all">All Time</button>
                 </div>
-
             </div>
-
-
 
             <!-- SUMMARY CARDS -->
             <div class="report-summary-grid">
-
-
-                <div class="report-summary-card">
-
-                    <div class="report-summary-icon">
-                        💵
-                    </div>
-
-                    <div>
-
-                        <span>
-                            Total Sales
-                        </span>
-
-                        <strong id="reportSales">
-                            Rs. 0
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="report-summary-card">
-
-                    <div class="report-summary-icon">
-                        🧾
-                    </div>
-
-                    <div>
-
-                        <span>
-                            Total Orders
-                        </span>
-
-                        <strong id="reportOrders">
-                            0
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="report-summary-card">
-
-                    <div class="report-summary-icon">
-                        💰
-                    </div>
-
-                    <div>
-
-                        <span>
-                            Total Expenses
-                        </span>
-
-                        <strong id="reportExpenses">
-                            Rs. 0
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="report-summary-card">
-
-                    <div class="report-summary-icon">
-                        📈
-                    </div>
-
-                    <div>
-
-                        <span>
-                            Net Profit
-                        </span>
-
-                        <strong id="reportProfit">
-                            Rs. 0
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
+                <div class="report-summary-card"><div class="report-summary-icon">💵</div><div><span>Total Sales</span><strong id="reportSales">Rs. 0</strong></div></div>
+                <div class="report-summary-card"><div class="report-summary-icon">🧾</div><div><span>Total Orders</span><strong id="reportOrders">0</strong></div></div>
+                <div class="report-summary-card"><div class="report-summary-icon">💰</div><div><span>Total Expenses</span><strong id="reportExpenses">Rs. 0</strong></div></div>
+                <div class="report-summary-card"><div class="report-summary-icon">📈</div><div><span>Net Profit</span><strong id="reportProfit">Rs. 0</strong></div></div>
             </div>
-
-
 
             <!-- REPORT PANELS -->
             <div class="reports-grid">
-
-
                 <!-- SALES REPORT -->
                 <div class="report-panel">
-
-                    <div class="report-panel-header">
-
-                        <div>
-
-                            <h2>
-                                Sales Overview
-                            </h2>
-
-                            <p>
-                                Sales performance for the selected period.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
+                    <div class="report-panel-header"><div><h2>Sales Overview</h2><p>Sales performance for the selected period.</p></div></div>
                     <div class="sales-overview">
-
-                        <div class="sales-big-number">
-                            <span>
-                                Revenue
-                            </span>
-
-                            <strong id="salesRevenue">
-                                Rs. 0
-                            </strong>
-                        </div>
-
-
-                        <div class="sales-big-number">
-                            <span>
-                                Average Order
-                            </span>
-
-                            <strong id="averageOrder">
-                                Rs. 0
-                            </strong>
-                        </div>
-
+                        <div class="sales-big-number"><span>Revenue</span><strong id="salesRevenue">Rs. 0</strong></div>
+                        <div class="sales-big-number"><span>Average Order</span><strong id="averageOrder">Rs. 0</strong></div>
                     </div>
-
-
-                    <div class="sales-chart">
-
-                        <div class="chart-title">
-                            Daily Sales
-                        </div>
-
-                        <div
-                            id="salesChart"
-                            class="chart-bars"
-                        ></div>
-
-                    </div>
-
+                    <div class="sales-chart"><div class="chart-title">Daily Sales</div><div id="salesChart" class="chart-bars"></div></div>
                 </div>
-
-
-
                 <!-- EXPENSE REPORT -->
                 <div class="report-panel">
-
-                    <div class="report-panel-header">
-
-                        <div>
-
-                            <h2>
-                                Expense Breakdown
-                            </h2>
-
-                            <p>
-                                Expenses by category.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        id="expenseBreakdown"
-                        class="expense-breakdown"
-                    ></div>
-
-
-                    <div class="expense-total-row">
-
-                        <span>
-                            Total
-                        </span>
-
-                        <strong id="breakdownTotal">
-                            Rs. 0
-                        </strong>
-
-                    </div>
-
+                    <div class="report-panel-header"><div><h2>Expense Breakdown</h2><p>Expenses by category.</p></div></div>
+                    <div id="expenseBreakdown" class="expense-breakdown"></div>
+                    <div class="expense-total-row"><span>Total</span><strong id="breakdownTotal">Rs. 0</strong></div>
                 </div>
-
-
             </div>
-
-
 
             <!-- TOP ITEMS -->
             <div class="report-panel top-items-panel">
-
-                <div class="report-panel-header">
-
-                    <div>
-
-                        <h2>
-                            Top Selling Items
-                        </h2>
-
-                        <p>
-                            Best performing menu items.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="topItems"
-                    class="top-items-list"
-                ></div>
-
+                <div class="report-panel-header"><div><h2>Top Selling Items</h2><p>Best performing menu items.</p></div></div>
+                <div id="topItems" class="top-items-list"></div>
             </div>
-
-
-
-            <!-- PRINT -->
-            <div class="reports-actions">
-
-                <button
-                    type="button"
-                    onclick="printReport()"
-                    class="print-report-button"
-                >
-                    🖨️ Print Report
-                </button>
-
-            </div>
-
-
         </section>
 
+        <!-- ACTIONS -->
+        <div class="reports-actions">
+            <button type="button" onclick="downloadReportPDF()" class="download-pdf-button">📥 Download Report PDF</button>
+            <button type="button" onclick="shareReportWhatsApp()" class="share-wa-button">📤 Share on WhatsApp</button>
+            <button type="button" onclick="printReport()" class="print-report-button">🖨️ Print Report</button>
+        </div>
     </main>
 
-
     <script src="reports.js"></script>
-<script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+    <script>
+    // Print - purana wala
+    function printReport(){ window.print(); }
 
+    // Download PDF - poori report PDF ban jayegi
+    function downloadReportPDF(){
+        const element = document.getElementById("reportArea");
+        if(!element) return alert("Report not found.");
+        const activeBtn = document.querySelector(".period-button.active");
+        const period = activeBtn ? activeBtn.textContent.trim() : "Report";
+        const fileName = "RestaurantPro-" + period.replace(/\s+/g,"-") + "-" + new Date().toISOString().slice(0,10) + ".pdf";
+        const opt = {
+            margin: [0.4, 0.4, 0.4, 0.4],
+            filename: fileName,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['css', 'legacy'] }
+        };
+        // Button ko thora disable karo taake double click na ho
+        const btn = document.querySelector(".download-pdf-button");
+        const oldText = btn.textContent;
+        btn.textContent = "⏳ Making PDF...";
+        btn.disabled = true;
+        html2pdf().set(opt).from(element).save().then(function(){
+            btn.textContent = oldText;
+            btn.disabled = false;
+        }).catch(function(){
+            btn.textContent = oldText;
+            btn.disabled = false;
+            alert("PDF banane me masla aaya, dobara try karein.");
+        });
+    }
+
+    // Share on WhatsApp - pehle PDF download hogi, phir WhatsApp khulega
+    function shareReportWhatsApp(){
+        // Pehle PDF download kar do, taake user ke paas file aa jaye
+        downloadReportPDF();
+        setTimeout(function(){
+            const sales = document.getElementById("reportSales") ? document.getElementById("reportSales").textContent : "";
+            const orders = document.getElementById("reportOrders") ? document.getElementById("reportOrders").textContent : "";
+            const profit = document.getElementById("reportProfit") ? document.getElementById("reportProfit").textContent : "";
+            const text = "RestaurantPro Report\nTotal Sales: " + sales + "\nTotal Orders: " + orders + "\nNet Profit: " + profit + "\n\nPDF download ho gayi hai, upar se attach karke bhej dein.";
+            window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
+        }, 800);
+    }
+    </script>
+</body>
 </html>
