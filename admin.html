@@ -53,6 +53,13 @@
         .empty-state { padding: 50px 20px; text-align: center; color: #777; }
         .empty-state .icon { font-size: 42px; margin-bottom: 12px; }
         .loading { padding: 30px; text-align: center; color: #777; }
+        /* Backup */
+        .backup-box { background: #e8f7ee; border: 1px solid #c8ead6; border-radius: 12px; padding: 18px 20px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+        .backup-box h3 { font-size: 17px; margin-bottom: 4px; }
+        .backup-box p { font-size: 13px; color: #555; }
+        .backup-btn { border: none; background: #0b7a3e; color: #fff; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; white-space: nowrap; }
+        .backup-btn:disabled { opacity: .6; cursor: not-allowed; }
+        #backupStatus { font-size: 13px; color: #237447; margin-top: 6px; }
         /* Edit Modal */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; padding: 15px; }
         .modal-overlay.open { display: flex; }
@@ -81,6 +88,17 @@
 </header>
 <main class="container">
     <div class="page-title"><h2>Dashboard</h2><p>Manage your RestaurantPro customers and subscriptions.</p></div>
+
+    <!-- 1-CLICK BACKUP -->
+    <div class="backup-box">
+        <div>
+            <h3>💾 Data Backup</h3>
+            <p>Saara data ek click me download karo. Hafte me 1 dafa zaroor karo aur file ko Google Drive me save kar lo.</p>
+            <div id="backupStatus"></div>
+        </div>
+        <button class="backup-btn" id="backupBtn" onclick="downloadFullBackup()">💾 1-Click Backup Download</button>
+    </div>
+
     <section class="stats">
         <div class="stat-card"><span>Total Restaurants</span><h3 id="totalRestaurants">0</h3></div>
         <div class="stat-card"><span>Active</span><h3 id="activeRestaurants">0</h3></div>
@@ -112,7 +130,7 @@
     </section>
 </main>
 
-<!-- EDIT MODAL - Password yahan nahi hai, Excel me rakho -->
+<!-- EDIT MODAL -->
 <div id="editModal" class="modal-overlay">
     <div class="modal-box">
         <h3>✏️ Edit Restaurant</h3>
@@ -147,6 +165,44 @@ const messageBox = document.getElementById("message");
 function showMessage(text, type) { messageBox.textContent = text; messageBox.className = "message " + type; }
 function hideMessage() { messageBox.textContent = ""; messageBox.className = "message"; }
 
+// ===== 1-CLICK BACKUP =====
+async function downloadFullBackup(){
+  const btn = document.getElementById("backupBtn");
+  const status = document.getElementById("backupStatus");
+  btn.disabled = true;
+  btn.textContent = "⏳ Backup ban raha hai...";
+  if(status) status.textContent = "Data download ho raha hai, please wait...";
+  try{
+    const tables = ["restaurants","admin_users","orders","order_items","menu_items","menu_categories","categories","tables","customers","expenses","inventory","inventory_items","settings"];
+    const backup = {};
+    backup.backup_date = new Date().toISOString();
+    backup.app = "RestaurantPro";
+    backup.counts = {};
+    for(const table of tables){
+      const { data, error } = await supabaseClient.from(table).select("*").limit(5000);
+      if(!error && data){
+        backup[table] = data;
+        backup.counts[table] = data.length;
+      }
+    }
+    const fileName = "RestaurantPro-Backup-" + new Date().toISOString().slice(0,10) + "-" + Date.now() + ".json";
+    const blob = new Blob([JSON.stringify(backup, null, 2)], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = fileName;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    if(status) status.textContent = "✅ Backup download ho gaya: " + fileName + " - Is ko Google Drive me save kar lo.";
+    btn.textContent = "✅ Backup Ho Gaya!";
+    setTimeout(()=>{ btn.textContent = "💾 1-Click Backup Download"; btn.disabled = false; }, 3000);
+  }catch(e){
+    console.log(e);
+    alert("Backup me masla aaya. Dobara try karein.");
+    btn.disabled = false;
+    btn.textContent = "💾 1-Click Backup Download";
+  }
+}
+
 async function loadRestaurants() {
     const list = document.getElementById("restaurantList");
     list.innerHTML = '<div class="loading">Loading restaurants...</div>';
@@ -177,7 +233,6 @@ async function loadRestaurants() {
             </div>`;
     }).join("");
 }
-
 function updateStats(restaurants) {
     const total = restaurants.length;
     const active = restaurants.filter(function (r) { return String(r.status).toLowerCase() === "active"; }).length;
@@ -188,12 +243,9 @@ function updateStats(restaurants) {
     document.getElementById("blockedRestaurants").textContent = blocked;
     document.getElementById("unpaidRestaurants").textContent = unpaid;
 }
-
 function escapeHtml(value) {
     return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 }
-
-// ===== EDIT - Open Modal with old data =====
 async function openEditModal(id) {
     const { data, error } = await supabaseClient.from("restaurants").select("*").eq("id", id).single();
     if (error || !data) return showMessage("Restaurant not found.", "error");
@@ -209,8 +261,6 @@ async function openEditModal(id) {
 }
 function closeEditModal() { document.getElementById("editModal").classList.remove("open"); }
 document.getElementById("editModal").addEventListener("click", function(e){ if(e.target.id === "editModal") closeEditModal(); });
-
-// ===== EDIT - Save / Update =====
 async function saveEdit() {
     const id = document.getElementById("editId").value;
     if (!id) return;
@@ -230,7 +280,6 @@ async function saveEdit() {
     showMessage("Restaurant updated successfully.", "success");
     await loadRestaurants();
 }
-
 document.getElementById("restaurantForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     hideMessage();
@@ -262,7 +311,6 @@ document.getElementById("restaurantForm").addEventListener("submit", async funct
         button.textContent = "Create Restaurant";
     }
 });
-
 async function toggleRestaurant(restaurantId, isBlocked) {
     const newStatus = isBlocked ? "active" : "blocked";
     const { error } = await supabaseClient.from("restaurants").update({ status: newStatus }).eq("id", restaurantId);
@@ -270,7 +318,6 @@ async function toggleRestaurant(restaurantId, isBlocked) {
     showMessage("Restaurant status updated.", "success");
     await loadRestaurants();
 }
-
 document.getElementById("logoutButton").addEventListener("click", async function () {
     localStorage.removeItem("restaurantpro_admin_logged_in");
     await supabaseClient.auth.signOut();
